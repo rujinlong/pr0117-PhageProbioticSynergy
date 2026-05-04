@@ -1,3 +1,5 @@
+Your Name
+
      1|     1|---
      2|     2|title: "Experimental Design"
      3|     3|params:
@@ -97,155 +99,65 @@
     97|    97|  "- Count plaques, calculate titer (PFU/mL)",
     98|    98|  "",
     99|    99|  "## Characterization",
-   100|   100|  "- TEM: Negative staining, observe morphology",
-   101|   101|  "- Host range: Spot test on 10+ strains",
-   102|   102|  "- Stability: pH 3-10, temperature 4-60°C",
-   103|   103|  "- One-step growth curve: Latent period, burst size"
-   104|   104|)
-   105|   105|
-   106|   106|write_lines(
-   107|   107|  protocol,
-   108|   108|  file.path(path_target, "protocols", "phage_isolation.txt")
-   109|   109|)
-   110|   110|
-   111|   111|dir.create(file.path(path_target, "protocols"), showWarnings = FALSE)
-   112|   112|```
-   113|   113|
-   114|   114|### 2.2 Synergy Testing (In Vitro)
-   115|   115|
-   116|   116|**Design**: 2×2 factorial (Phage ± Probiotic)
-   117|   117|
-   118|   118|| Treatment | Phage | Probiotic | Expected Outcome |
-   119|   119||-----------|--------|------------|-------------------|
-   120|   120|| Control | - | - | Baseline pathogen growth |
-   121|   121|| Phage only | ✓ | - | Pathogen reduction |
-   122|   122|| Probiotic only | - | ✓ | Moderate colonization |
-   123|   123|| **Synergy** | ✓ | ✓ | **Max clearance + colonization** |
-   124|   124|
-   125|   125|**Measurement Metrics**:
-   126|   126|
-   127|   127|```\{r\}
-   128|   128|#| label: synergy-metrics
-   129|   129|#| eval: false
-   130|   130|
-   131|   131|metrics <- tibble(
-   132|   132|  metric = c("Pathogen CFU", "Probiotic CFU", "Short-chain fatty acids",
-   133|   133|             "pH", "Bile acid profile", "Inflammatory markers"),
-   134|   134|  method = c("Plate count", "Plate count", "GC-MS",
-   135|   135|              "pH meter", "LC-MS", "ELISA/qPCR"),
-   136|   136|  frequency = c("Daily", "Daily", "Endpoint", "Daily", "Endpoint", "Endpoint")
-   137|   137|)
-   138|   138|
-   139|   139|knitr::kable(metrics, caption = "In Vitro Synergy Metrics")
-   140|   140|```
-   141|   141|
-   142|   142|## 3. Animal Experiments (Germany → China Transfer)
-   143|   143|
-   144|   144|### 3.1 Poultry Model (Broiler Chickens)
-   145|   145|
-   146|   146|**Design**: Randomized Complete Block Design
-   147|   147|
-   148|   148|**Factors**:
-   149|   149|- Treatment (4 levels: Control, Phage, Probiotic, Synergy)
-   150|   150|- Time (5 levels: Day 0, 7, 14, 21, 35)
-   151|   151|- Block (3 levels: Rack position in incubator)
-   152|   152|
-   153|   153|**Response Variables**:
-   154|   154|
-   155|   155|```\{r\}
-   156|   156|#| label: poultry-design
-   157|   157|#| eval: false
-   158|   158|
-   159|   159|# Generate experimental design
-   160|   160|library(agricolae)
-   161|   161|
-   162|   162|treatments <- c("Control", "Phage", "Probiotic", "Synergy")
-   163|   163|timepoints <- c(0, 7, 14, 21, 35)
-   164|   164|blocks <- 1:3
-   165|   165|
-   166|   166|design <- design.rcbd(
-   167|   167|  treatments,
-   168|   168|  r = length(blocks) * length(timepoints),
-   169|   169|  serie = 2  # Randomize within blocks
-   170|   170|)
-   171|   171|
-   172|   172|# Add metadata
-   173|   173|design$timepoint <- rep(timepoints, each = length(treatments) * length(blocks))
-   174|   174|design$block <- rep(blocks, each = length(treatments), times = length(timepoints))
-   175|   175|
-   176|   176|knitr::kable(head(design, 10), caption = "Poultry Experiment Design (RCBD)")
-   177|   177|```
-   178|   178|
-   179|   179|### 3.2 Sample Size Calculation
-   180|   180|
-   181|   181|**Power Analysis** (based on expected effect size):
-   182|   182|
-   183|   183|```\{r\}
-   184|   184|#| label: power-analysis
-   185|   185|#| eval: false
-   186|   186|
-   187|   187|# Template: Power analysis for ANOVA
-   188|   188|# Expected effect size: d = 0.8 (large)
-   189|   189|# Alpha = 0.05, Power = 0.80
-   190|   190|
-   191|   191|# Using pwr package (if available)
-   192|   192|if (requireNamespace("pwr", quietly = TRUE)) {
-   193|   193|  library(pwr)
-   194|   194|  power_result <- pwr.anova.test(
-   195|   195|    k = 4,        # 4 treatments
-   196|   196|    f = 0.4,      # Cohen's f (medium-large effect)
-   197|   197|    sig.level = 0.05,
-   198|   198|    power = 0.80
-   199|   199|  )
-   200|   200|  print(power_result)
-   201|   201|}
-   202|   202|
-   203|   203|# Rule of thumb: 8-10 birds per treatment per timepoint
-   204|   204|# Total: 4 treatments × 5 timepoints × 10 birds = 200 birds
-   205|   205|```
-   206|   206|
-   207|   207|## 4. China Animal Trials
-   208|   208|
-   209|   209|### 4.1 Regulatory Compliance
-   210|   210|
-   211|   211|From Notion Document Section 6.1 (Geographic & Regulatory Constraints):
-   212|   212|
-   213|   213|- **Germany**: Animal experimentation approval is slow → focus on in vitro
-   214|   214|- **China**: Collaborating institutions can conduct formal trials
-   215|   215|- **Transfer**: Send validated phages/probiotics to China partner
-   216|   216|
-   217|   217|### 4.2 Trial Design (China)
-   218|   218|
-   219|   219|**Target**: Broiler chickens, commercial farm setting
-   220|   220|
-   221|   221|| Parameter | Specification |
-   222|   222||-----------|---------------|
-   223|   223|| **Animals** | 1000 broilers, day-old |
-   224|   224|| **Duration** | 42 days (standard production cycle) |
-   225|   225|| **Treatments** | 4 groups × 250 birds |
-   226|   226|| **Replicates** | 5 pens per treatment (50 birds/pen) |
-   227|   227|| **Metrics** | FCR, mortality, lesion scores, gut microbiota |
-   228|   228|
-   229|   229|**Economic Analysis**:
-   230|   230|
-   231|   231|```\{r\}
-   232|   232|#| label: economic-model
-   233|   233|#| eval: false
-   234|   234|
-   235|   235|economics <- tibble(
-   236|   236|  item = c("Phage production (per dose)", "Probiotic (per dose)", 
-   237|   237|            "Administration", "Labor", "FCR improvement", "Mortality reduction"),
-   238|   238|  cost = c(0.05, 0.03, 0.01, 0.02, -0.10, -0.50),  # Negative = savings
-   239|   239|  unit = c("USD", "USD", "USD", "USD", "FCR points", "%")
-   240|   240|)
-   241|   241|
-   242|   242|total_cost_per_bird <- sum(economics$cost[economics$cost > 0])
-   243|   243|total_savings <- abs(sum(economics$cost[economics$cost < 0]))
-   244|   244|
-   245|   245|ROI <- (total_savings - total_cost_per_bird) / total_cost_per_bird * 100
-   246|   246|
-   247|   247|message("Cost per bird: $", total_cost_per_bird)
-   248|   248|message("Savings per bird: $", total_savings)
+
+100\| 100\| “- TEM: Negative staining, observe morphology”, 101\| 101\|
+“- Host range: Spot test on 10+ strains”, 102\| 102\| “- Stability: pH
+3-10, temperature 4-60°C”, 103\| 103\| “- One-step growth curve: Latent
+period, burst size” 104\| 104\|) 105\| 105\| 106\| 106\|write_lines(
+107\| 107\| protocol, 108\| 108\| file.path(path_target, “protocols”,
+“phage_isolation.txt”) 109\| 109\|) 110\| 110\| 111\|
+111\|dir.create(file.path(path_target, “protocols”), showWarnings =
+FALSE) 112\|
+112\|`113|   113|    114|   114|### 2.2 Synergy Testing (In Vitro)    115|   115|    116|   116|**Design**: 2×2 factorial (Phage ± Probiotic)    117|   117|    118|   118|| Treatment | Phage | Probiotic | Expected Outcome |    119|   119||-----------|--------|------------|-------------------|    120|   120|| Control | - | - | Baseline pathogen growth |    121|   121|| Phage only | ✓ | - | Pathogen reduction |    122|   122|| Probiotic only | - | ✓ | Moderate colonization |    123|   123|| **Synergy** | ✓ | ✓ | **Max clearance + colonization** |    124|   124|    125|   125|**Measurement Metrics**:    126|   126|    127|   127|`{r}
+128\| 128\|#\| label: synergy-metrics 129\| 129\|#\| eval: false 130\|
+130\| 131\| 131\|metrics \<- tibble( 132\| 132\| metric = c(“Pathogen
+CFU”, “Probiotic CFU”, “Short-chain fatty acids”, 133\| 133\| “pH”,
+“Bile acid profile”, “Inflammatory markers”), 134\| 134\| method =
+c(“Plate count”, “Plate count”, “GC-MS”, 135\| 135\| “pH meter”,
+“LC-MS”, “ELISA/qPCR”), 136\| 136\| frequency = c(“Daily”, “Daily”,
+“Endpoint”, “Daily”, “Endpoint”, “Endpoint”) 137\| 137\|) 138\| 138\|
+139\| 139\|knitr::kable(metrics, caption = “In Vitro Synergy Metrics”)
+140\|
+140\|`141|   141|    142|   142|## 3. Animal Experiments (Germany → China Transfer)    143|   143|    144|   144|### 3.1 Poultry Model (Broiler Chickens)    145|   145|    146|   146|**Design**: Randomized Complete Block Design    147|   147|    148|   148|**Factors**:    149|   149|- Treatment (4 levels: Control, Phage, Probiotic, Synergy)    150|   150|- Time (5 levels: Day 0, 7, 14, 21, 35)    151|   151|- Block (3 levels: Rack position in incubator)    152|   152|    153|   153|**Response Variables**:    154|   154|    155|   155|`{r}
+156\| 156\|#\| label: poultry-design 157\| 157\|#\| eval: false 158\|
+158\| 159\| 159\|# Generate experimental design 160\|
+160\|library(agricolae) 161\| 161\| 162\| 162\|treatments \<-
+c(“Control”, “Phage”, “Probiotic”, “Synergy”) 163\| 163\|timepoints \<-
+c(0, 7, 14, 21, 35) 164\| 164\|blocks \<- 1:3 165\| 165\| 166\|
+166\|design \<- design.rcbd( 167\| 167\| treatments, 168\| 168\| r =
+length(blocks) \* length(timepoints), 169\| 169\| serie = 2 \# Randomize
+within blocks 170\| 170\|) 171\| 171\| 172\| 172\|# Add metadata 173\|
+173\|design$timepoint <- rep(timepoints, each = length(treatments) * length(blocks))
+   174|   174|design$block \<- rep(blocks, each = length(treatments),
+times = length(timepoints)) 175\| 175\| 176\|
+176\|knitr::kable(head(design, 10), caption = “Poultry Experiment Design
+(RCBD)”) 177\|
+177\|`178|   178|    179|   179|### 3.2 Sample Size Calculation    180|   180|    181|   181|**Power Analysis** (based on expected effect size):    182|   182|    183|   183|`{r}
+184\| 184\|#\| label: power-analysis 185\| 185\|#\| eval: false 186\|
+186\| 187\| 187\|# Template: Power analysis for ANOVA 188\| 188\|#
+Expected effect size: d = 0.8 (large) 189\| 189\|# Alpha = 0.05, Power =
+0.80 190\| 190\| 191\| 191\|# Using pwr package (if available) 192\|
+192\|if (requireNamespace(“pwr”, quietly = TRUE)) { 193\| 193\|
+library(pwr) 194\| 194\| power_result \<- pwr.anova.test( 195\| 195\| k
+= 4, \# 4 treatments 196\| 196\| f = 0.4, \# Cohen’s f (medium-large
+effect) 197\| 197\| sig.level = 0.05, 198\| 198\| power = 0.80 199\|
+199\| ) 200\| 200\| print(power_result) 201\| 201\|} 202\| 202\| 203\|
+203\|# Rule of thumb: 8-10 birds per treatment per timepoint 204\|
+204\|# Total: 4 treatments × 5 timepoints × 10 birds = 200 birds 205\|
+205\|`206|   206|    207|   207|## 4. China Animal Trials    208|   208|    209|   209|### 4.1 Regulatory Compliance    210|   210|    211|   211|From Notion Document Section 6.1 (Geographic & Regulatory Constraints):    212|   212|    213|   213|- **Germany**: Animal experimentation approval is slow → focus on in vitro    214|   214|- **China**: Collaborating institutions can conduct formal trials    215|   215|- **Transfer**: Send validated phages/probiotics to China partner    216|   216|    217|   217|### 4.2 Trial Design (China)    218|   218|    219|   219|**Target**: Broiler chickens, commercial farm setting    220|   220|    221|   221|| Parameter | Specification |    222|   222||-----------|---------------|    223|   223|| **Animals** | 1000 broilers, day-old |    224|   224|| **Duration** | 42 days (standard production cycle) |    225|   225|| **Treatments** | 4 groups × 250 birds |    226|   226|| **Replicates** | 5 pens per treatment (50 birds/pen) |    227|   227|| **Metrics** | FCR, mortality, lesion scores, gut microbiota |    228|   228|    229|   229|**Economic Analysis**:    230|   230|    231|   231|`{r}
+232\| 232\|#\| label: economic-model 233\| 233\|#\| eval: false 234\|
+234\| 235\| 235\|economics \<- tibble( 236\| 236\| item = c(“Phage
+production (per dose)”, “Probiotic (per dose)”, 237\| 237\|
+“Administration”, “Labor”, “FCR improvement”, “Mortality reduction”),
+238\| 238\| cost = c(0.05, 0.03, 0.01, 0.02, -0.10, -0.50), \# Negative
+= savings 239\| 239\| unit = c(“USD”, “USD”, “USD”, “USD”, “FCR points”,
+“%”) 240\| 240\|) 241\| 241\| 242\| 242\|total_cost_per_bird \<-
+sum(economics$cost[economics$cost \> 0\]) 243\| 243\|total_savings \<-
+abs(sum(economics$cost[economics$cost \< 0\])) 244\| 244\| 245\|
+245\|ROI \<- (total_savings - total_cost_per_bird) / total_cost_per_bird
+\* 100 246\| 246\| 247\| 247\|message(“Cost per bird: \$”,
+total_cost_per_bird) 248\| 248\|message(“Savings per bird:
+$", total_savings)
    249|   249|message("ROI: ", round(ROI, 1), "%")
    250|   250|```
    251|   251|
@@ -327,25 +239,11 @@
    327|   327|After finalizing design, add to NotebookLM:
    328|   328|
    329|   329|```bash
-   330|   330|nlm source add phage-synergy --text "$(cat experimental_design_summary.txt)" \
-   331|   331|  --title "Experimental Design pr0117"
-   332|   332|```
-   333|   333|
-   334|   334|## 8. Session Info
-   335|   335|
-   336|   336|```\{r\}
-   337|   337|#| label: session-info
-   338|   338|sessionInfo()
-   339|   339|```
-   340|   340|
-   341|   341|## 9. Next Steps
-   342|   342|
-   343|   343|1. **Submit ethics application** (Germany) — critical path item
-   344|   344|2. **Order proxy strains** (DSMZ/ATCC) — Module 05 results
-   345|   345|3. **Begin phage isolation** — start with available samples
-   346|   346|4. **Prepare China transfer documents** — shipping, import permits
-   347|   347|5. **Proceed to Module 08** (`08-manuscript-draft.qmd`)
-   348|   348|
-   349|   349|---
-   350|   350|*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
-   351|   351|
+   330|   330|nlm source add phage-synergy --text "$(cat
+experimental_design_summary.txt)”  
+331\| 331\| –title “Experimental Design pr0117” 332\|
+332\|`333|   333|    334|   334|## 8. Session Info    335|   335|    336|   336|`{r}
+337\| 337\|#\| label: session-info 338\| 338\|sessionInfo() 339\|
+339\|\`\``340|   340|    341|   341|## 9. Next Steps    342|   342|    343|   343|1. **Submit ethics application** (Germany) — critical path item    344|   344|2. **Order proxy strains** (DSMZ/ATCC) — Module 05 results    345|   345|3. **Begin phage isolation** — start with available samples    346|   346|4. **Prepare China transfer documents** — shipping, import permits    347|   347|5. **Proceed to Module 08** (`08-manuscript-draft.qmd\`)
+348\| 348\| 349\| 349\|— 350\| 350\|*Generated by qproj workflow for
+pr0117-PhageProbioticSynergy* 351\| 351\|

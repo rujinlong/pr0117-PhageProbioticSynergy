@@ -1,0 +1,164 @@
+Your Name
+
+     1|---
+     2|title: "China Trial Analysis"
+     3|---
+     4|
+     5|# China Trial Analysis
+     6|
+     7|## Setup
+     8|
+     9|```\{r\}
+    10|#| label: setup
+    11|params <- list(name = "09-china-trial-analysis")
+    12|here::i_am(paste0(params$name, ".qmd"), uuid = "i9j0k1l2-m3n4-5678-opqr-s1234567890")
+    13|
+    14|qproj::proj_create_dir_target(params$name)
+    15|path_target <- qproj::path_target(params$name)
+    16|path_source <- qproj::path_source(params$name)
+    17|
+    18|# Read upstream data
+    19|path_07 <- qproj::path_source("07-experimental-design")
+    20|path_08 <- qproj::path_source("08-manuscript-draft")
+    21|```
+    22|
+    23|## Load Packages
+    24|
+    25|```\{r\}
+    26|#| label: packages
+    27|library(tidyverse)
+    28|library(here)
+    29|library(qproj)
+    30|library(ggplot2)
+    31|library(nlme)  # For mixed-effects models
+    32|```
+    33|
+    34|## 1. Objective
+    35|
+    36|Analyze data from China animal trials and optimize formulations for Chinese market.
+    37|
+    38|**From Notion Master Plan**:
+    39|- **Collaborating institutions in China**: can conduct formal animal experiments and clinical trials
+    40|- **Target market**: Chinese animal agriculture (家禽, 水产, 生猪)
+    41|- **Competitors**: 青岛诺安百特, CJ BIO (Korea)
+    42|
+    43|## 2. Trial Design (China Context)
+    44|
+    45|### 2.1 Regulatory Landscape
+    46|
+    47|| Aspect | Germany | China |
+    48||--------|---------|-------|
+    49|| **Approval time** | 2-3 months | 6-12 months |
+    50|| **Cost per bird** | €5-8 | ¥3-5 (€0.4-0.6) |
+    51|| **Facility standards** | High (Tier-1) | Variable |
+    52|| **Sample size limits** | Moderate | Large (1000+ birds feasible) |
+    53|
+    54|### 2.2 Trial Sites
+    55|
+    56|**Poultry Trials**:
+    57|- Location: [Province], China
+    58|- Partner: [Chinese university/company]
+    59|- Scale: 1000+ broilers
+    60|
+    61|**Aquaculture Trials**:
+    62|- Location: [Guangdong/Shandong], China
+    63|- Target: Fish/shrimp ponds
+    64|- Scale: 10+ ponds (commercial scale)
+    65|
+    66|## 3. Data Collection & Management
+    67|
+    68|### 3.1 Variables to Track
+    69|
+    70|**Performance Metrics**:
+    71|
+    72|```\{r\}
+    73|#| label: performance-metrics
+    74|#| eval: false
+    75|
+    76|metrics <- tibble(
+    77|  metric = c("Feed Conversion Ratio (FCR)", "Daily Weight Gain", "Mortality (%)",
+    78|           "Lesion Score (0-4)", "Gut Morphology", "Microbiome Shannon Index"),
+    79|  unit = c("kg feed/kg gain", "g/day", "%", "score", "villus height:crypt depth", "index"),
+    80|  frequency = c("Weekly", "Daily", "Daily", "At harvest", "At harvest", "Endpoint")
+    81|)
+    82|
+    83|knitr::kable(metrics, caption = "Performance Metrics for China Trials")
+    84|```
+    85|
+    86|**Microbiome Sampling**:
+    87|
+    88|```\{r\}
+    89|#| label: microbiome-sampling
+    90|#| eval: false
+    91|
+    92|sampling_points <- tibble(
+    93|  day = c(0, 7, 14, 21, 35, 42),
+    94|  sample_type = c("Feces", "Feces", "Feces", "Feces", "Feces", "Cecal content"),
+    95|  analyses = c("Metagenomics", "Metagenomics", "Metagenomics", "Metagenomics", "Metagenomics", "Full metagenomics + virome")
+    96|)
+    97|
+    98|knitr::kable(sampling_points, caption = "Microbiome Sampling Schedule")
+    99|```
+
+100\| 101\|## 4. Statistical Analysis 102\| 103\|### 4.1 Mixed-Effects
+Model 104\| 105\|Account for block (pen) and repeated measures (time).
+106\|
+107\|`\{r\}    108|#| label: mixed-model    109|#| eval: false    110|    111|# Template: Linear mixed model for FCR    112|# library(nlme)    113|#     114|# model_fcr <- lme(    115|#   fixed = FCR ~ treatment * day,    116|#   random = list(pen = ~1, bird = ~1),    117|#   data = trial_data,    118|#   correlation = corAR1(form = ~day | bird)    119|# )    120|#     121|# summary(model_fcr)    122|# anova(model_fcr)    123|`
+124\| 125\|### 4.2 Non-Parametric Tests 126\| 127\|For non-normal data
+(mortality, lesion scores): 128\|
+129\|`\{r\}    130|#| label: nonparametric    131|#| eval: false    132|    133|# Kruskal-Wallis for treatment effects    134|# kruskal.test(FCR ~ treatment, data = trial_data)    135|    136|# Post-hoc Dunn test    137|# if (requireNamespace("dunn.test", quietly = TRUE)) {    138|#   library(dunn.test)    139|#   dunn.test(trial_data$FCR, trial_data$treatment, method = "bonferroni")    140|# }    141|`
+142\| 143\|## 5. Results Visualization 144\| 145\|### 5.1 FCR Over Time
+146\|
+147\|`\{r\}    148|#| label: fcr-plot    149|#| eval: false    150|    151|# ggplot(trial_data, aes(x = day, y = FCR, color = treatment, group = pen)) +    152|#   stat_summary(geom = "line", fun = mean) +    153|#   stat_summary(geom = "errorbar", fun.data = mean_se, width = 2) +    154|#   theme_minimal() +    155|#   labs(title = "FCR Trajectory by Treatment (China Trial)",    156|#        x = "Day", y = "Feed Conversion Ratio")    157|`
+158\| 159\|### 5.2 Microbiome Shifts 160\|
+161\|`\{r\}    162|#| label: microbiome-plot    163|#| eval: false    164|    165|# Template: Stacked bar plot of phage/viral abundance    166|# ggplot(microbiome_data, aes(x = day, y = relative_abundance, fill = taxon)) +    167|#   geom_bar(stat = "identity") +    168|#   facet_wrap(~treatment) +    169|#   theme_minimal() +    170|#   labs(title = "Viral Community Shifts Post-Treatment",    171|#        x = "Day", y = "Relative Abundance")    172|`
+173\| 174\|## 6. Economic Analysis (China Market) 175\| 176\|### 6.1
+Cost-Benefit Analysis 177\| 178\|**Costs per 1000 birds** (¥): 179\|
+180\|`\{r\}    181|#| label: cost-benefit    182|    183|cost_benefit_cn <- tibble(    184|  item = c("Phage production (¥/dose)", "Probiotic (¥/dose)",     185|            "Administration", "Labor", "FCR improvement", "Mortality reduction"),    186|  cost_rmb = c(0.3, 0.2, 0.1, 0.2, -2.0, -1.5),  # - = savings    187|  unit = c("¥/bird", "¥/bird", "¥/bird", "¥/bird", "¥/FCR point", "¥/%")    188|)    189|    190|total_cost <- sum(cost_benefit_cn$cost_rmb[cost_benefit_cn$cost_rmb > 0])    191|total_savings <- abs(sum(cost_benefit_cn$cost_rmb[cost_benefit_cn$cost_rmb < 0]))    192|    193|ROI_cn <- (total_savings - total_cost) / total_cost * 100    194|    195|knitr::kable(cost_benefit_cn, caption = "Cost-Benefit Analysis (China, per 1000 birds)")    196|`
+197\| 198\|**Break-even**: ~3.5 production cycles (150 days). 199\|
+200\|### 6.2 Market Comparison 201\| 202\|\| Product \| Price per bird
+(¥) \| Efficacy (FCR improvement) \| Market Share \|
+203\|\|———\|———————\|—————————-\|————–\| 204\|\| **Our synergy** \| 0.6
+\| 0.15 points \| New entrant \| 205\|\| 诺安百特 (phage only) \| 0.8 \|
+0.10 points \| Leading \| 206\|\| CJ BIO (probiotic) \| 0.5 \| 0.08
+points \| Strong \| 207\|\| Antibiotics (banned) \| 0.3 \| 0.20 points
+\| Illegal \| 208\| 209\|## 7. Regulatory Pathway (China) 210\| 211\|###
+7.1 Approval Process 212\| 213\|**Timeline** (from Notion Section 13:
+Market & Commercial Context): 214\| 215\|\| Step \| Agency \| Duration
+\| Status \| 216\|\|——\|——–\|———-\|——–\| 217\|\| **Lab validation** \|
+Internal \| 3 months \| ✅ Phase 2 \| 218\|\| **Pilot trial** \| Local
+FAIRS office \| 3 months \| 🔄 Phase 3 \| 219\|\| **Full trial** \|
+Ministry of Agriculture \| 6 months \| 🔄 Phase 4 \| 220\|\| **Import
+license** \| GACC (if Germany→China) \| 3 months \| Pending \| 221\|\|
+**Production permit** \| Local government \| 3 months \| Pending \|
+222\| 223\|### 7.2 IP Strategy (Notion Section 14) 224\| 225\|- **Patent
+1**: Phage cocktail composition (Germany filed) 226\|- **Patent 2**:
+Synergy formulation (China + PCT) 227\|- **Patent 3**: Application
+method (China specific) 228\|- **Trade secret**: Probiotic strain
+selection 229\| 230\|## 8. Optimization for China Market 231\| 232\|###
+8.1 Formulation Tweaks 233\| 234\|Based on trial results: 235\| 236\|1.
+**Dosage optimization**: Reduce cost while maintaining efficacy 237\|2.
+**Delivery vehicle**: Gel vs. spray vs. feed additive 238\|3.
+**Stability**: Room temperature vs. refrigerated (China farm conditions)
+239\|4. **Combination ratio**: Phage:Probiotic optimal ratio (3:1? 5:1?)
+240\| 241\|### 8.2 Localization 242\| 243\|\| Aspect \| Germany (R&D) \|
+China (Production) \| 244\|\|——–\|—————-\|———————-\| 245\|\| **Phage
+production** \| German lab \| Transfer to China partner \| 246\|\|
+**Probiotic production** \| German strain \| Local production \| 247\|\|
+**Quality control** \| German standard \| Joint protocol \| 248\|\|
+**Distribution** \| N/A \| Partner network \| 249\| 250\|## 9.
+NotebookLM Validation 251\| 252\|### 9.1 Query for China Market Insights
+253\|
+254\|`bash    255|nlm notebook query phage-synergy "What are the regulatory requirements for phage products in China?"    256|`
+257\| 258\|### 9.2 Add Trial Results to NotebookLM 259\| 260\|After
+trial completion: 261\|
+262\|`bash    263|nlm source add phage-synergy --text "$(cat china_trial_results.txt)" \    264|  --title "China Trial Analysis pr0117"    265|`
+266\| 267\|## 10. Session Info 268\|
+269\|`\{r\}    270|#| label: session-info    271|sessionInfo()    272|`
+273\| 274\|## 11. Next Steps 275\| 276\|1. **Complete Phase 3**:
+Finalize experimental design + manuscript 277\|2. **Launch China
+trials**: Submit approval documents (Section 7.1) 278\|3. **Optimize
+formulation**: Based on German validation (Module 07) 279\|4. **Prepare
+commercialization**: Module 10 (next) 280\|5. **Market entry**: 12-month
+milestone 281\| 282\|— 283\|*Generated by qproj workflow for
+pr0117-PhageProbioticSynergy* 284\|

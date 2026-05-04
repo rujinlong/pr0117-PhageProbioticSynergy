@@ -1,81 +1,180 @@
-# 08-manuscript-draft
 Your Name
-2026-05-04
 
-- [<span class="toc-section-number">1</span> Tasks](#tasks)
-  - [<span class="toc-section-number">1.1</span> Task 1: Data
-    import](#task-1-data-import)
-- [<span class="toc-section-number">2</span> Files
-  written](#files-written)
+     1|---
+     2|title: "Manuscript Draft"
+     3|---
+     4|
+     5|# Manuscript Draft
+     6|
+     7|## Setup
+     8|
+     9|```\{r\}
+    10|#| label: setup
+    11|params <- list(name = "08-manuscript-draft")
+    12|here::i_am(paste0(params$name, ".qmd"), uuid = "h8i9j0k1-l2m3-4567-nopq-r1234567890")
+    13|
+    14|qproj::proj_create_dir_target(params$name)
+    15|path_target <- qproj::path_target(params$name)
+    16|path_source <- qproj::path_source(params$name)
+    17|
+    18|# Read upstream data
+    19|path_01 <- qproj::path_source("01-public-data-mining")
+    20|path_02 <- qproj::path_source("02-phage-host-prediction")
+    21|path_03 <- qproj::path_source("03-probiotic-target-identification")
+    22|path_04 <- qproj::path_source("04-synergy-scoring")
+    23|path_05 <- qproj::path_source("05-proxy-strain-analysis")
+    24|path_06 <- qproj::path_source("06-mechanism-exploration")
+    25|path_07 <- qproj::path_source("07-experimental-design")
+    26|```
+    27|
+    28|## Load Packages
+    29|
+    30|```\{r\}
+    31|#| label: packages
+    32|library(tidyverse)
+    33|library(here)
+    34|library(qproj)
+    35|library(ggplot2)
+    36|library(knitr)
+    37|```
+    38|
+    39|## 1. Title & Authors
+    40|
+    41|**Working Title**:
+    42|> Phage-Probiotic Synergy Platform for Animal Health: A Bioinformatics-Driven Approach to Antibiotic Alternatives in Chinese Livestock and Aquaculture
+    43|
+    44|**Authors**: (to be finalized)
+    45|- Jinlong Zhang^1,2^
+    46|- [Co-authors from Germany lab]^2^
+    47|- [Co-authors from China partner]^3^
+    48|
+    49|**Affiliations**:
+    50|1. [Your institution in China]
+    51|2. [German collaborating institution]
+    52|3. [Chinese collaborating institution]
+    53|
+    54|## 2. Abstract
+    55|
+    56|**Background**: Antibiotic resistance crisis + 禁抗令 in China → urgent need for alternatives.
+    57|
+    58|**Methods**: Bioinformatics-first strategy using:
+    59|- Public metagenomic data mining (Module 01)
+    60|- Phage-host prediction (Module 02)
+    61|- Probiotic target identification (Module 03)
+    62|- Synergy scoring system (Module 04)
+    63|- Proxy strain validation (Module 05)
+    64|- Mechanism exploration (Module 06)
+    65|
+    66|**Results**: (to be populated after experiments)
+    67|- Identified X phage-probiotic combinations
+    68|- Top combination: [Phage X + Probiotic Y] achieves synergy score of Z
+    69|- Proxy strain validation: >95% ANI to China isolates
+    70|- Mechanism: Niche clearing + metabolic synergy + immune modulation
+    71|
+    72|**Conclusions**: Phage-probiotic synergy offers effective, scalable alternative to antibiotics in Chinese animal agriculture.
+    73|
+    74|**Keywords**: Phage therapy, Probiotics, Synergy, Animal health, Chinese livestock, Aquaculture, Bioinformatics
+    75|
+    76|## 3. Introduction
+    77|
+    78|### 3.1 The Antibiotic Resistance Crisis
+    79|
+    80|- Global context: AMR causes X deaths annually
+    81|- China's 禁抗令 (antibiotic ban) in animal agriculture
+    82|- Urgent market need for alternatives
+    83|
+    84|### 3.2 Phage Therapy & Probiotics
+    85|
+    86|- Phages: Precision antimicrobials, no off-target effects
+    87|- Probiotics: Gut stabilization, immune modulation
+    88|- **Gap**: Most products treat them separately
+    89|
+    90|### 3.3 The Synergy Hypothesis
+    91|
+    92|From Notion Research Master Plan Section 3:
+    93|> "Phages can selectively eliminate pathogens that compete with probiotic bacteria for intestinal colonization sites."
+    94|
+    95|**Two sub-components**:
+    96|1. Phage-mediated pathogen clearance → niche opening
+    97|2. Probiotic colonization → enhanced gut health
+    98|
+    99|### 3.4 The Bioinformatics-First Strategy
 
-**Updated: 2026-05-04 22:51:53 CET.**
-
-<details class="code-fold">
-<summary>Code</summary>
-
-``` r
-suppressPackageStartupMessages({
-  library(here)
-  library(conflicted)
-  library(tidyverse)
-  library(data.table)
-  devtools::load_all()
-})
-# Resolve common dplyr / data.table / stats name clashes up front.
-# Add more `conflicts_prefer()` calls below as needed.
-conflicted::conflicts_prefer(
-  dplyr::filter,
-  dplyr::lag,
-  dplyr::first,
-  dplyr::last,
-  dplyr::between,
-  .quiet = TRUE
-)
-```
-
-</details>
-
-## Tasks
-
-This section is designated for your workflow implementation. **Please
-write all your analysis and processing code here.**
-
-Maintaining your code within this section ensures a clean project
-structure and facilitates reproducibility. We recommend organizing your
-workflow into modular tasks—such as data cleaning, analysis, and
-visualization—using distinct code chunks.
-
-> [!NOTE]
->
-> ### Example structure
->
-> This is an example structure to get you started. You can modify it as
-> per your needs.
-
-### Task 1: Data import
-
-<details class="code-fold">
-<summary>Code</summary>
-
-``` r
-# Your data import code here
-```
-
-</details>
-
-## Files written
-
-These files have been written to the target directory,
-data/08-manuscript-draft:
-
-<details class="code-fold">
-<summary>Code</summary>
-
-``` r
-knitr::kable(qproj::proj_dir_info(path_target(), tz = "CET"))
-```
-
-</details>
-
-| path | type | size | modification_time |
-|:-----|:-----|-----:|:------------------|
+100\| 101\|From Notion Section 8: 102\|- Start with computational
+analysis (Phase 1: 2 months) 103\|- Validate with experiments (Phase
+2-3: 3-6 months) 104\|- Scale to China market (Phase 4: 12 months) 105\|
+106\|**Advantage**: Generate preliminary data for grant applications
+within 6 months. 107\| 108\|## 4. Materials & Methods 109\| 110\|### 4.1
+Bioinformatics Pipeline 111\| 112\|**Public Data Mining (Module 01)**:
+113\|- SRA search: Poultry/aquaculture gut metagenomes 114\|- PubMed
+search: “phage probiotic synergy” (200+ papers) 115\|- Database
+construction: pathogens, probiotics, phages 116\| 117\|**Phage-Host
+Prediction (Module 02)**: 118\|- Tools: ViroProfiler, vConTACT3, deep
+learning methods 119\|- Target pathogens: *C. perfringens*, *S.
+enterica*, *E. coli*, *Vibrio* spp. 120\|- Host range prediction +
+lifestyle classification 121\| 122\|**Probiotic Target Identification
+(Module 03)**: 123\|- Niche overlap analysis (carbon sources, pH, oxygen
+tolerance) 124\|- Receptor landscape comparison 125\|- Colonization
+potential scoring 126\| 127\|**Synergy Scoring (Module 04)**: 128\|-
+Weighted scoring: Pathogen clearance (0.25) + Probiotic colonization
+(0.20) + Synergy potential (0.30) + Safety (0.15) + Commercial readiness
+(0.10) 129\|- Top combinations ranked 130\| 131\|### 4.2 Proxy Strain
+Strategy (Module 05) 132\| 133\|**Challenge**: Cannot access China local
+strains in Germany. 134\| 135\|**Solution**: 136\|1. Identify
+international reference strains (ATCC, DSMZ) 137\|2. Validate ANI \>95%
+to China isolates 138\|3. Phage susceptibility testing 139\|4.
+Technology transfer to China 140\| 141\|### 4.3 Experimental Design
+(Module 07) 142\| 143\|**In Vitro (Germany)**: 144\|- Phage isolation
+from samples 145\|- Host range testing (proxy strains) 146\|- Synergy
+assays (2×2 factorial design) 147\| 148\|**Animal Trials (China)**:
+149\|- Poultry model: 1000 broilers, 42-day trial 150\|- Metrics: FCR,
+mortality, gut microbiota, lesion scores 151\| 152\|## 5. Results 153\|
+154\|### 5.1 Bioinformatics Findings 155\| 156\|*To be populated after
+running analyses* 157\| 158\|**Expected outputs**: 159\|- Table 1: Top 5
+phage-probiotic combinations with synergy scores 160\|- Figure 1:
+Phage-host prediction network (vConTACT3) 161\|- Figure 2: Niche overlap
+heatmap (pathogens vs. probiotics) 162\|- Figure 3: Synergy scoring
+dashboard 163\| 164\|### 5.2 Proxy Strain Validation 165\| 166\|*To be
+populated after Module 05* 167\| 168\|**Expected outputs**: 169\|- Table
+2: Proxy strain candidates with ANI scores 170\|- Figure 4: Phylogenetic
+tree (proxy vs. China isolates) 171\|- Figure 5: Phage susceptibility
+comparison 172\| 173\|### 5.3 Experimental Results 174\| 175\|*To be
+populated after Phase 3 experiments* 176\| 177\|**Expected outputs**:
+178\|- Table 3: In vitro synergy metrics 179\|- Figure 6: Pathogen
+reduction over time (CFU) 180\|- Figure 7: Probiotic colonization
+enhancement 181\|- Figure 8: Gut microbiota Shannon diversity 182\|
+183\|## 6. Discussion 184\| 185\|### 6.1 Key Findings 186\| 187\|*To be
+written after results* 188\| 189\|### 6.2 Comparison to Existing
+Products 190\| 191\|**Competitors** (from Notion Section 13): 192\|-
+青岛诺安百特 (Qingdao Nuo’anbai): Leading domestic phage product 193\|-
+CJ BIO (Korea): Commercial presence in China 194\| 195\|**Our
+advantage**: 196\|- Synergy approach (not mono-therapy) 197\|-
+Bioinformatics-driven (faster R&D) 198\|- Germany-China pipeline (lab
+validation → market) 199\| 200\|### 6.3 Mechanism Insights (Module 06)
+201\| 202\|*To be populated after mechanism exploration* 203\|
+204\|**Expected insights**: 205\|- Niche clearing → reduced competition
+206\|- Metabolic cross-feeding → enhanced probiotic growth 207\|- Immune
+modulation → better gut health 208\| 209\|### 6.4 Limitations 210\|
+211\|- Proxy strain approximation (not identical to China isolates)
+212\|- In vitro to in vivo translation 213\|- Regulatory pathways (China
+market access) 214\| 215\|## 7. Conclusion 216\| 217\|*To be written
+after completing all phases* 218\| 219\|**Impact**: 220\|- Scientific:
+Novel synergy mechanism understanding 221\|- Commercial:
+Ready-for-market product for Chinese animal agriculture 222\|- Societal:
+Contribution to antibiotic reduction goals (禁抗令) 223\| 224\|## 8.
+References 225\| 226\|*To be populated from NotebookLM sources (34
+imported)* 227\| 228\|Use Zotero integration for citation management.
+229\| 230\|## 9. NotebookLM Integration 231\| 232\|### 9.1 Query for
+Writing Assistance 233\|
+234\|`bash    235|nlm notebook query phage-synergy "What are the latest findings on phage-probiotic synergy in poultry?"    236|`
+237\| 238\|### 9.2 Add Draft to NotebookLM 239\| 240\|After completing
+sections, add to NotebookLM for validation: 241\|
+242\|`bash    243|nlm source add phage-synergy --text "$(cat manuscript_draft.txt)" \    244|  --title "Manuscript Draft pr0117"    245|`
+246\| 247\|## 10. Session Info 248\|
+249\|`\{r\}    250|#| label: session-info    251|sessionInfo()    252|`
+253\| 254\|## 11. Next Steps 255\| 256\|1. **Complete analyses**
+(Modules 01-06) → populate Results 257\|2. **Run experiments** (Module
+07) → generate data 258\|3. **Draft full manuscript** → submit to
+journal 259\|4. **Parallel work**: Module 09 (China trials) + Module 10
+(Commercialization) 260\| 261\|— 262\|*Generated by qproj workflow for
+pr0117-PhageProbioticSynergy* 263\|
