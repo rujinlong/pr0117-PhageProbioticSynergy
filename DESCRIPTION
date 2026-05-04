@@ -1,0 +1,12 @@
+Package: PhageProbioticSynergy
+Title: Phage-Probiotic Synergy Platform for Animal Health
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Jinlong", family = "Zhang", email = "jinlong@gdou.edu.cn", role = c("aut", "cre")))
+Maintainer: Jinlong Zhang <jinlong@gdou.edu.cn>
+Description: Computational framework for analyzing phage-probiotic synergy in animal health applications. 
+    Implements bioinformatics pipelines for phage-host prediction, probiotic targeting, and synergy mechanism analysis.
+License: MIT + file LICENSE
+URL: https://github.com/rujinlong/pr0117-PhageProbioticSynergy
+BugReports: https://github.com/rujinlong/pr0117-PhageProbioticSynergy/issues
+Encoding: UTF-8
