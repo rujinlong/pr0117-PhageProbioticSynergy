@@ -68,11 +68,19 @@ Here we present a bioinformatics-driven platform for rational phage-probiotic sy
 
 ## 3. Results
 
+### Figure 1: Conceptual model of targeted niche re-engineering
+
+![Conceptual model showing phage-probiotic synergy mechanism: niche clearing, metabolic cross-feeding, and immune modulation leading to stable colonization.](figures/figure1_conceptual_model.jpg)
+
 ### 3.1 Bioinformatics Discovery of Phage-Probiotic Interactions
 
 We began by mining public metagenomic datasets to construct vOTU-host interaction networks using vConTACT3 with a 95% ANI clustering threshold. Our computational pipeline identified 847 viral contigs across 23 samples, which clustered into 312 high-confidence vOTUs. Network analysis revealed that phages targeting Enterobacteriaceae family members exhibited the highest predicted host range breadth, with an average of 4.2 potential host species per vOTU.
 
 Synergy scoring integrated four weighted metrics: pathogen clearance potential (0.35), probiotic colonization enhancement (0.30), safety profile (0.20), and metabolic complementarity (0.15). The top-ranking phage-probiotic combination, vOTU_142 (targeting *Salmonella enterica*) with *Lactobacillus plantarum*, achieved a synergy score of 0.89, significantly outperforming empirical combinations (p < 0.001, Wilcoxon rank-sum test). Heatmap visualization of niche overlap scores demonstrated that rational pairings exploited complementary metabolic capabilities, with phages providing liberation of carbohydrates and amino acids that directly fueled probiotic growth.
+
+### Figure 4: vOTU-host interaction network
+
+![Network graph showing vOTU_142 (phage) interactions with Salmonella enterica and Lactobacillus plantarum. Node colors: purple=Enterobacteriaceae, green=Lactobacillaceae. Edge thickness represents interaction confidence.](figures/figure4_network.jpg)
 
 ### 3.2 In Vitro Validation of Synergistic Activity
 
@@ -110,6 +118,10 @@ We propose "targeted niche re-engineering" as a unifying conceptual model integr
 
 This model advances beyond descriptive studies by providing mechanistic links between phage-host dynamics and community-level outcomes. Our observation of cascading effects, where targeted pathogen removal reshapes entire microbial networks, aligns with recent findings that phages serve as keystone predators in gut ecosystems.
 
+### Figure 5: Ecological model of phage-probiotic synergy in gut microbiome
+
+![Ecological model showing three trophic levels: pathogens (red) targeted by phages, commensals (green) expanding after pathogen removal, and probiotics (blue) colonizing vacated niches. Interaction arrows show niche clearing, nutrient release, and stable colonization.](figures/figure5_ecological_model.jpg)
+
 ### 4.3 Integration with the Literature
 
 Our work complements emerging studies on phage-bacteria coevolution and microbiome stability. While Hsu et al. demonstrated cascading effects[1] of phages on non-target microbiota, and Gordillo Altamirano et al. highlighted heteroresistance[3] as a major barrier to phage therapy, our study provides the first computational-experimental pipeline that anticipates and overcomes these challenges through rational design.
@@ -131,6 +143,14 @@ While demonstrated here within an avian model to combat agricultural antibiotic 
 The platform's modular design allows rapid reconfiguration for emerging pathogens, making it a valuable tool in the accelerating race between antimicrobial innovation and bacterial evolution.
 
 ## 5. Methods
+
+### Figure 2: Bioinformatics pipeline for phage-probiotic synergy prediction
+
+![Bioinformatics pipeline: from raw metagenomic data to synergy prediction and validation. Color-coded stages: data (blue), QC (yellow), analysis (green), output (purple).](figures/figure2_pipeline.jpg)
+
+### Figure 6: Experimental process timeline
+
+![Process timeline showing 6 steps from metagenomic mining to community restructuring. Color-coded: blue=data, yellow=prediction, green=validation, purple=outcome. Step numbers in circles.](figures/figure6_timeline.jpg)
 
 ### 5.1 Metagenomic Data Acquisition and Processing
 
