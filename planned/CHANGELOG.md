@@ -215,3 +215,79 @@ analyses/*.qmd          → Analysis modules (untouched)
 **End of CHANGELOG.md**
 
 *This file tracks all major changes to project documentation. For the current authoritative research plan, see `planned/PROJECT_PLAN.md`. For the audit report that motivated this restructuring, see `planned/RESEARCH_AUDIT_REPORT.md`.*
+
+---
+
+## v3 Additional Cleanup (2026-05-05)
+
+**Type**: Repository cleanup (per user instruction "执行")
+
+**Actions Taken**:
+1. ✅ **Deleted `planned/RESEARCH_TASKS.md`**
+   - Reason: Replaced by `planned/PROJECT_PLAN.md` (sole authority)
+   - Avoids dual-truth problem
+
+2. ✅ **Moved old qmd files to `planned/archive/`**
+   - Files: `11-synergy-network-modeling.qmd` through `17-cost-benefit-analysis.qmd` (7 files)
+   - Reason: These are v1 cross-species era files, no longer relevant
+   - Recovery: Available in `planned/archive/` if needed
+
+3. ✅ **Created `scripts/` directory with placeholder scripts**
+   - `task1_baseline_calibration.R`
+   - `task2_transwell_metabolomics.R`
+   - `task3_git_stability.R`
+   - `task4_in_vivo_analysis.R`
+   - `task5_microbiome_exploratory.R`
+   - `task6_economic_scenario.py`
+   - `task7_power_analysis.R`
+   - Reason: Referenced in PROJECT_PLAN.md as "to be created"
+
+4. ✅ **Created `references/` with symlink**
+   - `bibliography.bib` → `/Users/cmbjx/storage/references.bib`
+   - Per user memory: "Zotero references.bib 位于 /Users/cmbjx/storage/references.bib...严禁编辑此文件"
+
+5. ✅ **Moved `RESEARCH_AUDIT_REPORT.md` to `planned/`**
+   - Reason: Consistent with other planning documents
+   - Now at: `planned/RESEARCH_AUDIT_REPORT.md`
+
+6. ✅ **Cleaned `analyses/` directory**
+   - Removed: `*_cache/` directories (15 dirs)
+   - Removed: `*_files/` directories (16 dirs)
+   - Removed: `*.html` files (17 files)
+   - Removed: `*.gfm.md` files (1 file)
+   - Kept: `*.qmd`, `*.md`, `*.pdf`, `data/`, `figures/`, `_quarto.yml`, `README.md`
+
+7. ✅ **Removed residual files**
+   - Removed: `analyses/analyses/` (nested directory)
+   - Removed: `analyses/.jupyter_cache/`, `analyses/.quarto/`
+   - Removed: `errors.log`, `notebook_create.log` (root level)
+
+**Final Directory Structure**:
+```
+pr0117-PhageProbioticSynergy/
+├── README.md                          # Repository entry (navigation only)
+├── DESCRIPTION
+├── NAMESPACE
+├── PhageProbioticSynergy.Rproj
+├── .gitignore
+├── .manuscript-review-state.json
+├── planned/                           # ★ Planning documents
+│   ├── PROJECT_PLAN.md               # Sole authoritative research plan
+│   ├── CHANGELOG.md                  # This file (version history)
+│   ├── RESEARCH_AUDIT_REPORT.md      # Codex audit (reference)
+│   └── archive/                      # v1 cross-species files (7 qmd)
+├── analyses/                          # qproj analysis modules (untouched)
+│   ├── 01-*.qmd, 02-*.qmd, ...    # Analysis files (kept)
+│   ├── data/
+│   ├── figures/
+│   └── README.md
+├── scripts/                           # Placeholder scripts (created)
+│   ├── task1_*.R through task7_*.R/py
+├── references/                        # Bibliography symlink
+│   └── bibliography.bib → /Users/cmbjx/storage/references.bib
+└── notebooklm-output/                 # Kept (user may need)
+    └── pr0117-slides.pdf
+```
+
+**Status**: ✅ Repository fully restructured per Codex recommendations.
+**Next Step**: Begin Task 1 (In Vitro Baseline Calibration) execution.

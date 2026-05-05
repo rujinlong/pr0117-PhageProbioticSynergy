@@ -35,3 +35,4 @@ zotero_search*.json
 # Manuscript review state (auto-generated)
 .manuscript-review-state.json
 .claude/
+analyses/*_cache
