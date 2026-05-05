@@ -6,3 +6,32 @@
 analyses/data/*
 analyses/tmp/
 !analyses/data/README.md
+
+# Quarto cache and rendered output
+*_cache/
+*.html
+*_files/
+.jupyter_cache/
+
+# Logs
+*.log
+
+# Temporary files
+round*.log
+notebook_*.txt
+upload.log
+pipeline.log
+drive_search.log
+
+# NotebookLM output
+notebooklm-output/
+
+# PDF (keep only specific ones if needed)
+*.pdf
+
+# Zotero search temp files
+zotero_search*.json
+
+# Manuscript review state (auto-generated)
+.manuscript-review-state.json
+.claude/

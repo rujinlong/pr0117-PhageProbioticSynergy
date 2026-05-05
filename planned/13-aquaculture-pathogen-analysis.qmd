@@ -1,0 +1,292 @@
+---
+title: "Aquaculture Pathogen Analysis (Extension)"
+params:
+  name: "13-aquaculture-pathogen-analysis"
+---
+
+# Aquaculture Pathogen Analysis
+
+## Setup
+
+```{r setup}
+#| label: setup
+here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- here::here("analyses", params$name, "target")
+path_source <- here::here("analyses", params$name, "source")
+
+# Read upstream data
+path_02 <- here::here("analyses", "02-phage-host-prediction", "source")
+path_03 <- here::here("analyses", "03-probiotic-target-identification", "source")
+path_11 <- here::here("analyses", "11-synergy-network-modeling", "source")
+```
+
+## Load Packages
+
+```{r packages}
+#| label: packages
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+library(ggrepel)  # For labeling points
+```
+
+## 1. Objective
+
+Focus on aquaculture-specific pathogens and optimize phage-probiotic synergy for aquatic farming.
+
+**Aquaculture context**:
+- **Target species**: Fish (tilapia, catfish, carp), shrimp, shellfish
+- **Key pathogens**: *Aeromonas hydrophila*, *Vibrio spp.*, *Edwardsiella tarda*
+- **Environmental factors**: Water temperature, salinity, pH, oxygen
+- **Probiotic candidates**: *Bacillus spp.*, *Lactobacillus spp.*, *Enterococcus spp.*
+
+---
+
+## 2. Aquaculture Pathogen Database
+
+### 2.1 Major Aquaculture Pathogens
+
+| Pathogen | Disease | Host Range | Mortality | Phage Available |
+|----------|---------|------------|-----------|------------------|
+| *Aeromonas hydrophila* | Motile Aeromonad Septicemia | Freshwater fish | 30-70% | ✓ (Multiple) |
+| *Vibrio harveyi* | Vibriosis | Marine fish/shrimp | 50-90% | ✓ (Some) |
+| *Vibrio anguillarum* | Vibriosis | Marine fish | 40-80% | ✓ (Limited) |
+| *Edwardsiella tarda* | Edwardsiellosis | Freshwater fish | 20-60% | ✗ (Rare) |
+| *Streptococcus iniae* | Streptococcosis | Various fish | 30-50% | ✗ (None) |
+| *Yersinia ruckeri* | Enteric Redmouth Disease | Trout | 10-40% | ✓ (Some) |
+
+### 2.2 Pathogen Genomics
+
+**Genome features relevant to phage therapy**:
+- **Prophage load**: High prophage count → lysogenic phages (avoid)
+- **CRISPR arrays**: Number of spacers → phage resistance risk
+- **Capsule/ biofilm**: Phage accessibility issues
+- **Antibiotic resistance**: Co-selection with phage resistance
+
+```{python pathogen-genomics}
+#| label: pathogen-genomics
+#| eval: false
+
+import pandas as pd
+
+# Aquaculture pathogen database (example)
+pathogen_db = pd.DataFrame({
+    'species': ['Aeromonas_hydrophila', 'Vibrio_harveyi', 'Vibrio_anguillarum', 
+                'Edwardsiella_tarda', 'Streptococcus_iniae'],
+    'genome_size_mbp': [3.5, 5.8, 4.2, 3.8, 2.1],
+    'gc_content': [61.5, 45.2, 44.8, 53.2, 36.5],
+    'prophage_count': [3, 5, 2, 1, 0],  # Estimated
+    'crispr_arrays': [2, 3, 2, 1, 0],
+    'crispr_spacers': [28, 35, 22, 15, 0],
+    'biofilm_forming': [True, True, True, False, True],
+    'antibiotic_resistance': ['multi-drug', 'beta-lactam', 'multi-drug', 'quinolone', 'macrolide'],
+    'aquaculture_host': ['freshwater', 'marine', 'marine', 'freshwater', 'various']
+})
+
+print("Aquaculture Pathogen Database:")
+print(pathogen_db)
+
+# Risk score: higher = more challenging for phage therapy
+pathogen_db['phage_risk_score'] = (
+    pathogen_db['prophage_count'] * 0.3 + 
+    pathogen_db['crispr_spacers'] * 0.05 + 
+    pathogen_db['biofilm_forming'].astype(int) * 0.5
+)
+
+pathogen_db_sorted = pathogen_db.sort_values('phage_risk_score', ascending=False)
+print("\nPathogen Risk Ranking (higher = harder to treat with phages):")
+print(pathogen_db_sorted[['species', 'phage_risk_score', 'aquaculture_host']])
+```
+
+---
+
+## 3. Environmental Factors
+
+### 3.1 Water Quality Parameters
+
+**Critical factors affecting phage-probiotic synergy in aquaculture**:
+
+| Factor | Optimal Range | Effect on Phage | Effect on Probiotic |
+|--------|----------------|-------------------|-------------------|
+| Temperature | 25-30°C | Affects phage replication rate | Affects probiotic growth |
+| Salinity | 0-35 ppt | Marine phages vs freshwater | Probiotic salt tolerance |
+| pH | 6.5-8.5 | Phage stability | Probiotic survival |
+| Dissolved O₂ | >5 mg/L | Minimal | Essential for aerobes |
+| Organic matter | <20 mg/L | Can inactivate phages | Nutrient source |
+
+### 3.2 Simulate Environmental Effects
+
+```{python env-simulation}
+#| label: env-simulation
+#| eval: false
+
+import numpy as np
+import pandas as pd
+
+# Simulate phage stability under different conditions
+def phage_stability_score(temp, salinity, pH):
+    """
+    Simplified model: phage stability index (0-1)
+    Higher = more stable
+    """
+    # Temperature effect (optimal around 25-30°C)
+    temp_score = 1.0 - abs(temp - 27.5) / 20.0
+    temp_score = max(0, min(1, temp_score))
+    
+    # Salinity effect (marine phages more tolerant)
+    salinity_score = 1.0 - salinity / 50.0
+    salinity_score = max(0, min(1, salinity_score))
+    
+    # pH effect (optimal 7.0-8.0)
+    ph_score = 1.0 - abs(pH - 7.5) / 5.0
+    ph_score = max(0, min(1, ph_score))
+    
+    # Combined score (simplified)
+    return (temp_score + salinity_score + ph_score) / 3
+
+# Test different aquaculture scenarios
+scenarios = [
+    {'name': 'Freshwater pond', 'temp': 28, 'salinity': 0, 'pH': 7.2},
+    {'name': 'Brackish water', 'temp': 26, 'salinity': 15, 'pH': 7.8},
+    {'name': 'Marine cage', 'temp': 25, 'salinity': 35, 'pH': 8.1},
+    {'name': 'Cold freshwater', 'temp': 15, 'salinity': 0, 'pH': 6.8}
+]
+
+results = []
+for s in scenarios:
+    score = phage_stability_score(s['temp'], s['salinity'], s['pH'])
+    results.append({
+        'scenario': s['name'],
+        'temperature': s['temp'],
+        'salinity': s['salinity'],
+        'pH': s['pH'],
+        'phage_stability': score
+    })
+
+df_scenarios = pd.DataFrame(results)
+print("Phage Stability under Different Aquaculture Conditions:")
+print(df_scenarios)
+```
+
+---
+
+## 4. Probiotic Candidates for Aquaculture
+
+### 4.1 Top Probiotic Species
+
+Based on literature and Module 03 analysis, adapted for aquaculture:
+
+| Probiotic | Target Pathogen | Aquaculture Use | Mechanism | Evidence |
+|-----------|-----------------|------------------|------------|----------|
+| *Bacillus subtilis* | *A. hydrophila* | ✓ Widely used | Competitive exclusion, bacteriocins | Strong |
+| *Bacillus licheniformis* | *V. harveyi* | ✓ Common | Spore-former, stable in water | Moderate |
+| *Lactobacillus plantarum* | *E. tarda* | ✓ Freshwater | Acidification, adhesion | Moderate |
+| *Enterococcus faecium* | *S. iniae* | ✓ Some use | Competitive exclusion | Limited |
+| *Pediococcus acidilactici* | Various | ✓ Emerging | Lactic acid, bacteriocins | Growing |
+
+### 4.2 Aquaculture-Specific Scoring
+
+**Additional criteria for aquaculture**:
+- **Spore-forming ability** (for *Bacillus*): Survival in water
+- **Salt tolerance**: For marine/brackish systems
+- **Temperature tolerance**: 15-35°C range
+- **Water column stability**: Not quickly sedimenting
+
+---
+
+## 5. Synergy Optimization for Aquaculture
+
+### 5.1 Phage-Probiotic Pairing Strategy
+
+**Strategy for different aquaculture systems**:
+
+1. **Freshwater ponds** (tilapia, catfish):
+   - Pathogen: *A. hydrophila*, *E. tarda*
+   - Probiotic: *B. subtilis* (spore-former, stable)
+   - Phage: *A. hydrophila*-specific (lytic, broad host range within species)
+
+2. **Marine cages** (sea bass, sea bream):
+   - Pathogen: *V. harveyi*, *V. anguillarum*
+   - Probiotic: *B. licheniformis* (salt-tolerant)
+   - Phage: *Vibrio*-specific (consider phage cocktails)
+
+3. **Shrimp ponds**:
+   - Pathogen: *V. harveyi*, *V. parahaemolyticus*
+   - Probiotic: *B. subtilis* + *L. plantarum* (combination)
+   - Phage: *Vibrio* phage cocktail (3-4 phages)
+
+### 5.2 Dosing and Delivery
+
+**Key considerations**:
+- **Water volume**: Dose per m³ (phage: 10³-10⁶ PFU/L, probiotic: 10⁶-10⁸ CFU/L)
+- **Delivery method**: Direct addition vs encapsulated (slow release)
+- **Timing**: Probiotic first (3-5 days), then phage (establish niche)
+- **Monitoring**: Weekly water sampling + qPCR for pathogen load
+
+---
+
+## 6. Risk Assessment for Aquaculture
+
+### 6.1 Phage Resistance Evolution (Aquaculture Context)
+
+**Higher risk factors**:
+- High pathogen density in ponds (10⁶-10⁸ CFU/mL)
+- Continuous phage exposure (vs pulsed)
+- Sub-lethal phage doses (incomplete lysis)
+
+**Mitigation strategies**:
+- **Phage cocktails** (3-5 phages targeting different receptors)
+- **Rotating phages** (every 2-3 weeks)
+- **Combine with probiotics** (reduces selection pressure)
+- **Monitor CRISPR spacers** (early warning system)
+
+### 6.2 Regulatory and Safety
+
+- **Phage approval**: USDA/FDA regulations (US), EFSA (EU)
+- **Probiotic GRAS status**: Ensure aquaculture-approved strains
+- **Environmental release**: Risk of phage dispersal to wild populations
+- **Antibiotic interaction**: Avoid during antibiotic treatment
+
+---
+
+## 7. Integration with NotebookLM
+
+### 7.1 Query for Aquaculture Evidence
+
+```bash
+nlm notebook query phage-synergy "What are the most effective probiotic strains for Vibrio control in shrimp aquaculture?"
+```
+
+### 7.2 Add Aquaculture Data
+
+```bash
+nlm source add phage-synergy --text "$(cat aquaculture_pathogen_db.csv)" \
+  --title "Aquaculture Pathogen Database pr0117"
+```
+
+---
+
+## 8. Session Info
+
+```{r session-info}
+#| label: session-info
+sessionInfo()
+```
+
+---
+
+## 9. Next Steps
+
+1. **Validate pathogen database** with NotebookLM literature search
+2. **Run Module 11** (FBA) for aquaculture probiotics
+3. **Run Module 12** (CRISPR simulation) for aquaculture pathogens
+4. **Design pilot trial** (e.g., tilapia + *A. hydrophila* + *B. subtilis* + phage)
+5. **Proceed to Module 14** (System Biology Integration)
+
+---
+
+*Extension module for pr0117-PhageProbioticSynergy*
+*Focus: Aquaculture-specific optimization*

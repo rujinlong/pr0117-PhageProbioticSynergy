@@ -1,0 +1,325 @@
+---
+title: "Regulatory Pathway (Extension)"
+params:
+  name: "16-regulatory-pathway"
+---
+
+# Regulatory Pathway
+
+## Setup
+
+```{r setup}
+here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- here::here("analyses", params$name, "target")
+path_source <- here::here("analyses", params$name, "source")
+
+# Read upstream data
+path_10 <- here::here("analyses", "10-commercialization-analysis", "source")
+path_14 <- here::here("analyses", "14-system-biology-integration", "source")
+path_15 <- here::here("analyses", "15-multi-omics-integration", "source")
+```
+
+## Load Packages
+
+```{r packages}
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+library(kableExtra)  # For nice tables
+library(DiagrammeR)  # For flowcharts
+```
+
+## 1. Objective
+
+Navigate regulatory pathways for phage-probiotic synergy products in aquaculture.
+
+**Regulatory bodies**:
+- **USA**: FDA (Food and Drug Administration)
+- **EU**: EFSA (European Food Safety Authority)
+- **China**: NMPA (National Medical Products Administration) + MOA
+- **Global**: OIE (World Organisation for Animal Health)
+
+**Goal**: Map regulatory requirements and design compliance strategy.
+
+---
+
+## 2. Regulatory Classification
+
+### 2.1 Product Categories
+
+| Product Type | Regulatory Pathway | Examples | Timeline |
+|-------------|-------------------|----------|----------|
+| **Phage product** | Veterinary drug (FDA CVM) | Phage cocktail for *A. hydrophila* | 3-5 years |
+| **Probiotic** | Feed additive (FDA CVM) | *B. subtilis* spores | 1-2 years |
+| **Combination** | Investigational New Animal Drug (INAD) | Phage + probiotic | 4-6 years |
+| **Biologic** | Biologics License (USDA) | Live phage/probiotic | 5-7 years |
+
+### 2.2 Key Regulatory Hurdles
+
+| Requirement | Phage | Probiotic | Combination |
+|-------------|--------|-----------|------------|
+| **Safety** | Lack pathogenicity, toxin genes | GRAS status, antibiotic resistance | Both |
+| **Efficacy** | >90% pathogen reduction | Colonization proof | Synergy proof |
+| **Quality** | Titer stability, sterility | CFU counts, purity | Both + interaction |
+| **Environmental** | No ecological disruption | No antibiotic resistance spread | Both |
+| **Labeling** | Phage identity, host range | Strain, CFU count | Both |
+
+---
+
+## 3. FDA Pathway (USA)
+
+### 3.1 Investigational New Animal Drug (INAD)
+
+**Steps**:
+1. **Pre-INAD meeting**: Discuss study design with FDA CVM
+2. **INAD application**: Submit manufacturing, safety, efficacy data
+3. **Clinical trials**: Field trials in aquaculture settings
+4. **New Animal Drug Application (NADA)**: Full submission
+5. **Approval**: Conditional or full approval
+
+```{r fda-timeline}
+#| eval: false
+
+library(ggplot2)
+library(lubridate)
+
+# FDA timeline (example)
+fda_steps <- tibble(
+  step = c("Pre-INAD", "INAD Submission", "Phase I Trial", 
+            "Phase II Trial", "Phase III Trial", "NADA Submission", "Approval"),
+  start_date = as.Date(c("2026-01", "2026-06", "2027-01", 
+                         "2027-07", "2028-01", "2028-07", "2029-01"),
+  duration_months = c(6, 6, 12, 12, 18, 12, 6)
+)
+
+fda_steps <- fda_steps %>%
+  mutate(
+    end_date = start_date %m+% months(duration_months),
+    y_position = 1:7
+  )
+
+ggplot(fda_steps, aes(x = start_date, xend = end_date, 
+                         y = y_position, yend = y_position)) +
+  geom_segment(color = "steelblue", size = 8, alpha = 0.7) +
+  geom_text(aes(x = start_date + (end_date - start_date)/2, 
+            y = y_position, label = step),
+            size = 3, color = "white") +
+  theme_minimal() +
+  labs(title = "FDA Regulatory Timeline (INAD → Approval)",
+       x = "", y = "") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+### 3.2 Required Documentation
+
+| Document | Content | Timeline |
+|-----------|---------|----------|
+| **Chemistry, Manufacturing, Controls (CMC)** | Phage purification, titer, stability | Month 1-6 |
+| **Safety studies** | Acute/chronic toxicity, environmental impact | Month 6-18 |
+| **Efficacy studies** | Field trials, statistical analysis | Month 12-30 |
+| **Environmental Assessment (EA)** | Ecological risk, non-target effects | Month 18-24 |
+| **Labeling** | Claims, directions for use | Month 30-36 |
+
+---
+
+## 4. EFSA Pathway (EU)
+
+### 4.1 Feed Additive Authorization
+
+**Regulation (EC) No 1831/2003**:
+1. **Dossier preparation**: Technical, safety, efficacy data
+2. **EFSA assessment**: Scientific opinion
+3. **EU Commission decision**: Authorization
+4. **Listing**: EU Register of Feed Additives
+
+### 4.2 Comparative Requirements
+
+| Aspect | FDA (USA) | EFSA (EU) | Difference |
+|--------|------------|------------|------------|
+| **Data requirements** | Extensive | Very extensive | EU more detailed |
+| **Timeline** | 3-5 years | 4-6 years | EU longer |
+| **Cost** | $2-5M | €3-7M | EU slightly higher |
+| **Post-market** | Required | Required | Both require monitoring |
+
+---
+
+## 5. China Pathway
+
+### 5.1 NMPA + MOA Dual Track
+
+**For veterinary drugs**:
+1. **NMPA**: Drug registration (import/domestic)
+2. **MOA**: Feed additive approval
+3. **Provincial**: Local registration for aquaculture use
+
+### 5.2 Accelerated Pathways
+
+| Pathway | Eligibility | Timeline | Cost |
+|---------|--------------|----------|------|
+| **Innovative Drug** | Novel mechanism (phage-probiotic) | 2-3 years | ¥5-10M |
+| **Generic Drug** | Existing phage/probiotic | 1-2 years | ¥2-5M |
+| **Emergency Use** | Disease outbreak | 6-12 months | ¥1-3M |
+
+---
+
+## 6. Combination Product Strategy
+
+### 6.1 Regulatory Challenges
+
+**Phage + Probiotic combination**:
+- **Primary mode of action**: Which product is "lead"?
+- **Interaction studies**: Phage affects probiotic? Vice versa?
+- **Stability**: Shelf-life of combination product
+- **Dosing**: Separate vs co-administration
+
+### 6.2 Proposed Pathway
+
+```
+Pre-clinical → INAD (Combination) → Phase I/II → Phase III → NADA → Approval
+     ↓
+  Separate INDs (phage + probiotic as backup)
+```
+
+---
+
+## 7. Compliance Checklist
+
+### 7.1 Pre-submission
+
+- [ ] **GMP facility**: Phage purification (FDA 21 CFR Part 211)
+- [ ] **Stability studies**: 6 months real-time, 3 months accelerated
+- [ ] **Sterility testing**: USP <71> (sterility tests)
+- [ ] **Endotoxin testing**: Phage preparations (<1 EU/mg)
+- [ ] **Antibiotic resistance**: Probiotic strain characterization
+- [ ] **Toxin gene screening**: Phage genome annotation
+
+### 7.2 Clinical Trials
+
+- [ ] **Protocol approval**: IACUC/IRB for animal studies
+- [ ] **Randomized design**: Control vs treatment vs combination
+- [ ] **Sample size**: Power analysis (80% power, α=0.05)
+- [ ] **Endpoints**: Pathogen load (log reduction), fish survival (%)
+- [ ] **Statistics**: ANOVA, Tukey HSD for multiple comparisons
+
+---
+
+## 8. Cost Estimation
+
+### 8.1 Regulatory Costs (FDA Pathway)
+
+| Item | Cost (USD) | Notes |
+|------|-------------|-------|
+| **Consultant fees** | $100,000 | Regulatory affairs specialist |
+| **CMC studies** | $300,000 | Manufacturing, stability |
+| **Safety studies** | $500,000 | Toxicology, environmental |
+| **Efficacy trials** | $800,000 | Field trials (3 sites × 2 years) |
+| **NADA preparation** | $200,000 | Dossier compilation |
+| **FDA user fees** | $500,000 | PDUFA/ADUFA fees |
+| **Contingency** | $300,000 | 10% buffer |
+| **Total** | **$2,700,000** | ~¥19M |
+
+### 8.2 Cost-Benefit Visualization
+
+```{r cost-benefit-reg}
+#| eval: false
+
+library(ggplot2)
+
+# Regulatory investment vs market access
+reg_data <- tibble(
+  pathway = c("Probiotic only", "Phage only", "Combination"),
+  cost_m = c(1.5, 2.0, 2.7),  # Million USD
+  time_years = c(2, 3, 5),
+  market_size_m = c(10, 15, 25)  # Million USD
+)
+
+ggplot(reg_data, aes(x = cost_m, y = market_size_m, size = time_years)) +
+  geom_point(alpha = 0.7, color = "steelblue") +
+  geom_text(aes(label = pathway), vjust = -1, size = 3) +
+  theme_minimal() +
+  labs(title = "Regulatory Cost vs Market Opportunity",
+       x = "Regulatory Cost (Million USD)",
+       y = "Market Size (Million USD)") +
+  scale_size_continuous(name = "Timeline (Years)")
+```
+
+---
+
+## 9. Risk Mitigation
+
+### 9.1 Regulatory Risks
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| **Rejection** | Medium | High | Pre-IND meeting, expert consultant |
+| **Delay** | High | Medium | Buffers in timeline, parallel activities |
+| **Additional studies** | Medium | Medium | Conservative study design |
+| **Label restrictions** | Low | High | Clear efficacy data, safety margin |
+
+### 9.2 Strategy Recommendations
+
+1. **Hire regulatory consultant** with phage experience
+2. **Start with probiotic** (faster approval, lower cost)
+3. **Parallel INAD** for phage (longer timeline)
+4. **Combination data** from pilot trials (Module 07-08)
+5. **International strategy**: FDA first, then EFSA/China
+
+---
+
+## 10. Integration with Other Modules
+
+### 10.1 Link to Module 10 (Commercialization)
+
+- Regulatory costs → Market entry budget
+- Approval timeline → Launch date
+- Label claims → Marketing strategy
+
+### 10.2 Link to Module 14 (System Biology)
+
+- Efficacy data → DSS synergy score validation
+- Safety data → Environmental risk assessment
+- Post-market monitoring → Adaptive management
+
+---
+
+## 11. Integration with NotebookLM
+
+### 11.1 Query for Regulatory Evidence
+
+```bash
+nlm notebook query phage-synergy "What are recent FDA approvals for phage therapy in aquaculture?"
+```
+
+### 11.2 Add Regulatory Data
+
+```bash
+nlm source add phage-synergy --text "$(cat fda-regulatory-checklist.csv)" \
+  --title "Regulatory Pathway pr0117"
+```
+
+---
+
+## 12. Session Info
+
+```{r session-info}
+sessionInfo()
+```
+
+---
+
+## 13. Next Steps
+
+1. **Hire regulatory consultant** (Month 1)
+2. **Pre-INAD meeting** with FDA CVM (Month 3)
+3. **Start probiotic approval** (faster market entry)
+4. **Simultaneous phage INAD** (longer preparation)
+5. **Proceed to Module 17** (Cost-Benefit Analysis)
+
+---
+
+*Extension module for pr0117-PhageProbioticSynergy*
+*Regulatory navigation: FDA → EFSA → China → Global market access*

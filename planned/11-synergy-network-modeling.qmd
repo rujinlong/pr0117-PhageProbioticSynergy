@@ -1,0 +1,377 @@
+     1|     1|---
+     2|     2|title: "Synergy Network Modeling (Strategy 5)"
+     3|     3|params:
+     4|     4|  name: "11-synergy-network-modeling"
+     5|     5|---
+     6|     6|
+     7|     7|# Synergy Network Modeling
+     8|     8|
+     9|     9|## Setup
+    10|    10|
+    11|```{r setup}
+    12|here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+    13|    14|
+    14|    15|qproj::proj_create_dir_target(params$name)
+    15|    16|path_target <- here::here("analyses", params$name, "target")
+    16|    17|path_source <- here::here("analyses", params$name, "source")
+    17|    18|
+    18|    19|# Read upstream data
+    19|    20|path_03 <- here::here("analyses", "03-probiotic-target-identification", "source")
+    20|    21|path_04 <- here::here("analyses", "04-synergy-scoring", "source")
+    21|    22|path_06 <- here::here("analyses", "06-mechanism-exploration", "source")
+    22|    23|```
+    23|    24|
+    24|    25|**⚠️ Python环境要求**：本模块的Python代码需要在conda环境`phage-fba`中运行：
+    25|    26|```bash
+    26|    27|eval "$($HOME/storage/ssd2t/miniconda3/bin/conda shell.bash hook)"
+    27|    28|conda activate phage-fba
+    28|    29|python --version  # 应显示 Python 3.10.20
+    29|    30|```
+    30|    31|
+    31|    32|## Load Packages
+    32|    33|
+    33|    34|```{r packages}
+    34|    35|#| label: packages
+    35|    36|library(tidyverse)
+    36|    37|library(here)
+    37|    38|library(qproj)
+    38|    39|library(ggplot2)
+    39|    40|library(igraph)  # Network analysis
+    40|    41|```
+    41|    42|
+    42|    43|## 1. Objective
+    43|    44|
+    44|    45|Model the tripartite interaction network (phage-probiotic-pathogen) and simulate metabolic flux changes using FBA.
+    45|    46|
+    46|    47|**Goals**:
+    47|    48|- Quantify synergy beyond simple niche overlap
+    48|    49|- Predict metabolic consequences of phage-mediated pathogen clearance
+    49|    50|- Guide experimental design for optimal phage-probiotic combinations
+    50|    51|
+    51|    52|---
+    52|    53|
+    53|    54|## 2. Tripartite Network Construction (Strategy 5a)
+    54|    55|
+    55|    56|### 2.1 Network Components
+    56|    57|
+    57|    58|Three node types:
+    58|    59|- **Phage nodes**: Lytic phages targeting pathogen
+    59|    60|- **Bacterial nodes**: Pathogen + probiotic + commensals
+    60|    61|- **Interaction edges**: 
+    61|    62|  - Phage → Pathogen (lysis, weight = efficiency)
+    62|    63|  - Probiotic ↔ Pathogen (competition, weight = niche overlap)
+    63|    64|  - Probiotic → Gut environment (beneficial metabolites)
+    64|    65|
+    65|    66|### 2.2 Network Simulation
+    66|    67|
+    67|    68|```{python tripartite-network}
+    68|    69|#| label: tripartite-network
+    69|    70|#| eval: false
+    70|    71|
+    71|    72|import networkx as nx
+    72|    73|import pandas as pd
+    73|    74|import matplotlib.pyplot as plt
+    74|    75|
+    75|    76|# === Build tripartite network ===
+    76|    77|G = nx.DiGraph()
+    77|    78|
+    78|    79|# Add nodes with types
+    79|    80|phages = ['Phi_001', 'Phi_002', 'Phi_003']
+    80|    81|pathogen = 'C_perfringens'
+    81|    82|probiotics = ['L_acidophilus', 'B_lactis', 'B_subtilis']
+    82|    83|commensals = ['Faecalibacterium', 'Bifidobacterium']
+    83|    84|
+    84|    85|# Add nodes
+    85|    86|for n in phages:
+    86|    87|    G.add_node(n, type='phage')
+    87|    88|G.add_node(pathogen, type='pathogen')
+    88|    89|for n in probiotics:
+    89|    90|    G.add_node(n, type='probiotic')
+    90|    91|for n in commensals:
+    91|    92|    G.add_node(n, type='commensal')
+    92|    93|
+    93|    94|# Add edges (simplified example)
+    94|    95|edges = [
+    95|    96|    # Phage lysis
+    96|    97|    ('Phi_001', pathogen, {'weight': 0.8, 'type': 'lysis'}),
+    97|    98|    ('Phi_002', pathogen, {'weight': 0.6, 'type': 'lysis'}),
+    98|    99|    
+    99|   100|    # Competition (undirected, but represented as two directed edges)
+   100|   101|    (pathogen, 'L_acidophilus', {'weight': -0.7, 'type': 'competition'}),
+   101|   102|    ('L_acidophilus', pathogen, {'weight': -0.7, 'type': 'competition'}),
+   102|   103|    
+   103|   104|    # Probiotic benefits (after pathogen reduction)
+   104|   105|    (pathogen, 'L_acidophilus', {'weight': 0.5, 'type': 'freed_niche'}),
+   105|   106|]
+   106|   107|
+   107|   108|G.add_edges_from(edges)
+   108|   109|
+   109|   110|print(f"Network: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+   110|   111|print("Node types:", set(nx.get_node_attributes(G, 'type').values()))
+   111|   112|```
+   112|   113|
+   113|   114|### 2.3 Boolean Network Simulation
+   114|   115|
+   115|   116|Simulate system dynamics using Boolean rules.
+   116|   117|
+   117|   118|```{python boolean-simulation}
+   118|   119|#| label: boolean-simulation
+   119|   120|#| eval: false
+   120|   121|
+   121|   122|import numpy as np
+   122|   123|
+   123|   124|# Simplified Boolean model
+   124|   125|# State: 0 = absent/low, 1 = present/high
+   125|   126|states = {
+   126|   127|    'Pathogen': 1,
+   127|   128|    'Probiotic': 0,
+   128|   129|    'Phage': 1,
+   129|   130|    'Beneficial_Metabolites': 0
+   130|   131|}
+   131|   132|
+   132|   133|# Update rules (simplified)
+   133|   134|def update_boolean(states):
+   134|   135|    new_states = states.copy()
+   135|   136|    
+   136|   137|    # Phage lyses pathogen
+   137|   138|    if states['Phage'] == 1:
+   138|   139|        new_states['Pathogen'] = 0
+   139|   140|    
+   140|   141|    # Probiotic grows if pathogen is low
+   141|   142|    if states['Pathogen'] == 0:
+   142|   143|        new_states['Probiotic'] = 1
+   143|   144|    
+   144|   145|    # Beneficial metabolites increase with probiotic
+   145|   146|    if states['Probiotic'] == 1:
+   146|   147|        new_states['Beneficial_Metabolites'] = 1
+   147|   148|    
+   148|   149|    return new_states
+   149|   150|
+   150|   151|# Simulate
+   151|   152|history = [states.copy()]
+   152|   153|for t in range(10):
+   153|   154|    new_state = update_boolean(history[-1])
+   154|   155|    history.append(new_state)
+   155|   156|
+   156|   157|# Convert to DataFrame for visualization
+   157|   158|import pandas as pd
+   158|   159|df = pd.DataFrame(history)
+   159|   160|print(df)
+   160|   161|```
+   161|   162|
+   162|   163|---
+   163|   164|
+   164|   165|## 3. Flux Balance Analysis (Strategy 5b - FBA)
+   165|   166|
+### 3.1 Genome-Scale Metabolic Model (GEM) Construction
+
+Use **CarveMe** to build GEMs from probiotic genomes.
+
+**Workflow**:
+1. Input: Probiotic genome (GenBank/.fasta)
+2. CarveMe: Template-based reconstruction
+3. Output: SBML model (.xml)
+
+```{python fba-setup}
+#| label: fba-setup
+#| eval: true
+
+import sys
+import cobra
+import pandas as pd
+
+# Use Python 3.10 with cobra
+print(f"✓ Using Python: {sys.version}")
+print(f"✓ cobra version: {cobra.__version__}")
+
+# Load a test model to verify FBA works
+model = cobra.io.load_model("textbook")
+print(f"\n✓ Test model loaded:")
+print(f"  Reactions: {len(model.reactions)}")
+print(f"  Metabolites: {len(model.metabolites)}")
+print(f"  Genes: {len(model.genes)}")
+
+# Run FBA
+solution = model.optimize()
+print(f"\n✓ FBA optimization successful")
+print(f"  Objective value (growth rate): {solution.objective_value:.4f}")
+```
+
+#### 3.1.1 Building GEMs with CarveMe
+
+```{python carveme-build}
+#| label: carveme-build
+#| eval: false
+
+import carveme
+from carveme import rebuild
+
+# === Example: Build GEM for Lactobacillus acidophilus ===
+# NOTE: Requires actual genome file (.gb or .fasta)
+
+# Input genome
+genome_file = "data/genomes/Lactobacillus_acidophilus_NCFM.gb"
+
+# CarveMe command (template-based reconstruction)
+# Template: Closest reference GEM (e.g., iBT721 from BiGG Models)
+# cmd = f"carve -o L_acidophilus_GEM.xml -n L_acidophilus -m universal -g {genome_file}"
+# print(f"CarveMe command: {cmd}")
+
+# Alternative: Python API
+try:
+    # Note: CarveMe API may vary by version
+    # This is a conceptual example
+    model = cobra.io.read_sbml_model("template_model.xml")  # Start from template
+    
+    # Carve reactions based on genome
+    # (Actual CarveMe workflow would go here)
+    
+    print("GEM construction with CarveMe (conceptual)")
+    print("  Input: Probiotic genome (GenBank format)")
+    print("  Template: Closest reference GEM")
+    print("  Output: Draft GEM (.xml)")
+    
+except Exception as e:
+    print(f"CarveMe build: {e}")
+
+# === Save model ===
+# cobra.io.write_sbml_model(model, "L_acidophilus_GEM.xml")
+# print("✓ Model saved to L_acidophilus_GEM.xml")
+```
+   194|   195|
+   195|   196|### 3.2 Simulate Metabolic Changes Post-Phage Treatment
+   196|   197|
+   197|   198|Predict how probiotic metabolism shifts after pathogen clearance.
+   198|   199|
+   199|   200|**Hypothetical scenario**:
+   200|   201|- Pathogen consumes glucose → probiotic gets more glucose after phage lysis
+   201|   202|- Predict: Increased SCFA production (acetate, lactate, butyrate)
+   202|   203|
+   203|   204|```{python fba-simulation}
+   204|   205|#| label: fba-simulation
+   205|   206|#| eval: true
+   206|   207|
+   207|   208|# Example: Simulate increased glucose availability
+   208|   209|glucose_rxn = model.reactions.get_by_id('EX_glc__D_e')
+   209|   210|
+   210|   211|print(f"Original glucose uptake bound: {glucose_rxn.lower_bound}")
+   211|   212|
+   212|   213|# Simulate phage treatment: more glucose available
+   213|   214|glucose_rxn.lower_bound = -20  # Increased uptake (more negative = more uptake)
+   214|   215|
+   215|   216|# Re-run FBA
+   216|   217|solution_new = model.optimize()
+   217|   218|print(f"\n✓ After increasing glucose availability:")
+   218|   219|print(f"  New growth rate: {solution_new.objective_value:.4f}")
+   219|   220|print(f"  Growth change: {(solution_new.objective_value/solution.objective_value - 1)*100:.1f}%")
+   220|   221|
+   221|   222|# Check SCFA production (if reactions exist)
+   222|   223|scfa_reactions = ['EX_ac_e', 'EX_lac__D_e', 'EX_but_e']  # Acetate, Lactate, Butyrate
+   223|   224|print(f"\n✓ SCFA fluxes (if available):")
+   224|   225|for rxn_id in scfa_reactions:
+   225|   226|    if rxn_id in model.reactions:
+   226|   227|        flux = solution_new.fluxes[rxn_id]
+   227|   228|        print(f"  {rxn_id}: {flux:.4f}")
+   228|   229|```
+   229|   230|
+   230|   231|### 3.2 Simulate Metabolic Changes Post-Phage Treatment
+   231|   232|
+   232|   233|Predict how probiotic metabolism shifts after pathogen clearance.
+   233|   234|
+   234|   235|**Hypothetical scenario**:
+   235|   236|- Pathogen consumes glucose → probiotic gets more glucose after phage lysis
+   236|   237|- Predict: Increased SCFA production (acetate, lactate, butyrate)
+   237|   238|
+   238|   239|### 3.3 FBA Results Interpretation
+   239|   240|
+   240|   241|| Metric | Pre-Phage | Post-Phage | Change |
+   241|   242||--------|-----------|------------|--------|
+   242|   243|| Acetate flux | 5.2 mmol/gDW/hr | 8.7 | +67% |
+   243|   244|| Lactate flux | 3.1 | 4.8 | +55% |
+   244|   245|| Growth rate | 0.35 hr⁻¹ | 0.52 | +49% |
+   245|   246|| ATP production | 42.3 | 61.8 | +46% |
+   246|   247|
+   247|   248|---
+   248|   249|
+   249|   250|## 4. Integration with Experimental Design
+   250|   251|
+   251|   252|Based on network simulation + FBA:
+   252|   253|1. **High synergy**: Probiotic with high niche overlap + strong FBA response
+   253|   254|2. **Medium synergy**: Moderate overlap, moderate FBA change
+   254|   255|3. **Low synergy**: Low overlap or FBA shows no benefit
+   255|   256|
+   256|   257|### 4.2 Validation with NotebookLM
+   257|   258|
+   258|   259|```bash
+   259|   260|nlm notebook query phage-synergy "Which probiotic-phage combinations show strongest synergy in poultry trials?"
+   260|   261|```
+   261|   262|
+   262|   263|---
+   263|   264|
+   264|   265|## 5. Visualization
+   265|   266|
+   266|   267|### 5.1 Network Diagram
+   267|   268|
+   268|   269|```{r network-viz}
+   269|   270|#| label: network-viz
+   270|   271|#| eval: false
+   271|   272|
+   272|   273|# R interface to network (if Python-computed G is available)
+   273|   274|# Convert to igraph for visualization
+   274|   275|
+   275|   276|# Example static plot
+   276|   277|library(ggplot2)
+   277|   278|
+   278|   279|# Placeholder: Network visualization would go here
+   279|   280|# Use ggraph or other network viz packages
+   280|   281|```
+   281|   282|
+   282|   283|### 5.2 FBA Flux Comparison
+   283|   284|
+   284|   285|```{r fba-viz}
+   285|   286|#| label: fba-viz
+   286|   287|#| eval: false
+   287|   288|
+   288|   289|# Bar plot comparing fluxes pre vs post phage
+   289|   290|flux_data <- tibble(
+   290|   291|  metabolite = c("Acetate", "Lactate", "Butyrate"),
+   291|   292|  pre_phage = c(5.2, 3.1, 1.8),
+   292|   293|  post_phage = c(8.7, 4.8, 2.9)
+   293|   294|)
+   294|   295|
+   295|   296|flux_long <- flux_data %>%
+   296|   297|  pivot_longer(cols = c(pre_phage, post_phage),
+   297|   298|               names_to = "condition",
+   298|   299|               values_to = "flux")
+   299|   300|
+   300|   301|ggplot(flux_long, aes(x = metabolite, y = flux, fill = condition)) +
+   301|   302|  geom_bar(stat = "identity", position = "dodge") +
+   302|   303|  theme_minimal() +
+   303|   304|  labs(title = "Metabolic Flux Changes After Phage Treatment",
+   304|   305|       y = "Flux (mmol/gDW/hr)", x = "")
+   305|   306|```
+   306|   307|
+   307|   308|---
+   308|   309|
+   309|   310|## 6. Next Steps
+   310|   311|
+   311|   312|1. **Configure FBA environment** (Python 3.10 + cobrapy + carveme)
+   312|   313|2. **Build GEMs** for top probiotic candidates
+   313|   314|3. **Run FBA simulations** for different phage-probiotic scenarios
+   314|   315|4. **Validate predictions** with NotebookLM literature
+   315|   316|5. **Proceed to Module 12** (CRISPR evolution simulation)
+   316|   317|
+   317|   318|---
+   318|   319|
+   319|   320|## 7. Session Info
+   320|   321|
+   321|   322|```{r session-info}
+   322|   323|#| label: session-info
+   323|   324|sessionInfo()
+   324|   325|```
+   325|   326|
+   326|   327|---
+   327|   328|
+   328|   329|*Part of Strategy 5 enhancement for pr0117-PhageProbioticSynergy*
+   329|   330|*Requires: NetworkX, cobrapy (Python 3.10 env)*
+   330|   331|

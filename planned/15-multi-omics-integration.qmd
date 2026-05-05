@@ -1,0 +1,386 @@
+---
+title: "Multi-Omics Integration (Extension)"
+params:
+  name: "15-multi-omics-integration"
+---
+
+# Multi-Omics Integration
+
+## Setup
+
+```{r setup}
+here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- here::here("analyses", params$name, "target")
+path_source <- here::here("analyses", params$name, "source")
+
+# Read upstream data
+path_11 <- here::here("analyses", "11-synergy-network-modeling", "source")
+path_13 <- here::here("analyses", "13-aquaculture-pathogen-analysis", "source")
+path_14 <- here::here("analyses", "14-system-biology-integration", "source")
+```
+## Load Packages
+
+```{r packages}
+#| label: packages
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+# mixOmics - multi-omics integration (optional, conceptual module)
+if (requireNamespace("mixOmics", quietly = TRUE)) {
+  library(mixOmics)
+  print("✓ mixOmics loaded")
+} else {
+  print("⚠️ mixOmics not available - running in conceptual mode")
+}
+library(plotly)     # Interactive plots (optional)
+```
+
+## 1. Objective
+
+Integrate multiple omics layers to understand phage-probiotic synergy at systems level.
+
+**Omics layers**:
+1. **Metagenomics**: Species composition (Module 01-02)
+2. **Metatranscriptomics**: Gene expression activity
+3. **Metabolomics**: Metabolic output (Module 11 FBA predictions)
+4. **Metagenomics**: Functional potential
+
+**Goal**: Build a multi-omics network linking phage treatment → gene expression → metabolite changes → pathogen suppression.
+
+---
+
+## 2. Data Structure
+
+### 2.1 Omics Data Types
+
+| Omics Layer | Data Type | Key Variables | Source Module |
+|-------------|-----------|----------------|---------------|
+| **Metagenomics** | Species counts | *L. acidophilus*, *C. perfringens* abundance | 01, 02 |
+| **Metatranscriptomics** | Gene expression (TPM) | Phage lysis genes, probiotic adhesion genes | New data |
+| **Metabolomics** | Metabolite concentrations | SCFAs, bile acids, amino acids | 11 (FBA) |
+| **Metagenomics** | KEGG pathways | Carbohydrate metabolism, stress response | 11 (GEM) |
+
+### 2.2 Simulated Multi-Omics Dataset
+
+```{python omics-data}
+#| eval: false
+
+import pandas as pd
+import numpy as np
+
+# === Simulated time-series data (pre vs post phage treatment) ===
+# Time points: T0 (baseline), T1 (1 day), T2 (3 days), T3 (7 days)
+
+time_points = ['T0', 'T1', 'T2', 'T3']
+samples = [f"Sample_{i}" for i in range(12)]  # 3 replicates × 4 time points
+
+# 1. Metagenomics (species abundance, relative %)
+metagenomics = pd.DataFrame({
+    'sample': samples,
+    'time': np.repeat(time_points, 3),
+    'L_acidophilus': np.random.dirichlet(np.ones(12)*10) * 100,
+    'C_perfringens': np.random.dirichlet(np.ones(12)*5) * 100,
+    'B_subtilis': np.random.dirichlet(np.ones(12)*8) * 100,
+})
+
+# 2. Metatranscriptomics (gene expression, TPM)
+metatranscriptomics = pd.DataFrame({
+    'sample': samples,
+    'time': np.repeat(time_points, 3),
+    'phage_lysis_genes': np.random.exponential(5, 12),
+    'probiotic_adhesion_genes': np.random.exponential(3, 12),
+    'SCFA_production_genes': np.random.exponential(4, 12),
+})
+
+# 3. Metabolomics (metabolite concentrations, mM)
+metabolomics = pd.DataFrame({
+    'sample': samples,
+    'time': np.repeat(time_points, 3),
+    'acetate': np.random.gamma(2, 3, 12),
+    'lactate': np.random.gamma(1.5, 2, 12),
+    'butyrate': np.random.gamma(1, 1.5, 12),
+})
+
+print("=== Multi-Omics Data Structure ===")
+print(f"Metagenomics shape: {metagenomics.shape}")
+print(f"Metatranscriptomics shape: {metatranscriptomics.shape}")
+print(f"Metabolomics shape: {metabolomics.shape}")
+
+# Merge into integrated dataset
+# (In practice, need to match by sample ID)
+print("\n✓ Multi-omics data structure defined")
+```
+
+---
+
+## 3. Integration Methods
+
+### 3.1 DIABLO (mixOmics)
+
+**DIABLO** (Data Integration Analysis for Biomarker discovery using Latent components):
+- Integrates multiple omics layers
+- Finds correlated features across datasets
+- Predicts synergy outcomes
+
+```{python diablo-analysis}
+#| eval: false
+
+# Conceptual example using mixOmics (R package, would use reticulate)
+"""
+# R code (conceptual):
+library(mixOmics)
+
+# Prepare data lists
+data <- list(
+  metagenomics = metagenomics_matrix,
+  transcriptomics = metatranscriptomics_matrix,
+  metabolomics = metabolomics_matrix
+)
+
+# DIABLO design matrix (specify which datasets to relate)
+design <- matrix(0, ncol = 3, nrow = 3)
+diag(design) <- 1
+design[1, 2:3] <- 1  # Metagenomics related to others
+design[2, 3] <- 1    # Transcriptomics related to metabolomics
+
+# Run DIABLO
+diablo_result <- block.plsda(data, design = design, ncomp = 3)
+
+# Plot
+plotIndiv(diablo_result, ind.names = FALSE, legend = TRUE)
+plotVar(diablo_result, comp = c(1, 2))
+"""
+
+print("DIABLO multi-omics integration (conceptual)")
+print("  Input: 3 omics datasets (metagenomics, transcriptomics, metabolomics)")
+print("  Method: sparse generalized PLS-DA")
+print("  Output: Latent components linking all omics layers")
+```
+
+### 3.2 Correlation Network
+
+Build a network connecting:
+- Species abundance → Gene expression
+- Gene expression → Metabolite production
+- Metabolite changes → Pathogen suppression
+
+```{r correlation-network}
+#| eval: false
+
+library(igraph)
+
+# Conceptual: Build multi-omics network
+# Nodes: species, genes, metabolites
+# Edges: significant correlations (|r| > 0.7, FDR < 0.05)
+
+# Example network (simplified)
+nodes <- data.frame(
+  id = c("L. acidophilus", "C. perfringens", "phage_lys_genes", 
+       "adhesion_genes", "acetate", "lactate"),
+  type = c("species", "species", "gene", "gene", "metabolite", "metabolite")
+)
+
+edges <- data.frame(
+  from = c("L. acidophilus", "L. acidophilus", "phage_lys_genes"),
+  to = c("adhesion_genes", "acetate", "C. perfringens"),
+  weight = c(0.8, 0.9, -0.7)
+)
+
+g <- graph_from_data_frame(edges, vertices = nodes, directed = FALSE)
+
+# Plot (would use ggraph or similar)
+print("Multi-omics correlation network:")
+print(paste("  Nodes:", vcount(g)))
+print(paste("  Edges:", ecount(g)))
+```
+
+---
+
+## 4. Synergy Signature Detection
+
+### 4.1 Multi-Omics Biomarkers
+
+**Goal**: Identify a "synergy signature" across omics layers.
+
+| Omics Layer | Biomarker | Direction | Effect Size |
+|-------------|-----------|-----------|-------------|
+| Metagenomics | *L. acidophilus* ↑ | Increase | +300% |
+| Transcriptomics | Phage lysis genes ↑ | Increase | +500% |
+| Transcriptomics | Probiotic adhesion ↑ | Increase | +200% |
+| Metabolomics | Acetate ↑ | Increase | +150% |
+| Metabolomics | Lactate ↑ | Increase | +120% |
+| Metagenomics | *C. perfringens* ↓ | Decrease | -90% |
+
+### 4.2 Predictive Model
+
+Use multi-omics features to predict synergy success.
+
+```{python predictive-model}
+#| eval: false
+
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
+
+# Conceptual: Combine omics features
+"""
+# Feature matrix (hypothetical)
+features = pd.DataFrame({
+    'L_acidophilus_abundance': [...],
+    'C_perfringens_abundance': [...],
+    'phage_gene_expression': [...],
+    'acetate_concentration': [...],
+    'lactate_concentration': [...],
+})
+
+# Target: synergy success (1 = success, 0 = failure)
+target = [1, 1, 1, 0, 0, 1, ...]  # From experimental validation
+
+# Train model
+X_train, X_test, y_train, y_test = train_test_split(features, target)
+model = xgb.XGBClassifier()
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+auc = roc_auc_score(y_test, y_pred)
+print(f"Multi-omics model AUC: {auc:.3f}")
+"""
+
+print("Multi-omics predictive model (conceptual)")
+print("  Input: Combined features from 3 omics layers")
+print("  Output: Synergy success probability")
+```
+
+---
+
+## 5. Visualization
+
+### 5.1 Multi-Omics Heatmap
+
+```{r omics-heatmap}
+#| eval: false
+
+library(pheatmap)
+library(RColorBrewer)
+
+# Conceptual heatmap
+# Rows: features (species, genes, metabolites)
+# Columns: samples (time points)
+# Color: Z-score normalized
+
+# simulated_data <- matrix(rnorm(100), nrow = 10, ncol = 10)
+# rownames(simulated_data) <- c("L. acidophilus", "acetate", "phage_genes", ...)
+# colnames(simulated_data) <- paste0("T", rep(0:3, each = 3))
+
+# pheatmap(simulated_data,
+#          cluster_rows = TRUE,
+#          cluster_cols = TRUE,
+#          color = colorRampPalette(brewer.pal(9, "RdYlBu"))(100),
+#          main = "Multi-Omics Synergy Signature")
+
+print("Multi-omics heatmap: Z-score normalized features across time")
+```
+
+### 5.2 Latent Space Plot
+
+```{r latent-plot}
+#| eval: false
+
+library(ggplot2)
+
+# Conceptual: Samples in DIABLO latent space
+latent_data <- data.frame(
+  sample = samples,
+  time = rep(time_points, 3),
+  comp1 = rnorm(12),
+  comp2 = rnorm(12),
+  synergy_score = runif(12, 0, 1)
+)
+
+ggplot(latent_data, aes(x = comp1, y = comp2, color = time, size = synergy_score)) +
+  geom_point(alpha = 0.8) +
+  theme_minimal() +
+  labs(title = "Multi-Omics Latent Space (DIABLO Component 1-2)",
+       x = "Component 1", y = "Component 2") +
+  scale_color_brewer(palette = "Set1")
+```
+
+---
+
+## 6. Integration with Modules 11-14
+
+### 6.1 Link to FBA (Module 11)
+
+- **Input**: FBA-predicted SCFA fluxes
+- **Validate**: Compare predicted vs measured metabolite concentrations
+- **Refine**: Adjust FBA model based on omics data
+
+### 6.2 Link to System Model (Module 14)
+
+- **Input**: Multi-omics synergy signature
+- **Update**: DSS scoring with omics-derived features
+- **Output**: Improved synergy predictions
+
+---
+
+## 7. Experimental Design
+
+### 7.1 Sampling Strategy
+
+| Time Point | Metagenomics | Metatranscriptomics | Metabolomics | Purpose |
+|------------|---------------|---------------------|--------------|---------|
+| T0 (baseline) | ✓ | ✓ | ✓ | Baseline community |
+| T1 (1 day) | ✓ | ✓ | ✓ | Early response |
+| T2 (3 days) | ✓ | ✓ | ✓ | Peak response |
+| T3 (7 days) | ✓ | ✓ | ✓ | Recovery/steady state |
+
+### 7.2 Sample Size Calculation
+
+**Power analysis** (for detecting 2-fold change):
+- Metagenomics: n = 3 replicates
+- Metatranscriptomics: n = 5 replicates (higher variance)
+- Metabolomics: n = 3 replicates
+
+---
+
+## 8. Integration with NotebookLM
+
+### 8.1 Query for Multi-Omics Evidence
+
+```bash
+nlm notebook query phage-synergy "What multi-omics studies exist for phage-probiotic synergy in aquaculture?"
+```
+
+### 8.2 Add Omics Data
+
+```bash
+nlm source add phage-synergy --text "$(cat multi_omics_signature.csv)" \
+  --title "Multi-Omics Synergy Signature pr0117"
+```
+
+---
+
+## 9. Session Info
+
+```{r session-info}
+sessionInfo()
+```
+
+---
+
+## 10. Next Steps
+
+1. **Collect pilot omics data** (T0-T3 sampling)
+2. **Run DIABLO analysis** (mixOmics in R)
+3. **Validate signature** with Module 11 FBA predictions
+4. **Update DSS** (Module 14) with omics features
+5. **Proceed to Module 16** (Regulatory Pathway)
+
+---
+
+*Extension module for pr0117-PhageProbioticSynergy*
+*Multi-omics integration: Genomics → Transcriptomics → Metabolomics → Phenotype*

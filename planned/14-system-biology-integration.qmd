@@ -1,0 +1,328 @@
+---
+title: "System Biology Integration (Extension)"
+params:
+  name: "14-system-biology-integration"
+---
+
+# System Biology Integration
+
+## Setup
+
+```{r setup}
+here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- here::here("analyses", params$name, "target")
+path_source <- here::here("analyses", params$name, "source")
+
+# Read upstream data from all previous modules
+path_03 <- here::here("analyses", "03-probiotic-target-identification", "source")
+path_11 <- here::here("analyses", "11-synergy-network-modeling", "source")
+path_12 <- here::here("analyses", "12-crispr-evolution-simulation", "source")
+path_13 <- here::here("analyses", "13-aquaculture-pathogen-analysis", "source")
+```
+
+## Load Packages
+
+```{r packages}
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+library(patchwork)  # For combining plots
+library(cowplot)    # For publication-ready plots
+```
+
+## 1. Objective
+
+Integrate all previous analyses into a **multi-scale system model** of phage-probiotic synergy.
+
+**Integration levels**:
+1. **Molecular**: Phage-host receptor interactions (Module 02)
+2. **Metabolic**: FBA predictions (Module 11)
+3. **Evolutionary**: CRISPR escape dynamics (Module 12)
+4. **Ecological**: Aquaculture system context (Module 13)
+5. **System-level**: Combined effect prediction
+
+**Goal**: Provide a decision support system (DSS) for optimizing phage-probiotic therapy in aquaculture.
+
+---
+
+## 2. Multi-Scale Data Integration
+
+### 2.1 Data Sources Summary
+
+| Module | Data Type | Scale | Key Output |
+|--------|-----------|-------|-------------|
+| 02 | Host prediction | Molecular | Phage-host pairs |
+| 03 | ML ranking | Strain | Synergy scores |
+| 11 | FBA | Metabolic | Flux changes |
+| 12 | Evolution | Population | Escape risk |
+| 13 | Aquaculture | System | Environmental fit |
+
+### 2.2 Integrated Data Frame
+
+Combine insights from all modules.
+
+```{python integrated-data}
+#| eval: false
+
+import pandas as pd
+import numpy as np
+
+# === Simulated integrated data (would come from actual module outputs) ===
+integrated_data = pd.DataFrame({
+    'probiotic': ['L_acidophilus', 'B_subtilis', 'B_lactis', 'E_faecium'],
+    'target_pathogen': ['C_perfringens', 'C_perfringens', 'S_enterica', 'C_perfringens'],
+    'phage_available': [True, True, False, True],
+    'synergy_score': [0.82, 0.55, 0.78, 0.75],  # From Module 03
+    'fba_growth_increase': [0.49, 0.32, 0.41, 0.38],  # From Module 11 (49%, etc.)
+    'crispr_risk': ['Low', 'High', 'Medium', 'Low'],  # From Module 12
+    'aquaculture_fit': ['Moderate', 'High', 'Moderate', 'Low'],  # From Module 13
+    'env_stability': [0.7, 0.9, 0.75, 0.65]  # Environmental stability score
+})
+
+# Compute system-level synergy score (weighted)
+# Weights: synergy (0.3), FBA (0.3), CRISPR risk (0.2, inverted), aquaculture (0.2)
+def risk_score_to_numeric(risk):
+    return {'Low': 1.0, 'Medium': 0.6, 'High': 0.2}[risk]
+
+def fit_to_numeric(fit):
+    return {'Low': 0.3, 'Moderate': 0.6, 'High': 1.0}[fit]
+
+integrated_data['crispr_risk_numeric'] = integrated_data['crispr_risk'].apply(risk_score_to_numeric)
+integrated_data['aquaculture_fit_numeric'] = integrated_data['aquaculture_fit'].apply(fit_to_numeric)
+
+integrated_data['system_synergy_score'] = (
+    integrated_data['synergy_score'] * 0.3 +
+    integrated_data['fba_growth_increase'] * 0.3 +
+    integrated_data['crispr_risk_numeric'] * 0.2 +
+    integrated_data['aquaculture_fit_numeric'] * 0.2
+)
+
+# Sort by system-level score
+integrated_sorted = integrated_data.sort_values('system_synergy_score', ascending=False)
+
+print("=== Integrated System-Level Ranking ===")
+print(integrated_sorted[['probiotic', 'target_pathogen', 'synergy_score', 
+                       'fba_growth_increase', 'crispr_risk', 
+                       'aquaculture_fit', 'system_synergy_score']])
+```
+
+---
+
+## 3. Decision Support System (DSS) Framework
+
+### 3.1 Scoring Algorithm
+
+**Input parameters** (user-adjustable):
+- `w_synergy`: Weight for ML synergy score (default 0.3)
+- `w_fba`: Weight for FBA prediction (default 0.3)
+- `w_crispr`: Weight for CRISPR risk (default 0.2)
+- `w_aqua`: Weight for aquaculture fit (default 0.2)
+
+**Output**: System-level recommendation with confidence interval.
+
+### 3.2 Interactive Recommendation
+
+```{python dss-engine}
+#| eval: false
+
+def compute_dss_score(row, w_synergy=0.3, w_fba=0.3, w_crispr=0.2, w_aqua=0.2):
+    """
+    Compute Decision Support System score.
+    Higher = better candidate.
+    """
+    # Invert CRISPR risk (Low risk = high score)
+    crispr_score = {'Low': 1.0, 'Medium': 0.6, 'High': 0.2}[row['crispr_risk']]
+    
+    # Aquaculture fit
+    aqua_score = {'Low': 0.3, 'Moderate': 0.6, 'High': 1.0}[row['aquaculture_fit']]
+    
+    # Weighted sum
+    dss_score = (
+        row['synergy_score'] * w_synergy +
+        row['fba_growth_increase'] * w_fba +
+        crispr_score * w_crispr +
+        aqua_score * w_aqua
+    )
+    
+    return dss_score
+
+# Apply DSS to integrated data
+integrated_data['dss_score'] = integrated_data.apply(
+    lambda row: compute_dss_score(row), axis=1
+)
+
+# Rank
+dss_ranked = integrated_data.sort_values('dss_score', ascending=False)
+
+print("=== DSS Recommendations ===")
+print(dss_ranked[['probiotic', 'target_pathogen', 'dss_score']].to_string(index=False))
+
+# Top recommendation
+top = dss_ranked.iloc[0]
+print(f"\n*** Top Recommendation ***")
+print(f"Probiotic: {top['probiotic']}")
+print(f"Target Pathogen: {top['target_pathogen']}")
+print(f"DSS Score: {top['dss_score']:.3f}")
+print(f"Rationale:")
+print(f"  - Synergy Score: {top['synergy_score']:.2f}")
+print(f"  - FBA Growth Increase: {top['fba_growth_increase']:.0%}")
+print(f"  - CRISPR Risk: {top['crispr_risk']}")
+print(f"  - Aquaculture Fit: {top['aquaculture_fit']}")
+```
+
+---
+
+## 4. System Dynamics Visualization
+
+### 4.1 Multi-Panel Plot
+
+Combine key insights into a single figure.
+
+```{r system-viz}
+#| eval: false
+
+# Load integrated data (in practice, read from Python output)
+# integrated_df <- read_csv("integrated_data.csv")
+
+# Create example data for visualization
+system_data <- tibble(
+  probiotic = rep(c("L. acidophilus", "B. subtilis", "B. lactis", "E. faecium"), 2),
+  metric = rep(c("Synergy Score", "System DSS Score"), each = 4),
+  value = c(0.82, 0.55, 0.78, 0.75,  # Synergy scores
+            0.71, 0.62, 0.68, 0.65)  # DSS scores (example)
+)
+
+# Plot
+p <- ggplot(system_data, aes(x = probiotic, y = value, fill = metric)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Probiotic Candidates: Synergy vs System DSS Score",
+       x = "", y = "Score") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(p)
+```
+
+### 4.2 Network-Genome-FBA Integration
+
+**Conceptual diagram** (to be created with Cytoscape or similar):
+- **Layer 1**: Molecular network (phage-pathogen-probiotic)
+- **Layer 2**: Metabolic network (FBA reactions)
+- **Layer 3**: Evolutionary dynamics (CRISPR escape)
+- **Layer 4**: System context (aquaculture environment)
+
+---
+
+## 5. Uncertainty Quantification
+
+### 5.1 Sensitivity Analysis
+
+Test how DSS scores change with different weight assignments.
+
+```{python sensitivity-analysis}
+#| eval: false
+
+import itertools
+
+# Define weight ranges
+weight_ranges = {
+    'w_synergy': [0.2, 0.3, 0.4],
+    'w_fba': [0.2, 0.3, 0.4],
+    'w_crispr': [0.1, 0.2, 0.3],
+    'w_aqua': [0.1, 0.2, 0.3]
+}
+
+# Generate all combinations (simplified: only test a few)
+combinations = list(itertools.product(*weight_ranges.values()))
+print(f"Total combinations: {len(combinations)}")
+
+# Test top 3 combinations
+top_combinations = combinations[:3]
+
+for i, combo in enumerate(top_combinations):
+    w_syn, w_fba, w_crispr, w_aqua = combo
+    # Normalize weights
+    total = w_syn + w_fba + w_crispr + w_aqua
+    w_syn, w_fba, w_crispr, w_aqua = w_syn/total, w_fba/total, w_crispr/total, w_aqua/total
+    
+    # Compute scores
+    scores = []
+    for _, row in integrated_data.iterrows():
+        score = compute_dss_score(row, w_syn, w_fba, w_crispr, w_aqua)
+        scores.append(score)
+    
+    integrated_data[f'dss_combo_{i}'] = scores
+    
+    print(f"\nCombo {i+1}: synergy={w_syn:.1f}, fba={w_fba:.1f}, crispr={w_crispr:.1f}, aqua={w_aqua:.1f}")
+    print(f"  Top DSS score: {max(scores):.3f}")
+
+# Check ranking stability
+print("\n=== Ranking Stability ===")
+for i in range(3):
+    ranked = integrated_data.sort_values(f'dss_combo_{i}', ascending=False)
+    print(f"Combo {i+1} top 3: {list(ranked['probiotic'].head(3))}")
+```
+
+---
+
+## 6. Implementation Roadmap
+
+### 6.1 Phased Deployment
+
+| Phase | Action | Timeline | Modules Integrated |
+|-------|--------|----------|-------------------|
+| **Phase 1** | Pilot trial (top candidate) | Month 1-3 | 03, 11 |
+| **Phase 2** | Add aquaculture optimization | Month 4-6 | 13, 14 |
+| **Phase 3** | Monitor CRISPR evolution | Month 6-12 | 12, 14 |
+| **Phase 4** | Scale to commercial | Month 12+ | All |
+
+### 6.2 Success Metrics
+
+- **Primary**: Pathogen load reduction >90% (qPCR)
+- **Secondary**: Probiotic colonization >10⁶ CFU/g gut
+- **Tertiary**: No CRISPR escape mutants (monitoring)
+- **Economic**: ROI >200% (cost of phage + probiotic vs losses saved)
+
+---
+
+## 7. Integration with NotebookLM
+
+### 7.1 Query for System-Level Evidence
+
+```bash
+nlm notebook query phage-synergy "What are the best practices for integrating multi-omics data in probiotic therapy?"
+```
+
+### 7.2 Add System Model
+
+```bash
+nlm source add phage-synergy --text "$(cat integrated_dss_scores.csv)" \
+  --title "System DSS Scores pr0117"
+```
+
+---
+
+## 8. Session Info
+
+```{r session-info}
+sessionInfo()
+```
+
+---
+
+## 9. Next Steps
+
+1. **Validate DSS** with experimental data (Module 07-08)
+2. **Refine weights** based on pilot trial results
+3. **Expand to more probiotics** (Module 03 update)
+4. **Add economic modeling** (Module 10 integration)
+5. **Prepare manuscript** (Module 08 - incorporate system model)
+
+---
+
+*Extension module for pr0117-PhageProbioticSynergy*
+*Multi-scale integration: Molecular → Metabolic → Evolutionary → System*

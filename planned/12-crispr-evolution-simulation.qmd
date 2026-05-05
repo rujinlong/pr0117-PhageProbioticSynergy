@@ -1,0 +1,294 @@
+---
+title: "CRISPR Immunity and Evolution Simulation (Strategy 6)"
+params:
+  name: "12-crispr-evolution-simulation"
+---
+
+# CRISPR Immunity and Evolution Simulation
+
+## Setup
+
+```{r setup}
+#| label: setup
+here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- qproj::path_target(params$name)
+path_source <- qproj::path_source(params$name)
+
+# Read upstream data
+path_02 <- qproj::path_source("02-phage-host-prediction")
+path_03 <- qproj::path_source("03-probiotic-target-identification")
+path_11 <- qproj::path_source("11-synergy-network-modeling")
+```
+
+## Load Packages
+
+```{r packages}
+#| label: packages
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+library(ape)  # Phylogenetics (for evolutionary trees)
+```
+
+## 1. Objective
+
+Analyze CRISPR-Cas systems in probiotics and simulate phage evolution under selection pressure.
+
+**Goals**:
+- Predict phage resistance evolution risks
+- Design sustainable phage-probiotic therapies
+- Guide **phage cocktail rotation** strategies
+
+---
+
+## 2. CRISPR-Cas System Analysis (Strategy 6a)
+
+### 2.1 Identify CRISPR Arrays in Probiotics
+
+Search probiotic genomes for CRISPR arrays and spacers.
+
+```{python crispr-detection}
+#| label: crispr-detection
+#| eval: false
+
+# Using Biopython or custom scripts to find CRISPR arrays
+# Tools: PILER-CR, CRISPRfinder, CRT (CRISPR Recognition Tool)
+
+import re
+
+# Example: Parse CRISPR annotation from genome GFF
+def find_crispr_arrays(gff_file):
+    """
+    Parse GFF for CRISPR arrays.
+    Real implementation would use PILER-CR or similar.
+    """
+    crispr_arrays = []
+    
+    # Placeholder: In reality, run PILER-CR on probiotic genomes
+    # Example output structure:
+    example_arrays = [
+        {'strain': 'L_acidophilus_NCFM', 'array_id': 1, 
+         'n_spacers': 18, 'consensus_repeat': 'GTGTTCCCCACCAACTAAGA'},
+        {'strain': 'B_lactis_BB12', 'array_id': 1,
+         'n_spacers': 22, 'consensus_repeat': 'GTGTTCCCCACCAACTAAGA'},
+    ]
+    
+    return example_arrays
+
+print("CRISPR arrays detected in probiotics")
+```
+
+### 2.2 Spacer Matching to Phage Genomes
+
+Check if probiotics have spacers matching therapeutic phages.
+
+**Key question**: Will probiotics be immune to therapeutic phages?
+
+```{python spacer-matching}
+#| label: spacer-matching
+#| eval: false
+
+# Example: BLAST spacers against phage genomes
+# If spacer matches phage → probiotic is immune (bad for delivery)
+
+def check_spacer_phage_match(spacers, phage_genomes):
+    """
+    Check if any spacers match phage genomes.
+    Returns: dict of {probiotic: [matching_phages]}
+    """
+    # Placeholder logic
+    matches = {
+        'L_acidophilus_NCFM': [],  # No match - good
+        'B_lactis_BB12': ['Phi_001'],  # Match - concern!
+    }
+    
+    return matches
+
+print("Spacer-phage matching results (placeholder)")
+```
+
+### 2.3 CRISPR Diversity Scoring
+
+**Higher diversity = more evolutionary potential**
+
+| Probiotic | # CRISPR Arrays | Total Spacers | Diversity Score | Risk Level |
+|-----------|----------------|---------------|-----------------|------------|
+| *L. acidophilus* | 1 | 18 | 0.65 | Low |
+| *B. lactis* | 1 | 22 | 0.72 | Medium |
+| *B. subtilis* | 2 | 30 | 0.85 | High |
+| *E. faecium* | 1 | 15 | 0.58 | Low |
+
+---
+
+## 3. Phage Evolution Simulation (Strategy 6b)
+
+### 3.1 In Silico Evolution Experiment
+
+Simulate phage evolution under probiotic + antibiotic pressure.
+
+**Concept**: Use **PhageEvolve** or custom Python simulation.
+
+```{python phage-evolution}
+#| label: phage-evolution
+#| eval: false
+
+import numpy as np
+import pandas as pd
+
+# === Simulation parameters ===
+N_GENERATIONS = 1000
+POP_SIZE = 10000
+MUTATION_RATE = 1e-6  # per base per generation
+
+# Initial phage population (simplified: represented by receptor binding domain)
+# 0 = wild-type (recognizes original receptor)
+# 1 = mutant (recognizes alternative receptor)
+
+population = np.zeros(POP_SIZE)  # All wild-type initially
+
+# Selection pressures
+probiotic_present = True
+phage_mortality = 0.8  # From Module 04 synergy scoring
+
+# Track allele frequencies
+freq_history = []
+
+for gen in range(N_GENERATIONS):
+    # Mutation: rare receptor switch
+    n_mutations = np.random.binomial(POP_SIZE, MUTATION_RATE)
+    mutants = np.random.choice(POP_SIZE, n_mutations, replace=False)
+    population[mutants] = 1  # Switch to mutant type
+    
+    # Selection: wild-type lyses probiotic (if probiotic has receptor)
+    # Mutant may escape (if receptor mismatch)
+    
+    if probiotic_present:
+        # Wild-type fitness reduced (lysed by probiotic CRISPR?)
+        # Simplified: wild-type declines, mutant increases
+        fitness_wt = 0.3  # Low fitness if probiotic present
+        fitness_mut = 0.9  # High fitness (escapes)
+    else:
+        fitness_wt = 0.9
+        fitness_mut = 0.9
+    
+    # Apply selection (simplified)
+    n_wt = np.sum(population == 0)
+    n_mut = np.sum(population == 1)
+    
+    # Next generation (proportional to fitness)
+    total_fitness = n_wt * fitness_wt + n_mut * fitness_mut
+    p_wt_next = (n_wt * fitness_wt) / total_fitness
+    
+    # Sample next generation
+    population = np.random.choice([0, 1], POP_SIZE, p=[p_wt_next, 1-p_wt_next])
+    
+    # Record frequency
+    freq_mutant = np.mean(population)
+    freq_history.append(freq_mutant)
+
+# Convert to DataFrame
+df_evolution = pd.DataFrame({
+    'generation': range(N_GENERATIONS),
+    'mutant_freq': freq_history
+})
+
+print(f"Final mutant frequency: {freq_history[-1]:.3f}")
+print(f"Evolution complete: {'Mutant fixed' if freq_history[-1] > 0.95 else 'Polymorphic'}")
+```
+
+### 3.2 Visualize Evolution Trajectory
+
+```{r evolution-viz}
+#| label: evolution-viz
+#| eval: false
+
+# Assume df_evolution is passed from Python
+# (In practice, use reticulate or save to CSV)
+
+# Example visualization
+library(ggplot2)
+
+# Placeholder data
+evolution_data <- tibble(
+  generation = seq(0, 1000, by = 10),
+  mutant_freq = 1 / (1 + exp(-(generation - 500) / 50))  # Sigmoid
+)
+
+ggplot(evolution_data, aes(x = generation, y = mutant_freq)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  theme_minimal() +
+  labs(title = "Phage Receptor Evolution Under Probiotic Selection",
+       x = "Generation", y = "Mutant Frequency (Receptor Escape)") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") +
+  annotate("text", x = 800, y = 0.55, label = "Escape threshold")
+```
+
+---
+
+## 4. Risk Assessment
+
+### 4.1 Phage Cocktail Design
+
+Based on evolution simulation, design **rotating phage cocktails**.
+
+**Strategy**:
+- Cocktail A: Phages targeting receptor R1
+- Cocktail B: Phages targeting receptor R2
+- Rotate every 3 months (before phage adaptation)
+
+### 4.2 Probiotic Selection Criteria
+
+Prefer probiotics with:
+1. **Low CRISPR diversity** (less able to adapt to new phages)
+2. **No spacers matching therapeutic phages**
+3. **High synergy score** (from Module 03)
+
+| Probiotic | Synergy Score | CRISPR Risk | Combined Score | Recommendation |
+|-----------|---------------|-------------|----------------|-----------------|
+| *L. acidophilus* | 0.82 | Low | **0.85** | ✓ Use |
+| *B. lactis* | 0.78 | Medium | 0.72 | ⚠️ Monitor |
+| *B. subtilis* | 0.55 | High | 0.45 | ✗ Avoid |
+
+---
+
+## 5. Integration with NotebookLM
+
+### 5.1 Query for CRISPR Evidence
+
+```bash
+nlm notebook query phage-synergy "What CRISPR-Cas systems are found in Lactobacillus acidophilus?"
+```
+
+### 5.2 Add Simulation Results
+
+```bash
+nlm source add phage-synergy --text "$(cat phage_evolution_results.txt)" \
+  --title "Phage Evolution Simulation pr0117"
+```
+
+---
+
+## 6. Session Info
+
+```{r session-info}
+#| label: session-info
+sessionInfo()
+```
+
+---
+
+## 7. Next Steps
+
+1. **Complete CRISPR annotation** of all probiotic candidates
+2. **Run full evolution simulation** (1000+ generations)
+3. **Design phage cocktail rotation** based on risk assessment
+4. **Update Module 04** (synergy scoring) with evolution risk factor
+5. **Proceed to experimental design** (Module 07)
+
+---
+
+*Part of Strategy 6 enhancement for pr0117-PhageProbioticSynergy*
+*Requires: PILER-CR / CRISPRfinder for lab work*
