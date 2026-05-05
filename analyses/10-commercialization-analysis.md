@@ -1,186 +1,299 @@
+# Commercialization Analysis
 Your Name
 
-     1|---
-     2|title: "Commercialization Analysis"
-     3|---
-     4|
-     5|# Commercialization Analysis
-     6|
-     7|## Setup
-     8|
-     9|```\{r\}
-    10|#| label: setup
-    11|params <- list(name = "10-commercialization-analysis")
-    12|here::i_am(paste0(params$name, ".qmd"), uuid = "j0k1l2m3-n4o5-6789-pqrs-t1234567890")
-    13|
-    14|qproj::proj_create_dir_target(params$name)
-    15|path_target <- qproj::path_target(params$name)
-    16|path_source <- qproj::path_source(params$name)
-    17|
-    18|# Read upstream data
-    19|path_09 <- qproj::path_source("09-china-trial-analysis")
-    20|```
-    21|
-    22|## Load Packages
-    23|
-    24|```\{r\}
-    25|#| label: packages
-    26|library(tidyverse)
-    27|library(here)
-    28|library(qproj)
-    29|library(ggplot2)
-    30|```
-    31|
-    32|## 1. Commercial Context
-    33|
-    34|### 1.1 Target Market (China)
-    35|
-    36|From Notion Research Master Plan Section 13 (Market & Commercial Context):
-    37|
-    38|| Sector | Farmgate Value (¥ billions) | Antibiotic BAN Impact | Our Opportunity |
-    39||--------|--------------------------|----------------------|-------------------|
-    40|| **Poultry** | 1,200 | High (daily antibiotics banned) | Phage+Probiotic for broilers |
-    41|| **Aquaculture** | 800 | Medium (shrimp/fish) | Vibrio control + gut health |
-    42|| **Swine** | 1,500 | High (strict monitoring) | Salmonella control |
-    43|| **Cattle** | 600 | Low (mainly beef) | Limited focus |
-    44|
-    45|**Primary target**: Poultry (fastest ROI, 禁抗令 impact最高)
-    46|
-    47|### 1.2 Competitive Landscape
-    48|
-    49|| Competitor | Product Type | Market Share | Strength | Weakness |
-    50||------------|---------------|--------------|----------|----------|
-    51|| **青岛诺安百特** (Qingdao Nuo'anbai) | Phage (mono) | Leading | Established sales network | No synergy approach |
-    52|| **CJ BIO** (Korea) | Probiotic (mono) | Strong | Large capacity | No phage integration |
-    53|| **Our Product** | **Phage+Probiotic Synergy** | New entrant | Scientific basis, bioinformatics-driven | Needs market entry |
-    54|
-    55|## 2. Business Model
-    56|
-    57|### 2.1 Value Proposition
-    58|
-    59|**For farmers**:
-    60|- Reduce mortality by X% (Module 09 results)
-    61|- Improve FCR by 0.1-0.15 points
-    62|- No antibiotic residues (compliance with 禁抗令)
-    63|
-    64|**For integrators**:
-    65|- Traceable, sustainable production
-    66|- Premium pricing ("antibiotic-free" label)
-    67|- Regulatory compliance
-    68|
-    69|### 2.2 Revenue Streams
-    70|
-    71|```\{r\}
-    72|#| label: revenue-model
-    73|#| eval: false
-    74|
-    75|revenue <- tibble(
-    76|  stream = c("Direct sales (phage)", "Direct sales (probiotic)", 
-    77|           "Combo product", "Licensing (IP)", "Consulting (trial design)"),
-    78|  margin_pct = c(60, 50, 70, 90, 80),
-    79|  scale_potential = c("High", "High", "High", "Medium", "Low")
-    80|)
-    81|
-    82|knitr::kable(revenue, caption = "Revenue Streams Analysis")
-    83|```
-    84|
-    85|## 3. IP Strategy
-    86|
-    87|### 3.1 Patent Portfolio
-    88|
-    89|From Notion Section 14 (IP & Patent Strategy):
-    90|
-    91|| Patent | Coverage | Status | Timeline |
-    92||--------|----------|--------|----------|
-    93|| **Phage cocktail composition** | Germany + PCT | Filed (Phase 2) | 3-5 years protection |
-    94|| **Synergy formulation** | China + PCT | Drafting | File Month 9 |
-    95|| **Application method** | China specific | Drafting | File Month 10 |
-    96|| **Probiotic strain selection** | Trade secret | Maintaining | Ongoing |
-    97|
-    98|### 3.2 Freedom to Operate (FTO)
-    99|
+- [<span class="toc-section-number">1</span> Commercialization
+  Analysis](#commercialization-analysis)
+  - [<span class="toc-section-number">1.1</span> Setup](#setup)
+- [<span class="toc-section-number">2</span> Read upstream
+  data](#read-upstream-data)
+  - [<span class="toc-section-number">2.1</span> 1. Commercial
+    Context](#1-commercial-context)
+    - [<span class="toc-section-number">2.1.1</span> 1.1 Target Market
+      (China)](#11-target-market-china)
+    - [<span class="toc-section-number">2.1.2</span> 1.2 Competitive
+      Landscape](#12-competitive-landscape)
+  - [<span class="toc-section-number">2.2</span> 2. Business
+    Model](#2-business-model)
+    - [<span class="toc-section-number">2.2.1</span> 2.1 Value
+      Proposition](#21-value-proposition)
+    - [<span class="toc-section-number">2.2.2</span> 2.2 Revenue
+      Streams](#22-revenue-streams)
+    - [<span class="toc-section-number">2.2.3</span> 7.2 Funding
+      Requirements](#72-funding-requirements)
+  - [<span class="toc-section-number">2.3</span> 8. Risk
+    Management](#8-risk-management)
+    - [<span class="toc-section-number">2.3.1</span> 8.1 Risk
+      Matrix](#81-risk-matrix)
+    - [<span class="toc-section-number">2.3.2</span> 8.2 Exit
+      Strategy](#82-exit-strategy)
+  - [<span class="toc-section-number">2.4</span> 9. NotebookLM
+    Validation](#9-notebooklm-validation)
+    - [<span class="toc-section-number">2.4.1</span> 9.1 Query for
+      Market Insights](#91-query-for-market-insights)
+    - [<span class="toc-section-number">2.4.2</span> 9.2 Add Commercial
+      Analysis to NotebookLM](#92-add-commercial-analysis-to-notebooklm)
+  - [<span class="toc-section-number">2.5</span> 10. Session
+    Info](#10-session-info)
+  - [<span class="toc-section-number">2.6</span> 11. Final Milestones
+    (12-Month Target)](#11-final-milestones-12-month-target)
 
-100\|**Key risks**: 101\|1. **青岛诺安百特**: May have broad phage
-patents → design around 102\|2. **CJ BIO**: Probiotic formulations →
-ensure strain differentiation 103\|3. **University patents**: Check
-academic licensing options 104\| 105\|**Mitigation**: 106\|- Use novel
-phage isolates (German strains → China validation) 107\|- Combine with
-established GRAS probiotics (novel combination = new IP) 108\|- File
-defensively (prevent competitors from blocking) 109\| 110\|## 4.
-Regulatory Pathway 111\| 112\|### 4.1 China Market Access 113\| 114\|\|
-Step \| Agency \| Timeline \| Cost (¥) \| 115\|\|——\|——–\|———-\|———-\|
-116\|\| **Lab validation** \| Internal \| Complete (Phase 2) \| 50K \|
-117\|\| **Pilot trial** \| Local FAIRS \| Month 7-9 \| 200K \| 118\|\|
-**Full trial** \| Ministry of Agriculture \| Month 10-15 \| 500K \|
-119\|\| **Production permit** \| Provincial gov \| Month 16-18 \| 100K
-\| 120\|\| **Sales license** \| National \| Month 19-20 \| 50K \| 121\|
-122\|**Total timeline**: ~20 months from lab validation to market. 123\|
-124\|### 4.2 International Expansion (Post-China) 125\| 126\|\| Market
-\| Regulation \| Timeline \| Entry Strategy \|
-127\|\|——–\|————-\|———-\|—————–\| 128\|\| **EU** \| EFSA \| 24+ months
-\| Partner with EU firm \| 129\|\| **USA** \| FDA \| 18+ months \| CJ
-BIO partnership? \| 130\|\| **SEA** \| Variable \| 12 months \| China
-model replication \| 131\| 132\|## 5. Manufacturing & Supply Chain 133\|
-134\|### 5.1 Production Requirements 135\| 136\|**Phage production**:
-137\|- Scale: 10^12 PFU/month (serves 1M birds) 138\|- Facility: BSL-2
-lab (China partner) 139\|- Cost: ¥0.05/dose (target) 140\|
-141\|**Probiotic production**: 142\|- Scale: 1 ton/month (lyophilized)
-143\|- Facility: GMP certified (existing partner) 144\|- Cost:
-¥0.03/dose (target) 145\| 146\|### 5.2 Quality Control 147\| 148\|\|
-Test \| Frequency \| Method \| Standard \| 149\|\|——\|———–\|——–\|———-\|
-150\|\| **Phage titer** \| Every batch \| Double agar layer \| \>10^9
-PFU/mL \| 151\|\| **Probiotic viability** \| Every batch \| Plate count
-\| \>10^9 CFU/g \| 152\|\| **Sterility** \| Every batch \| Membrane
-filtration \| No growth \| 153\|\| **Heavy metals** \| Quarterly \|
-ICP-MS \| Meet feed standards \| 154\| 155\|## 6. Go-to-Market Strategy
-156\| 157\|### 6.1 Customer Segments 158\| 159\|\| Segment \| Size \|
-Priority \| Approach \| 160\|\|———\|——\|———-\|———-\| 161\|\| **Large
-integrators** (Wens, New Hope) \| 5-10 firms \| P0 (Highest) \| Direct
-sales team \| 162\|\| **Medium farms** (10K-100K birds) \| 1,000+ \| P1
-\| Distributor network \| 163\|\| **Feed mills** \| 50+ \| P2 \| B2B
-ingredient sales \| 164\|\| **Aquaculture** \| 200+ farms \| P3 \|
-Specialized channel \| 165\| 166\|### 6.2 Pricing Strategy 167\|
-168\|**Cost-plus pricing**: 169\|- Production cost: ¥0.08/bird (phage +
-probiotic) 170\|- Target price: ¥0.15/bird (47% margin) 171\|- Premium
-tier: ¥0.20/bird (if FCR improvement \>0.15) 172\| 173\|**Competitive
-pricing**: 174\|- 诺安百特 phage only: ¥0.18/bird 175\|- Our synergy:
-¥0.15/bird (better efficacy, lower price) 176\| 177\|## 7. Financial
-Projections 178\| 179\|### 7.1 5-Year Revenue Projection 180\|
-181\|`\{r\}    182|#| label: financial-projection    183|#| eval: false    184|    185|years <- 1:5    186|revenue_m <- c(0.5, 5, 20, 50, 100)  # Million ¥    187|cost_m <- c(2, 4, 10, 20, 40)  # Million ¥    188|profit_m <- revenue_m - cost_m    189|    190|projections <- tibble(    191|  Year = years,    192|  Revenue_M = revenue_m,    193|  Cost_M = cost_m,    194|  Profit_M = profit_m,    195|  Cumulative_Profit = cumsum(profit_m)    196|)    197|    198|knitr::kable(projections, caption = "5-Year Financial Projection (Million ¥)")    199|    200|# ggplot(projections, aes(x = Year)) +    201|#   geom_line(aes(y = Revenue_M, color = "Revenue")) +    202|#   geom_line(aes(y = Cost_M, color = "Cost")) +    203|#   geom_line(aes(y = Cumulative_Profit, color = "Cumulative Profit")) +    204|#   theme_minimal() +    205|#   labs(title = "Financial Projection (Million ¥)",    206|#        y = "Million ¥")    207|`
-208\| 209\|**Break-even**: Month 30 (2.5 years) 210\| 211\|### 7.2
-Funding Requirements 212\| 213\|\| Round \| Amount (M¥) \| Use \| Source
-\| 214\|\|——-\|—————\|—–\|——–\| 215\|\| **Seed** (Month 0-6) \| 2M \|
-R&D, pilot trial \| Government grant (DFG-equivalent), angel \| 216\|\|
-**Series A** (Month 12) \| 10M \| China trial, production setup \| VC
-(agtech focus) \| 217\|\| **Series B** (Month 24) \| 50M \| Market
-expansion \| VC, strategic investor \| 218\| 219\|## 8. Risk Management
-220\| 221\|### 8.1 Risk Matrix 222\| 223\|\| Risk \| Probability \|
-Impact \| Mitigation \| 224\|\|——\|————-\|——–\|————\| 225\|\|
-**Regulatory delay** \| Medium \| High \| Start approvals early
-(Month 1) \| 226\|\| **Competitor blocking** \| Low \| High \| Strong IP
-portfolio, design around \| 227\|\| **Phage resistance** \| High \|
-Medium \| Use cocktails (3+ phages) \| 228\|\| **Market rejection** \|
-Low \| High \| Pilot trials with key customers \| 229\|\| **Production
-failure** \| Low \| Medium \| Partner with established facility \| 230\|
-231\|### 8.2 Exit Strategy 232\| 233\|**Options** (Month 60+): 234\|1.
-**Acquisition** by 诺安百特 / CJ BIO (valuation: 500M-1B ¥) 235\|2.
-**IPO** on ChiNext/SSE (minimum 3 years profit) 236\|3. **Licensing** to
-multinational (royalty stream) 237\| 238\|## 9. NotebookLM Validation
-239\| 240\|### 9.1 Query for Market Insights 241\|
-242\|`bash    243|nlm notebook query phage-synergy "What is the market size for phage therapy in China animal agriculture?"    244|`
-245\| 246\|### 9.2 Add Commercial Analysis to NotebookLM 247\|
-248\|After finalizing commercial plan: 249\|
-250\|`bash    251|nlm source add phage-synergy --text "$(cat commercial_analysis.txt)" \    252|  --title "Commercialization Analysis pr0117"    253|`
-254\| 255\|## 10. Session Info 256\|
-257\|`\{r\}    258|#| label: session-info    259|sessionInfo()    260|`
-261\| 262\|## 11. Final Milestones (12-Month Target) 263\| 264\|✅
-**Month 0-2**: Bioinformatics analysis (Phase 1) — **COMPLETE** 265\|✅
+# Commercialization Analysis
+
+## Setup
+
+\`\`\`{r} \#\| label: setup params \<- list(name =
+“10-commercialization-analysis”) here::i_am(paste0(params\$name,
+“.qmd”), uuid = “j0k1l2m3-n4o5-6789-pqrs-t1234567890”)
+
+qproj::proj_create_dir_target(params$name)
+path_target <- qproj::path_target(params$name) path_source \<-
+qproj::path_source(params\$name)
+
+# Read upstream data
+
+path_09 \<- qproj::path_source(“09-china-trial-analysis”)
+
+
+    ## Load Packages
+
+    ```\{r\}
+    #| label: packages
+    library(tidyverse)
+    library(here)
+    library(qproj)
+    library(ggplot2)
+
+## 1. Commercial Context
+
+### 1.1 Target Market (China)
+
+From Notion Research Master Plan Section 13 (Market & Commercial
+Context):
+
+ Sector | Farmgate Value (¥ billions) | Antibiotic BAN Impact | Our Opportunity |
+----|----|----|----|
+ **Poultry** | 1,200 | High (daily antibiotics banned) | Phage+Probiotic for broilers |
+ **Aquaculture** | 800 | Medium (shrimp/fish) | Vibrio control + gut health |
+ **Swine** | 1,500 | High (strict monitoring) | Salmonella control |
+ **Cattle** | 600 | Low (mainly beef) | Limited focus |
+
+**Primary target**: Poultry (fastest ROI, 禁抗令 impact最高)
+
+### 1.2 Competitive Landscape
+
+ Competitor | Product Type | Market Share | Strength | Weakness |
+----|----|----|----|----|
+ **青岛诺安百特** (Qingdao Nuo’anbai) | Phage (mono) | Leading | Established sales network | No synergy approach |
+ **CJ BIO** (Korea) | Probiotic (mono) | Strong | Large capacity | No phage integration |
+ **Our Product** | **Phage+Probiotic Synergy** | New entrant | Scientific basis, bioinformatics-driven | Needs market entry |
+
+## 2. Business Model
+
+### 2.1 Value Proposition
+
+**For farmers**: - Reduce mortality by X% (Module 09 results) - Improve
+FCR by 0.1-0.15 points - No antibiotic residues (compliance with 禁抗令)
+
+**For integrators**: - Traceable, sustainable production - Premium
+pricing (“antibiotic-free” label) - Regulatory compliance
+
+### 2.2 Revenue Streams
+
+\`\`\`{r} \#\| label: revenue-model \#\| eval: false
+
+revenue \<- tibble( stream = c(“Direct sales (phage)”, “Direct sales
+(probiotic)”, “Combo product”, “Licensing (IP)”, “Consulting (trial
+design)”), margin_pct = c(60, 50, 70, 90, 80), scale_potential =
+c(“High”, “High”, “High”, “Medium”, “Low”) )
+
+knitr::kable(revenue, caption = “Revenue Streams Analysis”)
+
+
+    ## 3. IP Strategy
+
+    ### 3.1 Patent Portfolio
+
+    From Notion Section 14 (IP & Patent Strategy):
+
+ Patent | Coverage | Status | Timeline |
+--------|----------|--------|----------|
+ **Phage cocktail composition** | Germany + PCT | Filed (Phase 2) | 3-5 years protection |
+ **Synergy formulation** | China + PCT | Drafting | File Month 9 |
+ **Application method** | China specific | Drafting | File Month 10 |
+ **Probiotic strain selection** | Trade secret | Maintaining | Ongoing |
+
+    ### 3.2 Freedom to Operate (FTO)
+
+    **Key risks**:
+    1. **青岛诺安百特**: May have broad phage patents → design around
+    2. **CJ BIO**: Probiotic formulations → ensure strain differentiation
+    3. **University patents**: Check academic licensing options
+
+    **Mitigation**:
+    - Use novel phage isolates (German strains → China validation)
+    - Combine with established GRAS probiotics (novel combination = new IP)
+    - File defensively (prevent competitors from blocking)
+
+    ## 4. Regulatory Pathway
+
+    ### 4.1 China Market Access
+
+ Step | Agency | Timeline | Cost (¥) |
+------|--------|----------|----------|
+ **Lab validation** | Internal | Complete (Phase 2) | 50K |
+ **Pilot trial** | Local FAIRS | Month 7-9 | 200K |
+ **Full trial** | Ministry of Agriculture | Month 10-15 | 500K |
+ **Production permit** | Provincial gov | Month 16-18 | 100K |
+ **Sales license** | National | Month 19-20 | 50K |
+
+    **Total timeline**: ~20 months from lab validation to market.
+
+    ### 4.2 International Expansion (Post-China)
+
+ Market | Regulation | Timeline | Entry Strategy |
+--------|-------------|----------|-----------------|
+ **EU** | EFSA | 24+ months | Partner with EU firm |
+ **USA** | FDA | 18+ months | CJ BIO partnership? |
+ **SEA** | Variable | 12 months | China model replication |
+
+    ## 5. Manufacturing & Supply Chain
+
+    ### 5.1 Production Requirements
+
+    **Phage production**:
+    - Scale: 10^12 PFU/month (serves 1M birds)
+    - Facility: BSL-2 lab (China partner)
+    - Cost: ¥0.05/dose (target)
+
+    **Probiotic production**:
+    - Scale: 1 ton/month (lyophilized)
+    - Facility: GMP certified (existing partner)
+    - Cost: ¥0.03/dose (target)
+
+    ### 5.2 Quality Control
+
+ Test | Frequency | Method | Standard |
+------|-----------|--------|----------|
+ **Phage titer** | Every batch | Double agar layer | >10^9 PFU/mL |
+ **Probiotic viability** | Every batch | Plate count | >10^9 CFU/g |
+ **Sterility** | Every batch | Membrane filtration | No growth |
+ **Heavy metals** | Quarterly | ICP-MS | Meet feed standards |
+
+    ## 6. Go-to-Market Strategy
+
+    ### 6.1 Customer Segments
+
+ Segment | Size | Priority | Approach |
+---------|------|----------|----------|
+ **Large integrators** (Wens, New Hope) | 5-10 firms | P0 (Highest) | Direct sales team |
+ **Medium farms** (10K-100K birds) | 1,000+ | P1 | Distributor network |
+ **Feed mills** | 50+ | P2 | B2B ingredient sales |
+ **Aquaculture** | 200+ farms | P3 | Specialized channel |
+
+    ### 6.2 Pricing Strategy
+
+    **Cost-plus pricing**:
+    - Production cost: ¥0.08/bird (phage + probiotic)
+    - Target price: ¥0.15/bird (47% margin)
+    - Premium tier: ¥0.20/bird (if FCR improvement >0.15)
+
+    **Competitive pricing**:
+    - 诺安百特 phage only: ¥0.18/bird
+    - Our synergy: ¥0.15/bird (better efficacy, lower price)
+
+    ## 7. Financial Projections
+
+    ### 7.1 5-Year Revenue Projection
+
+    ```\{r\}
+    #| label: financial-projection
+    #| eval: false
+
+    years <- 1:5
+    revenue_m <- c(0.5, 5, 20, 50, 100)  # Million ¥
+    cost_m <- c(2, 4, 10, 20, 40)  # Million ¥
+    profit_m <- revenue_m - cost_m
+
+    projections <- tibble(
+      Year = years,
+      Revenue_M = revenue_m,
+      Cost_M = cost_m,
+      Profit_M = profit_m,
+      Cumulative_Profit = cumsum(profit_m)
+    )
+
+    knitr::kable(projections, caption = "5-Year Financial Projection (Million ¥)")
+
+    # ggplot(projections, aes(x = Year)) +
+    #   geom_line(aes(y = Revenue_M, color = "Revenue")) +
+    #   geom_line(aes(y = Cost_M, color = "Cost")) +
+    #   geom_line(aes(y = Cumulative_Profit, color = "Cumulative Profit")) +
+    #   theme_minimal() +
+    #   labs(title = "Financial Projection (Million ¥)",
+    #        y = "Million ¥")
+
+**Break-even**: Month 30 (2.5 years)
+
+### 7.2 Funding Requirements
+
+ Round | Amount (M¥) | Use | Source |
+----|----|----|----|
+ **Seed** (Month 0-6) | 2M | R&D, pilot trial | Government grant (DFG-equivalent), angel |
+ **Series A** (Month 12) | 10M | China trial, production setup | VC (agtech focus) |
+ **Series B** (Month 24) | 50M | Market expansion | VC, strategic investor |
+
+## 8. Risk Management
+
+### 8.1 Risk Matrix
+
+ Risk | Probability | Impact | Mitigation |
+----|----|----|----|
+ **Regulatory delay** | Medium | High | Start approvals early (Month 1) |
+ **Competitor blocking** | Low | High | Strong IP portfolio, design around |
+ **Phage resistance** | High | Medium | Use cocktails (3+ phages) |
+ **Market rejection** | Low | High | Pilot trials with key customers |
+ **Production failure** | Low | Medium | Partner with established facility |
+
+### 8.2 Exit Strategy
+
+**Options** (Month 60+): 1. **Acquisition** by 诺安百特 / CJ BIO
+(valuation: 500M-1B ¥) 2. **IPO** on ChiNext/SSE (minimum 3 years
+profit) 3. **Licensing** to multinational (royalty stream)
+
+## 9. NotebookLM Validation
+
+### 9.1 Query for Market Insights
+
+``` bash
+nlm notebook query phage-synergy "What is the market size for phage therapy in China animal agriculture?"
+```
+
+### 9.2 Add Commercial Analysis to NotebookLM
+
+After finalizing commercial plan:
+
+``` bash
+nlm source add phage-synergy --text "$(cat commercial_analysis.txt)" \
+  --title "Commercialization Analysis pr0117"
+```
+
+## 10. Session Info
+
+`\{r\} #| label: session-info sessionInfo()`
+
+## 11. Final Milestones (12-Month Target)
+
+✅ **Month 0-2**: Bioinformatics analysis (Phase 1) — **COMPLETE** ✅
 **Month 0-3**: Mechanism exploration + proxy strains (Phase 2) —
-**COMPLETE** 266\|🔄 **Month 0-6**: Experimental design + manuscript
-(Phase 3) — **IN PROGRESS** 267\|🔄 **Month 0-12**: China trials +
-commercialization (Phase 4) — **PLANNED** 268\| 269\|**Deliverables by
-Month 12**: 270\|1. ✅ Grant application (preliminary data ready)
-271\|2. 🔄 Manuscript submitted (Phase 3) 272\|3. 🔄 China trial
-completed (Phase 4) 273\|4. 🔄 Series A funding (¥10M) 274\|5. 🔄 Market
-entry (sales license) 275\| 276\|— 277\|*Generated by qproj workflow for
-pr0117-PhageProbioticSynergy* 278\|
+**COMPLETE** 🔄 **Month 0-6**: Experimental design + manuscript (Phase
+3) — **IN PROGRESS** 🔄 **Month 0-12**: China trials + commercialization
+(Phase 4) — **PLANNED**
+
+**Deliverables by Month 12**: 1. ✅ Grant application (preliminary data
+ready) 2. 🔄 Manuscript submitted (Phase 3) 3. 🔄 China trial completed
+(Phase 4) 4. 🔄 Series A funding (¥10M) 5. 🔄 Market entry (sales
+license)
+
+------------------------------------------------------------------------
+
+*Generated by qproj workflow for pr0117-PhageProbioticSynergy*

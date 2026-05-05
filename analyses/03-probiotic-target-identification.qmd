@@ -1,444 +1,443 @@
-     1|---
-     2|title: "Probiotic Target Identification"
-     3|params:
-     4|  name: "03-probiotic-target-identification"
-     5|---
-     6|
-     7|# Probiotic Target Identification
-     8|
-     9|## Setup
-    10|
-    11|```{r setup}
-    12|#| label: setup
-    13|here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
-    14|
-    15|qproj::proj_create_dir_target(params$name)
-    16|path_target <- qproj::path_target(params$name)
-    17|path_source <- qproj::path_source(params$name)
-    18|
-    19|# Read upstream data
-    20|path_01 <- qproj::path_source("01-public-data-mining")
-    21|path_02 <- qproj::path_source("02-phage-host-prediction")
-    22|```
-    23|
-    24|## Load Packages
-    25|
-    26|```{r packages}
-    27|#| label: packages
-    28|library(tidyverse)
-    29|library(here)
-    30|library(qproj)
-    31|library(ggplot2)
-    32|```
-    33|
-    34|## 1. Objective
-    35|
-    36|Identify which probiotic bacteria benefit most from phage-mediated niche clearing:
-    37|
-    38|- **Target probiotics**: *Lactobacillus*, *Bifidobacterium*, *Bacillus*, *Enterococcus*
-    39|- **Goal**: Understand colonization requirements, receptor usage, metabolic dependencies
-    40|- **Outcome**: Rank probiotics by expected synergy with phages
-    41|
-    42|## 2. Probiotic Colonization Requirements
-    43|
-    44|### 2.1 Key Factors for Gut Colonization
-    45|
-    46|Based on NotebookLM literature review:
-    47|
-    48|| Factor | Description | Relevance to Synergy |
-    49||--------|-------------|---------------------|
-    50|| Adhesion molecules | Bind to gut epithelial cells | Phage clearing competitors → more adhesion sites |
-    51|| Metabolic flexibility | Utilize diverse carbon sources | Survive after pathogen removal |
-    52|| Bile tolerance | Survive gut environment | Essential for delivery |
-    53|| Competitive exclusion | Outcompete pathogens | Enhanced by phage predation |
-    54|| Immune modulation | Regulate host immune response | Complementary to phage action |
-    55|
-    56|### 2.2 Receptor Landscape Analysis
-    57|
-    58|Analyze what receptors/pathways probiotics use for colonization.
-    59|
-    60|```{r receptor-analysis-template}
-    61|#| label: receptor-analysis-template
-    62|#| eval: false
-    63|
-    64|# Template: Analyze probiotic genome for adhesion factors
-    65|# Key gene families to search:
-    66|# - Mub (mucin-binding protein)
-    67|# - SpaCBA (sortase-anchored pilus)
-    68|# - LBA (lactobacillus adhesin)
-    69|# - S-layer proteins
-    70|
-    71|# Example using eggnog-mapper results (if available)
-    72|# probiotic_genes <- read_tsv(file.path(path_02, "processed", "probiotic_annotation.tsv"))
-    73|
-    74|# Filter for adhesion-related genes
-    75|# adhesion_genes <- probiotic_genes %>%
-    76|#   filter(grepl("adhesin|mucin|pilus|pilin|S-layer", description, ignore.case = TRUE))
-    77|
-    78|# knitr::kable(head(adhesion_genes, 10), caption = "Adhesion-Related Genes in Probiotics")
-    79|```
-    80|
-    81|## 3. Probiotic Fitness Knowledge Graph (Strategy 3 Enhancement)
-    82|
-    83|### 3.1 Knowledge Graph Construction
-    84|
-    85|Build a knowledge graph integrating multiple databases for objective probiotic scoring.
-    86|
-    87|```{python knowledge-graph}
-    88|#| eval: false
-    89|
-    90|# Knowledge graph using NetworkX (Python)
-    91|import networkx as nx
-    92|import pandas as pd
-    93|import json
-    94|
-    95|# Initialize knowledge graph
-    96|G = nx.DiGraph()
-    97|
-    98|# === Node types ===
-    99|# 1. Probiotic strains (from ProbiMed/BacMap)
-   100|probiotics = pd.DataFrame({
-   101|    'strain': ['Lactobacillus_acidophilus_NCFM', 'Bifidobacterium_lactis_BB12', 
-   102|               'Bacillus_subtilis_NRRL_B-30809', 'Enterococcus_faecium_NCIMB_10415'],
-   103|    'genome_size': [1.9, 2.2, 4.2, 2.8],  # Mbp
-   104|    'GC_content': [35.2, 58.1, 43.5, 37.8],
-   105|    'origin': ['human', 'animal', 'soil', 'animal']
-   106|})
-   107|
-   108|# Add probiotic nodes
-   109|for _, row in probiotics.iterrows():
-   110|    G.add_node(row['strain'], type='probiotic', **row.to_dict())
-   111|
-   112|# 2. Functional modules (from KEGG/BacMap)
-   113|functional_modules = [
-   114|    ('bacteriocin_synthesis', 'pathway', {'category': 'antimicrobial'}),
-   115|    ('adhesion_proteins', 'pathway', {'category': 'colonization'}),
-   116|    ('bile_salt_hydrolase', 'pathway', {'category': 'survival'}),
-   117|    ('short_chain_fatty_acid', 'pathway', {'category': 'metabolism'}),
-   118|    ('CRISPR_Cas', 'pathway', {'category': 'defense'})
-   119|]
-   120|
-   121|G.add_nodes_from([(m[0], m[2]) for m in functional_modules])
-   122|
-   123|# 3.Edgetypes: has_pathway, inhibits, enhances_synergy
-   124|# Example edges (would be populated from real DB queries)
-   125|edges = [
-   126|    ('Lactobacillus_acidophilus_NCFM', 'adhesion_proteins', {'weight': 0.9}),
-   127|    ('Lactobacillus_acidophilus_NCFM', 'bacteriocin_synthesis', {'weight': 0.8}),
-   128|    ('bacteriocin_synthesis', 'pathogen_suppression', {'weight': 0.85}),
-   129|    ('adhesion_proteins', 'gut_colonization', {'weight': 0.9})
-   130|]
-   131|
-   132|G.add_edges_from(edges)
-   133|
-   134|print(f"Knowledge graph created: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
-   135|```
-   136|
-   137|### 3.2 Feature Engineering for ML Scoring
-   138|
-   139|Extract quantifiable features from genomes and knowledge graph.
-   140|
-   141|```{python feature-engineering}
-   142|#| eval: false
-   143|
-   144|import numpy as np
-   145|from sklearn.preprocessing import StandardScaler
-   146|
-   147|# Feature matrix (example - would be computed from real data)
-   148|features = pd.DataFrame({
-   149|    'strain': probiotics['strain'],
-   150|    'genome_size_mbp': probiotics['genome_size'],
-   151|    'gc_content': probiotics['GC_content'],
-   152|    'bacteriocin_genes': [5, 3, 8, 6],  # Count from genome annotation
-   153|    'adhesion_genes': [12, 8, 4, 10],
-   154|    'bile_tolerance_score': [0.9, 0.85, 0.6, 0.8],  # From experiments
-   155|    'gut_colonization_score': [0.85, 0.8, 0.5, 0.75],  # From animal trials
-   156|    'cr CRISPR_spacers': [15, 22, 8, 18],  # From CRISPR array analysis
-   157|    'niche_overlap_pathogen': [0.7, 0.6, 0.4, 0.65]  # Computed from niche modeling
-   158|})
-   159|
-   160|# Target variable: synergy score (to be predicted/validated)
-   161|# This would come from literature + experimental validation
-   162|features['synergy_score'] = [0.82, 0.78, 0.55, 0.75]  # Placeholder
-   163|
-   164|print("Feature matrix shape:", features.shape)
-   165|print(features.head())
-   166|```
-   167|
-   168|### 3.3 XGBoost Model for Probiotic Ranking
-   169|
-   170|Train ML model to predict probiotic synergy potential with hyperparameter tuning.
-   171|
-   172|```{python xgboost-model}
-   173|#| eval: false
-   174|
-   175|import xgboost as xgb
-   176|from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
-   177|from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-   178|import pandas as pd
-   179|import numpy as np
-   180|
-   181|# Prepare data
-   182|X = features.drop(['strain', 'synergy_score'], axis=1)
-   183|y = features['synergy_score']
-   184|
-   185|# Train-test split
-   186|X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-   187|
-   188|# === Base model ===
-   189|model = xgb.XGBRegressor(
-   190|    n_estimators=100,
-   191|    max_depth=3,
-   192|    learning_rate=0.1,
-   193|    random_state=42
-   194|)
-   195|model.fit(X_train, y_train)
-   196|
-   197|# Predictions
-   198|y_pred = model.predict(X_test)
-   199|mse = mean_squared_error(y_test, y_pred)
-   200|r2 = r2_score(y_test, y_pred)
-   201|mae = mean_absolute_error(y_test, y_pred)
-   202|
-   203|print(f"Base Model Performance:")
-   204|print(f"  MSE: {mse:.4f}")
-   205|print(f"  R² Score: {r2:.4f}")
-   206|print(f"  MAE: {mae:.4f}")
-   207|
-   208|# === Cross-validation ===
-   209|print(f"\n=== Cross-Validation (5-fold) ===")
-   210|cv_scores = cross_val_score(model, X, y, cv=5, scoring='r2')
-   211|print(f"  R² scores: {cv_scores}")
-   212|print(f"  Mean R²: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})")
-   213|
-   214|# === Hyperparameter Tuning ===
-   215|print(f"\n=== Hyperparameter Tuning (GridSearch) ===")
-   216|param_grid = {
-   217|    'n_estimators': [50, 100, 200],
-   218|    'max_depth': [3, 5, 7],
-   219|    'learning_rate': [0.01, 0.1, 0.3],
-   220|    'subsample': [0.8, 1.0],
-   221|    'colsample_bytree': [0.8, 1.0]
-   222|}
-   223|
-   224|grid_search = GridSearchCV(
-   225|    xgb.XGBRegressor(random_state=42),
-   226|    param_grid,
-   227|    cv=5,
-   228|    scoring='r2',
-   229|    n_jobs=-1,
-   230|    verbose=1
-   231|)
-   232|grid_search.fit(X_train, y_train)
-   233|
-   234|print(f"\nBest parameters: {grid_search.best_params_}")
-   235|print(f"Best cross-validation R²: {grid_search.best_score_:.4f}")
-   236|
-   237|# Use best model
-   238|best_model = grid_search.best_estimator_
-   239|y_pred_best = best_model.predict(X_test)
-   240|r2_best = r2_score(y_test, y_pred_best)
-   241|print(f"Test R² with tuned model: {r2_best:.4f}")
-   242|
-   243|# === Feature Importance (from best model) ===
-   244|importance = pd.DataFrame({
-   245|    'feature': X.columns,
-   246|    'importance': best_model.feature_importances_
-   247|}).sort_values('importance', ascending=False)
-   248|
-   249|print(f"\nFeature Importance (Tuned Model):")
-   250|print(importance)
-   251|
-   252|# === Save model ===
-   253|import joblib
-   254|joblib.dump(best_model, 'probiotic_synergy_model.pkl')
-   255|print(f"\n✓ Model saved to probiotic_synergy_model.pkl")
-   256|```
-   257|
-   258|### 3.4 Visualization with Cytoscape
-   259|
-   260|Visualize knowledge graph and feature importance.
-   261|
-   262|```{r cytoscape-viz}
-   263|#| eval: false
-   264|
-   265|# R interface to Cytoscape (if available)
-   266|if (requireNamespace("RCy3", quietly = TRUE)) {
-   267|  library(RCy3)
-   268|  
-   269|  # Create Cytoscape network from Python-computed graph
-   270|  # (Integration would require exporting G to CSV/JSON)
-   271|  
-   272|  # Example: Bar plot of feature importance
-   273|  library(ggplot2)
-   274|  
-   275|  ggplot(importance, aes(x = reorder(feature, importance), y = importance)) +
-   276|    geom_bar(stat = "identity", fill = "steelblue") +
-   277|    coord_flip() +
-   278|    theme_minimal() +
-   279|    labs(title = "Feature Importance for Probiotic Synergy Prediction",
-   280|         x = "Feature", y = "Importance (XGBoost)")
-   281|}
-   282|```
-   283|
-   284|## 4. Niche Competition Modeling
-   285|
-   286|### 4.1 Ecological Niche Overlap
-   287|
-   288|Model the competitive relationship between pathogens and probiotics.
-   289|
-   290|```{r niche-overlap-template}
-   291|#| label: niche-overlap-template
-   292|#| eval: false
-   293|
-   294|# Template: Calculate niche overlap index
-   295|# Based on:
-   296|# - Carbon source utilization profiles
-   297|# - Oxygen tolerance
-   298|# - pH optima
-   299|# - Temperature range
-   300|# - Receptor usage
-   301|
-   302|# Example data structure
-   303|niche_data <- tibble(
-   304|  species = c("C. perfringens", "L. acidophilus", "S. enterica", "B. subtilis"),
-   305|  temp_opt (c(37, 37, 37, 30)),  # Celsius
-   306|  pH_opt (c(6.5, 6.0, 7.0, 7.5)),
-   307|  oxygen = c("anaerobic", "microaerophilic", "facultative", "aerobic"),
-   308|  carbon_sources = c(4, 6, 8, 10)  # Number of carbon sources utilized
-   309|)
-   310|
-   311|# Calculate overlap score (simplified)
-   312|# Overlap = 1 / (1 + |temp_diff| + |pH_diff| + |carbon_diff|)
-   313|```
-   314|
-   315|### 3.2 Phage Impact Simulation
-   316|
-   317|Simulate how phage predation on pathogens opens niche space for probiotics.
-   318|
-   319|```{r phage-impact-simulation}
-   320|#| label: phage-impact-simulation
-   321|#| eval: false
-   322|
-   323|# Template: Simple competition model
-   324|# Initial abundances
-   325|initial_state <- tibble(
-   326|  species = c("Pathogen", "Probiotic", "Commensal1", "Commensal2"),
-   327|  abundance = c(100, 10, 50, 40),
-   328|  growth_rate = c(1.2, 0.8, 0.9, 0.7),
-   329|  susceptibility = c(1.0, 0.0, 0.3, 0.2)  # Phage susceptibility
-   330|)
-   331|
-   332|# Simulation parameters
-   333|phage_mortality <- 0.8  # Pathogen mortality due to phage
-   334|
-   335|# Simulate after phage treatment
-   336|post_phage <- initial_state %>%
-   337|  mutate(
-   338|    new_abundance = ifelse(susceptibility > 0,
-   339|      abundance * (1 - susceptibility * phage_mortality),
-   340|      abundance * (1 + growth_rate * 0.1))
-   341|  )
-   342|
-   343|# Visualize
-   344|# ggplot(post_phage, aes(x = species, y = new_abundance, fill = species)) +
-   345|#   geom_bar(stat = "identity") +
-   346|#   theme_minimal() +
-   347|#   labs(title = "Abundance After Phage Treatment",
-   348|#        y = "Relative Abundance", x = "")
-   349|```
-   350|
-   351|## 4. Probiotic Ranking
-   352|
-   353|### 4.1 Ranking Criteria
-   354|
-   355|From the Research Master Plan:
-   356|
-   357|| Criterion | Weight | Description |
-   358||-----------|--------|-------------|
-   359|| Niche overlap with pathogen | 0.3 | Higher overlap = more benefit from phage |
-   360|| Lytic phage availability | 0.25 | Ensure effective phages exist |
-   361|| Commercial availability | 0.2 | Ready for application |
-   362|| Safety profile | 0.15 | GRAS status, no virulence |
-   363|| Mechanism clarity | 0.1 | Understanding of synergy |
-   364|
-   365|### 4.2 Preliminary Ranking
-   366|
-   367|*To be populated after analysis*
-   368|
-   369|| Rank | Probiotic | Target Pathogen | Niche Overlap | Phage Available | Score |
-   370||------|------------|-----------------|---------------|------------------|-------|
-   371|| 1 | TBD | TBD | - | - | - |
-   372|| 2 | TBD | TBD | - | - | - |
-   373|| 3 | TBD | TBD | - | - | - |
-   374|
-   375|## 5. Genomic Analysis
-   376|
-   377|### 5.1 Probiotic Genome Features
-   378|
-   379|Analyze probiotic genomes for synergy-relevant features.
-   380|
-   381|```{r genome-features-template}
-   382|#| label: genome-features-template
-   383|#| eval: false
-   384|
-   385|# Template: Analyze probiotic genomes
-   386|# Load probiotic genome annotations
-   387|# probiotic_gff <- rtracklayer::import.gff3(file.path(path_02, "raw", "probiotic_genomes.gff"))
-   388|
-   389|# Extract features of interest
-   390|# - Bacteriocin genes (competitive advantage)
-   391|# - Carbohydrate utilization loci (niche exploitation)
-   392|# - Stress response genes (survival)
-   393|# - Bile salt hydrolase (gut adaptation)
-   394|```
-   395|
-   396|### 5.2 Comparative Genomics
-   397|
-   398|Compare probiotic strains for optimal selection.
-   399|
-   400|```{r comparative-genomics}
-   401|#| label: comparative-genomics
-   402|#| eval: false
-   403|
-   404|# Template: Compare multiple strains of same species
-   405|# Identify core and accessory genome
-   406|# Focus on strains with proven efficacy in animal trials
-   407|```
-   408|
-   409|## 6. NotebookLM Validation
-   410|
-   411|### 6.1 Query for Probiotic Evidence
-   412|
-   413|Use NotebookLM to validate probiotic selection.
-   414|
-   415|```bash
-   416|nlm notebook query phage-synergy "Which Lactobacillus strains show best colonization in poultry gut?"
-   417|```
-   418|
-   419|### 6.2 Add Analysis Results
-   420|
-   421|After generating ranking, add to NotebookLM for literature cross-validation.
-   422|
-   423|```bash
-   424|nlm source add phage-synergy --text "$(cat probiotic_ranking.txt)" --title "Probiotic Ranking pr0117"
-   425|```
-   426|
-   427|## 7. Session Info
-   428|
-   429|```{r session-info}
-   430|#| label: session-info
-   431|sessionInfo()
-   432|```
-   433|
-   434|## 8. Next Steps
-   435|
-   436|1. **Complete genomic analysis** of top probiotic candidates
-   437|2. **Finalize ranking** based on multi-criteria assessment
-   438|3. **Cross-validate** with NotebookLM literature
-   439|4. **Proceed to Module 04** (`04-synergy-scoring.qmd`)
-   440|
-   441|---
-   442|*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
-   443|
-   444|
+---
+title: "Probiotic Target Identification"
+params:
+  name: "03-probiotic-target-identification"
+---
+
+# Probiotic Target Identification
+
+## Setup
+
+```{r setup}
+#| label: setup
+here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- qproj::path_target(params$name)
+path_source <- qproj::path_source(params$name)
+
+# Read upstream data
+path_01 <- qproj::path_source("01-public-data-mining")
+path_02 <- qproj::path_source("02-phage-host-prediction")
+```
+
+## Load Packages
+
+```{r packages}
+#| label: packages
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+```
+
+## 1. Objective
+
+Identify which probiotic bacteria benefit most from phage-mediated niche clearing:
+
+- **Target probiotics**: *Lactobacillus*, *Bifidobacterium*, *Bacillus*, *Enterococcus*
+- **Goal**: Understand colonization requirements, receptor usage, metabolic dependencies
+- **Outcome**: Rank probiotics by expected synergy with phages
+
+## 2. Probiotic Colonization Requirements
+
+### 2.1 Key Factors for Gut Colonization
+
+Based on NotebookLM literature review:
+
+| Factor | Description | Relevance to Synergy |
+|--------|-------------|---------------------|
+| Adhesion molecules | Bind to gut epithelial cells | Phage clearing competitors → more adhesion sites |
+| Metabolic flexibility | Utilize diverse carbon sources | Survive after pathogen removal |
+| Bile tolerance | Survive gut environment | Essential for delivery |
+| Competitive exclusion | Outcompete pathogens | Enhanced by phage predation |
+| Immune modulation | Regulate host immune response | Complementary to phage action |
+
+### 2.2 Receptor Landscape Analysis
+
+Analyze what receptors/pathways probiotics use for colonization.
+
+```{r receptor-analysis-template}
+#| label: receptor-analysis-template
+#| eval: false
+
+# Template: Analyze probiotic genome for adhesion factors
+# Key gene families to search:
+# - Mub (mucin-binding protein)
+# - SpaCBA (sortase-anchored pilus)
+# - LBA (lactobacillus adhesin)
+# - S-layer proteins
+
+# Example using eggnog-mapper results (if available)
+# probiotic_genes <- read_tsv(file.path(path_02, "processed", "probiotic_annotation.tsv"))
+
+# Filter for adhesion-related genes
+# adhesion_genes <- probiotic_genes %>%
+#   filter(grepl("adhesin|mucin|pilus|pilin|S-layer", description, ignore.case = TRUE))
+
+# knitr::kable(head(adhesion_genes, 10), caption = "Adhesion-Related Genes in Probiotics")
+```
+
+## 3. Probiotic Fitness Knowledge Graph (Strategy 3 Enhancement)
+
+### 3.1 Knowledge Graph Construction
+
+Build a knowledge graph integrating multiple databases for objective probiotic scoring.
+
+```{python knowledge-graph}
+#| eval: false
+
+# Knowledge graph using NetworkX (Python)
+import networkx as nx
+import pandas as pd
+import json
+
+# Initialize knowledge graph
+G = nx.DiGraph()
+
+# === Node types ===
+# 1. Probiotic strains (from ProbiMed/BacMap)
+probiotics = pd.DataFrame({
+    'strain': ['Lactobacillus_acidophilus_NCFM', 'Bifidobacterium_lactis_BB12', 
+               'Bacillus_subtilis_NRRL_B-30809', 'Enterococcus_faecium_NCIMB_10415'],
+    'genome_size': [1.9, 2.2, 4.2, 2.8],  # Mbp
+    'GC_content': [35.2, 58.1, 43.5, 37.8],
+    'origin': ['human', 'animal', 'soil', 'animal']
+})
+
+# Add probiotic nodes
+for _, row in probiotics.iterrows():
+    G.add_node(row['strain'], type='probiotic', **row.to_dict())
+
+# 2. Functional modules (from KEGG/BacMap)
+functional_modules = [
+    ('bacteriocin_synthesis', 'pathway', {'category': 'antimicrobial'}),
+    ('adhesion_proteins', 'pathway', {'category': 'colonization'}),
+    ('bile_salt_hydrolase', 'pathway', {'category': 'survival'}),
+    ('short_chain_fatty_acid', 'pathway', {'category': 'metabolism'}),
+    ('CRISPR_Cas', 'pathway', {'category': 'defense'})
+]
+
+G.add_nodes_from([(m[0], m[2]) for m in functional_modules])
+
+# 3.Edgetypes: has_pathway, inhibits, enhances_synergy
+# Example edges (would be populated from real DB queries)
+edges = [
+    ('Lactobacillus_acidophilus_NCFM', 'adhesion_proteins', {'weight': 0.9}),
+    ('Lactobacillus_acidophilus_NCFM', 'bacteriocin_synthesis', {'weight': 0.8}),
+    ('bacteriocin_synthesis', 'pathogen_suppression', {'weight': 0.85}),
+    ('adhesion_proteins', 'gut_colonization', {'weight': 0.9})
+]
+
+G.add_edges_from(edges)
+
+print(f"Knowledge graph created: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+```
+
+### 3.2 Feature Engineering for ML Scoring
+
+Extract quantifiable features from genomes and knowledge graph.
+
+```{python feature-engineering}
+#| eval: false
+
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+
+# Feature matrix (example - would be computed from real data)
+features = pd.DataFrame({
+    'strain': probiotics['strain'],
+    'genome_size_mbp': probiotics['genome_size'],
+    'gc_content': probiotics['GC_content'],
+    'bacteriocin_genes': [5, 3, 8, 6],  # Count from genome annotation
+    'adhesion_genes': [12, 8, 4, 10],
+    'bile_tolerance_score': [0.9, 0.85, 0.6, 0.8],  # From experiments
+    'gut_colonization_score': [0.85, 0.8, 0.5, 0.75],  # From animal trials
+    'cr CRISPR_spacers': [15, 22, 8, 18],  # From CRISPR array analysis
+    'niche_overlap_pathogen': [0.7, 0.6, 0.4, 0.65]  # Computed from niche modeling
+})
+
+# Target variable: synergy score (to be predicted/validated)
+# This would come from literature + experimental validation
+features['synergy_score'] = [0.82, 0.78, 0.55, 0.75]  # Placeholder
+
+print("Feature matrix shape:", features.shape)
+print(features.head())
+```
+
+### 3.3 XGBoost Model for Probiotic Ranking
+
+Train ML model to predict probiotic synergy potential with hyperparameter tuning.
+
+```{python xgboost-model}
+#| eval: false
+
+import xgboost as xgb
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+import pandas as pd
+import numpy as np
+
+# Prepare data
+X = features.drop(['strain', 'synergy_score'], axis=1)
+y = features['synergy_score']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# === Base model ===
+model = xgb.XGBRegressor(
+    n_estimators=100,
+    max_depth=3,
+    learning_rate=0.1,
+    random_state=42
+)
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+
+print(f"Base Model Performance:")
+print(f"  MSE: {mse:.4f}")
+print(f"  R² Score: {r2:.4f}")
+print(f"  MAE: {mae:.4f}")
+
+# === Cross-validation ===
+print(f"\n=== Cross-Validation (5-fold) ===")
+cv_scores = cross_val_score(model, X, y, cv=5, scoring='r2')
+print(f"  R² scores: {cv_scores}")
+print(f"  Mean R²: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})")
+
+# === Hyperparameter Tuning ===
+print(f"\n=== Hyperparameter Tuning (GridSearch) ===")
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 5, 7],
+    'learning_rate': [0.01, 0.1, 0.3],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0]
+}
+
+grid_search = GridSearchCV(
+    xgb.XGBRegressor(random_state=42),
+    param_grid,
+    cv=5,
+    scoring='r2',
+    n_jobs=-1,
+    verbose=1
+)
+grid_search.fit(X_train, y_train)
+
+print(f"\nBest parameters: {grid_search.best_params_}")
+print(f"Best cross-validation R²: {grid_search.best_score_:.4f}")
+
+# Use best model
+best_model = grid_search.best_estimator_
+y_pred_best = best_model.predict(X_test)
+r2_best = r2_score(y_test, y_pred_best)
+print(f"Test R² with tuned model: {r2_best:.4f}")
+
+# === Feature Importance (from best model) ===
+importance = pd.DataFrame({
+    'feature': X.columns,
+    'importance': best_model.feature_importances_
+}).sort_values('importance', ascending=False)
+
+print(f"\nFeature Importance (Tuned Model):")
+print(importance)
+
+# === Save model ===
+import joblib
+joblib.dump(best_model, 'probiotic_synergy_model.pkl')
+print(f"\n✓ Model saved to probiotic_synergy_model.pkl")
+```
+
+### 3.4 Visualization with Cytoscape
+
+Visualize knowledge graph and feature importance.
+
+```{r cytoscape-viz}
+#| eval: false
+
+# R interface to Cytoscape (if available)
+if (requireNamespace("RCy3", quietly = TRUE)) {
+  library(RCy3)
+  
+  # Create Cytoscape network from Python-computed graph
+  # (Integration would require exporting G to CSV/JSON)
+  
+  # Example: Bar plot of feature importance
+  library(ggplot2)
+  
+  ggplot(importance, aes(x = reorder(feature, importance), y = importance)) +
+    geom_bar(stat = "identity", fill = "steelblue") +
+    coord_flip() +
+    theme_minimal() +
+    labs(title = "Feature Importance for Probiotic Synergy Prediction",
+         x = "Feature", y = "Importance (XGBoost)")
+}
+```
+
+## 4. Niche Competition Modeling
+
+### 4.1 Ecological Niche Overlap
+
+Model the competitive relationship between pathogens and probiotics.
+
+```{r niche-overlap-template}
+#| label: niche-overlap-template
+#| eval: false
+
+# Template: Calculate niche overlap index
+# Based on:
+# - Carbon source utilization profiles
+# - Oxygen tolerance
+# - pH optima
+# - Temperature range
+# - Receptor usage
+
+# Example data structure
+niche_data <- tibble(
+  species = c("C. perfringens", "L. acidophilus", "S. enterica", "B. subtilis"),
+  temp_opt (c(37, 37, 37, 30)),  # Celsius
+  pH_opt (c(6.5, 6.0, 7.0, 7.5)),
+  oxygen = c("anaerobic", "microaerophilic", "facultative", "aerobic"),
+  carbon_sources = c(4, 6, 8, 10)  # Number of carbon sources utilized
+)
+
+# Calculate overlap score (simplified)
+# Overlap = 1 / (1 + |temp_diff| + |pH_diff| + |carbon_diff|)
+```
+
+### 3.2 Phage Impact Simulation
+
+Simulate how phage predation on pathogens opens niche space for probiotics.
+
+```{r phage-impact-simulation}
+#| label: phage-impact-simulation
+#| eval: false
+
+# Template: Simple competition model
+# Initial abundances
+initial_state <- tibble(
+  species = c("Pathogen", "Probiotic", "Commensal1", "Commensal2"),
+  abundance = c(100, 10, 50, 40),
+  growth_rate = c(1.2, 0.8, 0.9, 0.7),
+  susceptibility = c(1.0, 0.0, 0.3, 0.2)  # Phage susceptibility
+)
+
+# Simulation parameters
+phage_mortality <- 0.8  # Pathogen mortality due to phage
+
+# Simulate after phage treatment
+post_phage <- initial_state %>%
+  mutate(
+    new_abundance = ifelse(susceptibility > 0,
+      abundance * (1 - susceptibility * phage_mortality),
+      abundance * (1 + growth_rate * 0.1))
+  )
+
+# Visualize
+# ggplot(post_phage, aes(x = species, y = new_abundance, fill = species)) +
+#   geom_bar(stat = "identity") +
+#   theme_minimal() +
+#   labs(title = "Abundance After Phage Treatment",
+#        y = "Relative Abundance", x = "")
+```
+
+## 4. Probiotic Ranking
+
+### 4.1 Ranking Criteria
+
+From the Research Master Plan:
+
+| Criterion | Weight | Description |
+|-----------|--------|-------------|
+| Niche overlap with pathogen | 0.3 | Higher overlap = more benefit from phage |
+| Lytic phage availability | 0.25 | Ensure effective phages exist |
+| Commercial availability | 0.2 | Ready for application |
+| Safety profile | 0.15 | GRAS status, no virulence |
+| Mechanism clarity | 0.1 | Understanding of synergy |
+
+### 4.2 Preliminary Ranking
+
+*To be populated after analysis*
+
+| Rank | Probiotic | Target Pathogen | Niche Overlap | Phage Available | Score |
+|------|------------|-----------------|---------------|------------------|-------|
+| 1 | TBD | TBD | - | - | - |
+| 2 | TBD | TBD | - | - | - |
+| 3 | TBD | TBD | - | - | - |
+
+## 5. Genomic Analysis
+
+### 5.1 Probiotic Genome Features
+
+Analyze probiotic genomes for synergy-relevant features.
+
+```{r genome-features-template}
+#| label: genome-features-template
+#| eval: false
+
+# Template: Analyze probiotic genomes
+# Load probiotic genome annotations
+# probiotic_gff <- rtracklayer::import.gff3(file.path(path_02, "raw", "probiotic_genomes.gff"))
+
+# Extract features of interest
+# - Bacteriocin genes (competitive advantage)
+# - Carbohydrate utilization loci (niche exploitation)
+# - Stress response genes (survival)
+# - Bile salt hydrolase (gut adaptation)
+```
+
+### 5.2 Comparative Genomics
+
+Compare probiotic strains for optimal selection.
+
+```{r comparative-genomics}
+#| label: comparative-genomics
+#| eval: false
+
+# Template: Compare multiple strains of same species
+# Identify core and accessory genome
+# Focus on strains with proven efficacy in animal trials
+```
+
+## 6. NotebookLM Validation
+
+### 6.1 Query for Probiotic Evidence
+
+Use NotebookLM to validate probiotic selection.
+
+```bash
+nlm notebook query phage-synergy "Which Lactobacillus strains show best colonization in poultry gut?"
+```
+
+### 6.2 Add Analysis Results
+
+After generating ranking, add to NotebookLM for literature cross-validation.
+
+```bash
+nlm source add phage-synergy --text "$(cat probiotic_ranking.txt)" --title "Probiotic Ranking pr0117"
+```
+
+## 7. Session Info
+
+```{r session-info}
+#| label: session-info
+sessionInfo()
+```
+
+## 8. Next Steps
+
+1. **Complete genomic analysis** of top probiotic candidates
+2. **Finalize ranking** based on multi-criteria assessment
+3. **Cross-validate** with NotebookLM literature
+4. **Proceed to Module 04** (`04-synergy-scoring.qmd`)
+
+---
+*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
+

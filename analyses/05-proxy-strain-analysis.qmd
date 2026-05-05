@@ -1,279 +1,278 @@
-     1|---
-     2|title: "Proxy Strain Analysis for China Market"
-     3|params:
-     4|  name: "05-proxy-strain-analysis"
-     5|---
-     6|
-     7|# Proxy Strain Analysis for China Market
-     8|
-     9|## Setup
-    10|
-    11|```{r setup}
-    12|#| label: setup
-    13|params <- list(name = "05-proxy-strain-analysis")
-    14|here::i_am(paste0(params$name, ".qmd"), uuid = "e5f6a7b8-c9d0-1234-efgh-i1234567890")
-    15|
-    16|qproj::proj_create_dir_target(params$name)
-    17|path_target <- qproj::path_target(params$name)
-    18|path_source <- qproj::path_source(params$name)
-    19|
-    20|# Read upstream data
-    21|path_01 <- qproj::path_source("01-public-data-mining")
-    22|path_02 <- qproj::path_source("02-phage-host-prediction")
-    23|path_04 <- qproj::path_source("04-synergy-scoring")
-    24|```
-    25|
-    26|## Load Packages
-    27|
-    28|```{r packages}
-    29|#| label: packages
-    30|library(tidyverse)
-    31|library(here)
-    32|library(qproj)
-    33|library(ape)
-    34|library(ggplot2)
-    35|library(ggtree)
-    36|```
-    37|
-    38|## 1. Problem Statement
-    39|
-    40|### 1.1 The "Proxy Strain" Challenge
-    41|
-    42|**核心问题**：无法在德国获取中国本地病原体菌株，但需要在德国进行湿实验验证。
-    43|
-    44|**Notion 文档 Section 6.2**：
-    45|- 由于无法获取中国本地病原体菌株，策略是识别**可获得的国际参考菌株**
-    46|- 关键约束：代理菌株必须与中国本地菌株在基因组和表型上高度相似
-    47|
-    48|### 1.2 Target Pathogens for China Market
-    49|
-    50|| Pathogen | Disease | Target Animal | China Market Priority |
-    51||----------|---------|---------------|----------------------|
-    52|| *Clostridium perfringens* | 坏死性肠炎 | 家禽 (poultry) | ⭐⭐⭐⭐⭐ |
-    53|| *Salmonella enterica* | 沙门氏菌病 | 家禽/牲畜 | ⭐⭐⭐⭐ |
-    54|| *Escherichia coli* (pathogenic) | 大肠杆菌病 | 家禽/水产 | ⭐⭐⭐⭐ |
-    55|| *Vibrio parahaemolyticus* | 急性肠胃炎 | 水产 (aquaculture) | ⭐⭐⭐ |
-    56|| *Streptococcus suis* | 猪链球菌病 | 生猪 (pig) | ⭐⭐⭐ |
-    57|
-    58|## 2. Proxy Strain Selection Strategy
-    59|
-    60|### 2.1 Selection Criteria
-    61|
-    62|Based on Notion Research Master Plan:
-    63|
-    64|1. **Genomic similarity** > 95% ANI (Average Nucleotide Identity)
-    65|2. **Phage susceptibility** (similar phage receptor profiles)
-    66|3. **Availability** (can obtain from DSMZ, ATCC, etc.)
-    67|4. **Safety** (moderate virulence for lab work)
-    68|5. **Publication track record** (well-characterized in literature)
-    69|
-    70|### 2.2 Data Sources for Strain Comparison
-    71|
-    72|```{r data-sources}
-    73|#| label: data-sources
-    74|#| eval: false
-    75|
-    76|# Template: Search NCBI for available strains
-    77|if (FALSE) {
-    78|  library(rentrez)
-    79|  
-    80|  # Search for C. perfringens strains in NCBI BioSample
-    81|  search_query <- 'Clostridium perfringens[Organism] AND "China"[Geolocation] AND ("strain" OR "isolate") AND ("genome" OR "complete genome")'
-    82|  
-    83|  strains_search <- rentrez::entrez_search(
-    84|    db = "biosample",
-    85|    term = search_query,
-    86|    retmax = 100
-    87|  )
-    88|  
-    89|  # Save for analysis
-    90|  write_lines(
-    91|    strains_search$ids,
-    92|    file.path(path_target, "raw", "c_perfringens_china_strains.txt")
-    93|  )
-    94|}
-    95|```
-    96|
-    97|## 3. Strain Comparison Analysis
-    98|
-    99|### 3.1 ANI Calculation Template
-   100|
-   101|```{r ani-template}
-   102|#| label: ani-template
-   103|#| eval: false
-   104|
-   105|# Template for ANI calculation using pyani (Python) or fastANI
-   106|# Install: conda install -c bioconda pyani fastani
-   107|
-   108|ani_script <- c(
-   109|  "#!/bin/bash",
-   110|  "# ANI calculation script",
-   111|  paste0("TARGET_DIR=", path_target, "/processed/ani_results"),
-   112|  "mkdir -p $TARGET_DIR",
-   113|  "",
-   114|  "# Run fastANI",
-   115|  "# fastANI -q query_genome.fasta -r reference_genome.fasta -o $TARGET_DIR/ani_output.txt",
-   116|  "",
-   117|  "# Batch ANI for multiple strains",
-   118|  "# for q in strains/*.fasta; do",
-   119|  "#   for r in reference/*.fasta; do",
-   120|  "#     fastANI -q $q -r $r -o $TARGET_DIR/$(basename $q)_vs_$(basename $r).txt",
-   121|  "#   done",
-   122|  "# done"
-   123|)
-   124|
-   125|write_lines(
-   126|  ani_script,
-   127|  file.path(path_target, "scripts", "run_ani.sh")
-   128|)
-   129|
-   130|# Make executable
-   131|Sys.chmod(file.path(path_target, "scripts", "run_ani.sh"), "755")
-   132|```
-   133|
-   134|### 3.2 Phage Receptor Profile Comparison
-   135|
-   136|```{r receptor-comparison}
-   137|#| label: receptor-comparison
-   138|#| eval: false
-   139|
-   140|# Template: Compare phage receptor genes
-   141|# Key receptors to check:
-   142|# - LPS (Lipopolysaccharide) biosynthesis genes
-   143|# - T4P (Type IV Pilus) genes
-   144|# - Cell wall teichoic acid genes
-   145|# - Capsular polysaccharide genes
-   146|
-   147|# Load genome annotations (from eggNOG-mapper or Prokka)
-   148|# query_annotation <- read_tsv(file.path(path_02, "processed", "query_annotation.tsv"))
-   149|# reference_annotation <- read_tsv(file.path(path_02, "processed", "reference_annotation.tsv"))
-   150|
-   151|# Extract receptor-related genes
-   152|# receptor_genes <- c("lpx", "waa", "pil", "tat", "cap", "wzy")
-   153|
-   154|# Compare presence/absence
-   155|# comparison_table <- bind_rows(
-   156|#   query_annotation %>% mutate(type = "query"),
-   157|#   reference_annotation %>% mutate(type = "reference")
-   158|# ) %>%
-   159|#   filter(grepl(paste(receptor_genes, collapse = "|"), gene_id, ignore.case = TRUE)) %>%
-   160|#   group_by(type, gene_id) %>%
-   161|#   summarise(count = n(), .groups = "drop")
-   162|
-   163|# knitr::kable(comparison_table, caption = "Phage Receptor Gene Comparison")
-   164|```
-   165|
-   166|## 4. Proxy Strain Candidates
-   167|
-   168|### 4.1 *Clostridium perfringens* Proxies
-   169|
-   170|*To be populated after analysis*
-   171|
-   172|| Strain | Origin | ANI to China Isolate | Phage Susceptibility | Availability | Score |
-   173||--------|--------|---------------------|----------------------|--------------|-------|
-   174|| ATCC 13124 | USA | - | Known | ATCC/DSMZ | - |
-   175|| DSM 756 | Germany | - | Moderate | DSMZ | - |
-   176|| TYPE B STRAIN | - | - | - | - | - |
-   177|
-   178|### 4.2 *Salmonella enterica* Proxies
-   179|
-   180|| Strain | Serovar | ANI to China Isolate | Phage Susceptibility | Availability | Score |
-   181||--------|---------|---------------------|----------------------|--------------|-------|
-   182|| ATCC 14028 | Typhimurium | - | High | ATCC | - |
-   183|| DSM 554 | Enteritidis | - | Moderate | DSMZ | - |
-   184|
-   185|### 4.3 *Vibrio* spp. Proxies (Aquaculture)
-   186|
-   187|| Strain | Species | Origin | ANI | Host Range | Score |
-   188||--------|---------|--------|-----|------------|-------|
-   189|| ATCC 17802 | V. parahaemolyticus | USA | - | Known | - |
-   190|| DSM 10027 | V. cholerae | Germany | - | Moderate | - |
-   191|
-   192|## 5. Experimental Validation Plan
-   193|
-   194|### 5.1 Proxy Validation Workflow
-   195|
-   196|Based on Notion document Section 7 (The Bioinformatics-First Strategy):
-   197|
-   198|**Step 1**: In silico validation
-   199|- ANI > 95% to China isolates
-   200|- Phage receptor profile match > 80%
-   201|- Metabolic capability similarity
-   202|
-   203|**Step 2**: In vitro validation (Germany)
-   204|- Phage isolation using proxy strain
-   205|- Efficiency of plating (EOP) test
-   206|- Lytic spectrum confirmation
-   207|
-   208|**Step 3**: Technology transfer to China
-   209|- Send validated phages to China collaborator
-   210|- Validate on local China isolates
-   211|- Compare efficacy (German proxy vs. China local)
-   212|
-   213|### 5.2 Validation Metrics
-   214|
-   215|```{r validation-metrics}
-   216|#| label: validation-metrics
-   217|#| eval: false
-   218|
-   219|validation_criteria <- tibble(
-   220|  metric = c("ANI similarity", "Receptor match", "Phage susceptibility", "Lytic spectrum", "Growth inhibition"),
-   221|  threshold = c("> 95%", "> 80%", "> 90%", "> 5 strains", "> 2 log reduction"),
-   222|  method = c("fastANI", "Gene presence/absence", "EOP assay", "Spot test", "In vitro co-culture")
-   223|)
-   224|
-   225|knitr::kable(validation_criteria, caption = "Proxy Strain Validation Criteria")
-   226|```
-   227|
-   228|## 6. Commercial Implications
-   229|
-   230|### 6.1 China Market Access Strategy
-   231|
-   232|From Notion document:
-   233|- **Competing companies**: 青岛诺安百特 (Qingdao Nuo'anbai), CJ BIO (Korea)
-   234|- **Strategy**: Use German lab for R&D, China partner for trials + commercialization
-   235|- **Timeline**: Proxy validation (3 months) → China validation (6 months) → Market entry (12 months)
-   236|
-   237|### 6.2 IP Considerations
-   238|
-   239|- Patent strategy must cover **both** proxy and local strain applications
-   240|- Phage cocktails should be broad enough to cover strain variations
-   241|- Probiotic combinations need to be effective across strain spectra
-   242|
-   243|## 7. NotebookLM Validation
-   244|
-   245|### 7.1 Query for Evidence
-   246|
-   247|Use NotebookLM to validate proxy strain strategy:
-   248|
-   249|```bash
-   250|nlm notebook query phage-synergy "What proxy strains are used for Clostridium perfringens research in Europe?"
-   251|```
-   252|
-   253|### 7.2 Add Results to NotebookLM
-   254|
-   255|After completing proxy analysis, add to NotebookLM:
-   256|
-   257|```bash
-   258|nlm source add phage-synergy --text "$(cat proxy_strain_report.txt)" --title "Proxy Strain Analysis pr0117"
-   259|```
-   260|
-   261|## 8. Session Info
-   262|
-   263|```{r session-info}
-   264|#| label: session-info
-   265|sessionInfo()
-   266|```
-   267|
-   268|## 9. Next Steps
-   269|
-   270|1. **Complete ANI analysis** for top candidate strains
-   271|2. **Validate phage receptor profiles** against literature
-   272|3. **Order proxy strains** from DSMZ/ATCC
-   273|4. **Design validation experiments** (Germany lab)
-   274|5. **Proceed to Module 06** (`06-mechanism-exploration.qmd`)
-   275|
-   276|---
-   277|*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
-   278|
-   279|
+---
+title: "Proxy Strain Analysis for China Market"
+params:
+  name: "05-proxy-strain-analysis"
+---
+
+# Proxy Strain Analysis for China Market
+
+## Setup
+
+```{r setup}
+#| label: setup
+params <- list(name = "05-proxy-strain-analysis")
+here::i_am(paste0(params$name, ".qmd"), uuid = "e5f6a7b8-c9d0-1234-efgh-i1234567890")
+
+qproj::proj_create_dir_target(params$name)
+path_target <- qproj::path_target(params$name)
+path_source <- qproj::path_source(params$name)
+
+# Read upstream data
+path_01 <- qproj::path_source("01-public-data-mining")
+path_02 <- qproj::path_source("02-phage-host-prediction")
+path_04 <- qproj::path_source("04-synergy-scoring")
+```
+
+## Load Packages
+
+```{r packages}
+#| label: packages
+library(tidyverse)
+library(here)
+library(qproj)
+library(ape)
+library(ggplot2)
+library(ggtree)
+```
+
+## 1. Problem Statement
+
+### 1.1 The "Proxy Strain" Challenge
+
+**核心问题**：无法在德国获取中国本地病原体菌株，但需要在德国进行湿实验验证。
+
+**Notion 文档 Section 6.2**：
+- 由于无法获取中国本地病原体菌株，策略是识别**可获得的国际参考菌株**
+- 关键约束：代理菌株必须与中国本地菌株在基因组和表型上高度相似
+
+### 1.2 Target Pathogens for China Market
+
+| Pathogen | Disease | Target Animal | China Market Priority |
+|----------|---------|---------------|----------------------|
+| *Clostridium perfringens* | 坏死性肠炎 | 家禽 (poultry) | ⭐⭐⭐⭐⭐ |
+| *Salmonella enterica* | 沙门氏菌病 | 家禽/牲畜 | ⭐⭐⭐⭐ |
+| *Escherichia coli* (pathogenic) | 大肠杆菌病 | 家禽/水产 | ⭐⭐⭐⭐ |
+| *Vibrio parahaemolyticus* | 急性肠胃炎 | 水产 (aquaculture) | ⭐⭐⭐ |
+| *Streptococcus suis* | 猪链球菌病 | 生猪 (pig) | ⭐⭐⭐ |
+
+## 2. Proxy Strain Selection Strategy
+
+### 2.1 Selection Criteria
+
+Based on Notion Research Master Plan:
+
+1. **Genomic similarity** > 95% ANI (Average Nucleotide Identity)
+2. **Phage susceptibility** (similar phage receptor profiles)
+3. **Availability** (can obtain from DSMZ, ATCC, etc.)
+4. **Safety** (moderate virulence for lab work)
+5. **Publication track record** (well-characterized in literature)
+
+### 2.2 Data Sources for Strain Comparison
+
+```{r data-sources}
+#| label: data-sources
+#| eval: false
+
+# Template: Search NCBI for available strains
+if (FALSE) {
+  library(rentrez)
+  
+  # Search for C. perfringens strains in NCBI BioSample
+  search_query <- 'Clostridium perfringens[Organism] AND "China"[Geolocation] AND ("strain" OR "isolate") AND ("genome" OR "complete genome")'
+  
+  strains_search <- rentrez::entrez_search(
+    db = "biosample",
+    term = search_query,
+    retmax = 100
+  )
+  
+  # Save for analysis
+  write_lines(
+    strains_search$ids,
+    file.path(path_target, "raw", "c_perfringens_china_strains.txt")
+  )
+}
+```
+
+## 3. Strain Comparison Analysis
+
+### 3.1 ANI Calculation Template
+
+```{r ani-template}
+#| label: ani-template
+#| eval: false
+
+# Template for ANI calculation using pyani (Python) or fastANI
+# Install: conda install -c bioconda pyani fastani
+
+ani_script <- c(
+  "#!/bin/bash",
+  "# ANI calculation script",
+  paste0("TARGET_DIR=", path_target, "/processed/ani_results"),
+  "mkdir -p $TARGET_DIR",
+  "",
+  "# Run fastANI",
+  "# fastANI -q query_genome.fasta -r reference_genome.fasta -o $TARGET_DIR/ani_output.txt",
+  "",
+  "# Batch ANI for multiple strains",
+  "# for q in strains/*.fasta; do",
+  "#   for r in reference/*.fasta; do",
+  "#     fastANI -q $q -r $r -o $TARGET_DIR/$(basename $q)_vs_$(basename $r).txt",
+  "#   done",
+  "# done"
+)
+
+write_lines(
+  ani_script,
+  file.path(path_target, "scripts", "run_ani.sh")
+)
+
+# Make executable
+Sys.chmod(file.path(path_target, "scripts", "run_ani.sh"), "755")
+```
+
+### 3.2 Phage Receptor Profile Comparison
+
+```{r receptor-comparison}
+#| label: receptor-comparison
+#| eval: false
+
+# Template: Compare phage receptor genes
+# Key receptors to check:
+# - LPS (Lipopolysaccharide) biosynthesis genes
+# - T4P (Type IV Pilus) genes
+# - Cell wall teichoic acid genes
+# - Capsular polysaccharide genes
+
+# Load genome annotations (from eggNOG-mapper or Prokka)
+# query_annotation <- read_tsv(file.path(path_02, "processed", "query_annotation.tsv"))
+# reference_annotation <- read_tsv(file.path(path_02, "processed", "reference_annotation.tsv"))
+
+# Extract receptor-related genes
+# receptor_genes <- c("lpx", "waa", "pil", "tat", "cap", "wzy")
+
+# Compare presence/absence
+# comparison_table <- bind_rows(
+#   query_annotation %>% mutate(type = "query"),
+#   reference_annotation %>% mutate(type = "reference")
+# ) %>%
+#   filter(grepl(paste(receptor_genes, collapse = "|"), gene_id, ignore.case = TRUE)) %>%
+#   group_by(type, gene_id) %>%
+#   summarise(count = n(), .groups = "drop")
+
+# knitr::kable(comparison_table, caption = "Phage Receptor Gene Comparison")
+```
+
+## 4. Proxy Strain Candidates
+
+### 4.1 *Clostridium perfringens* Proxies
+
+*To be populated after analysis*
+
+| Strain | Origin | ANI to China Isolate | Phage Susceptibility | Availability | Score |
+|--------|--------|---------------------|----------------------|--------------|-------|
+| ATCC 13124 | USA | - | Known | ATCC/DSMZ | - |
+| DSM 756 | Germany | - | Moderate | DSMZ | - |
+| TYPE B STRAIN | - | - | - | - | - |
+
+### 4.2 *Salmonella enterica* Proxies
+
+| Strain | Serovar | ANI to China Isolate | Phage Susceptibility | Availability | Score |
+|--------|---------|---------------------|----------------------|--------------|-------|
+| ATCC 14028 | Typhimurium | - | High | ATCC | - |
+| DSM 554 | Enteritidis | - | Moderate | DSMZ | - |
+
+### 4.3 *Vibrio* spp. Proxies (Aquaculture)
+
+| Strain | Species | Origin | ANI | Host Range | Score |
+|--------|---------|--------|-----|------------|-------|
+| ATCC 17802 | V. parahaemolyticus | USA | - | Known | - |
+| DSM 10027 | V. cholerae | Germany | - | Moderate | - |
+
+## 5. Experimental Validation Plan
+
+### 5.1 Proxy Validation Workflow
+
+Based on Notion document Section 7 (The Bioinformatics-First Strategy):
+
+**Step 1**: In silico validation
+- ANI > 95% to China isolates
+- Phage receptor profile match > 80%
+- Metabolic capability similarity
+
+**Step 2**: In vitro validation (Germany)
+- Phage isolation using proxy strain
+- Efficiency of plating (EOP) test
+- Lytic spectrum confirmation
+
+**Step 3**: Technology transfer to China
+- Send validated phages to China collaborator
+- Validate on local China isolates
+- Compare efficacy (German proxy vs. China local)
+
+### 5.2 Validation Metrics
+
+```{r validation-metrics}
+#| label: validation-metrics
+#| eval: false
+
+validation_criteria <- tibble(
+  metric = c("ANI similarity", "Receptor match", "Phage susceptibility", "Lytic spectrum", "Growth inhibition"),
+  threshold = c("> 95%", "> 80%", "> 90%", "> 5 strains", "> 2 log reduction"),
+  method = c("fastANI", "Gene presence/absence", "EOP assay", "Spot test", "In vitro co-culture")
+)
+
+knitr::kable(validation_criteria, caption = "Proxy Strain Validation Criteria")
+```
+
+## 6. Commercial Implications
+
+### 6.1 China Market Access Strategy
+
+From Notion document:
+- **Competing companies**: 青岛诺安百特 (Qingdao Nuo'anbai), CJ BIO (Korea)
+- **Strategy**: Use German lab for R&D, China partner for trials + commercialization
+- **Timeline**: Proxy validation (3 months) → China validation (6 months) → Market entry (12 months)
+
+### 6.2 IP Considerations
+
+- Patent strategy must cover **both** proxy and local strain applications
+- Phage cocktails should be broad enough to cover strain variations
+- Probiotic combinations need to be effective across strain spectra
+
+## 7. NotebookLM Validation
+
+### 7.1 Query for Evidence
+
+Use NotebookLM to validate proxy strain strategy:
+
+```bash
+nlm notebook query phage-synergy "What proxy strains are used for Clostridium perfringens research in Europe?"
+```
+
+### 7.2 Add Results to NotebookLM
+
+After completing proxy analysis, add to NotebookLM:
+
+```bash
+nlm source add phage-synergy --text "$(cat proxy_strain_report.txt)" --title "Proxy Strain Analysis pr0117"
+```
+
+## 8. Session Info
+
+```{r session-info}
+#| label: session-info
+sessionInfo()
+```
+
+## 9. Next Steps
+
+1. **Complete ANI analysis** for top candidate strains
+2. **Validate phage receptor profiles** against literature
+3. **Order proxy strains** from DSMZ/ATCC
+4. **Design validation experiments** (Germany lab)
+5. **Proceed to Module 06** (`06-mechanism-exploration.qmd`)
+
+---
+*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
+
