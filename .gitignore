@@ -26,8 +26,8 @@ drive_search.log
 # NotebookLM output
 notebooklm-output/
 
-# PDF (keep only specific ones if needed)
-*.pdf
+# PDF - allow analyses/*.pdf for GitHub preview
+# *.pdf  # Commented out to allow PDF commits
 
 # Zotero search temp files
 zotero_search*.json
