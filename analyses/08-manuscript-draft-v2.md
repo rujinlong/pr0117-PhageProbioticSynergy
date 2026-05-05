@@ -89,8 +89,6 @@ Your Name
     Contributions](#8-author-contributions)
   - [<span class="toc-section-number">1.11</span> 9. Competing
     Interests](#9-competing-interests)
-  - [<span class="toc-section-number">1.12</span> 10.
-    References](#10-references)
 
 # Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics
 
@@ -140,31 +138,26 @@ library(knitr)
 
 The global antibiotic resistance crisis has spurred urgent demand for
 precise microbiome modulation strategies that overcome colonization
-resistance in complex
-ecosystems[2](https://doi.org/10.1016/j.chom.2019.01.018). While phage
-therapy offers targeted pathogen clearance, it faces rapid evolutionary
-arms races driven by bacterial defense systems and
-heteroresistance[3](https://doi.org/10.1128/mbio.01234-23). Probiotics
-alone often fail to establish due to intense niche
-competition[1](https://doi.org/10.1038/s41467-019-11723-7). Here we
-present a bioinformatics-driven platform that rationally predicts and
-validates phage-probiotic synergistic consortia from metagenomics data.
-By integrating vOTU-host interaction
-networks[4](https://doi.org/10.1038/s41579-023-00981-w), niche overlap
-analysis, and metabolic cross-feeding predictions, we identified optimal
-combinations that achieve targeted niche clearing followed by stable
-probiotic colonization. In vitro validation demonstrated that rationally
-matched phages induce cascading
-effects[1](https://doi.org/10.1038/s41467-019-11723-7) that eliminate
-key pathogens while releasing metabolic byproducts that facilitate
-probiotic engraftment. In vivo validation in avian models confirmed that
-this synergistic approach significantly improved gut microbiota
-diversity (Shannon index, p \< 0.01) and reduced pathogen load by \>2
-log10 CFU/g compared to monotherapies. Our platform provides a
-generalizable paradigm for rational microbiome engineering across
-agricultural, clinical, and environmental applications, effectively
-short-circuiting the evolutionary arms race between phages and their
-hosts.
+resistance in complex ecosystems ([Kim S
+2017](#ref-2017-Intestinal_Kim)). While phage therapy offers targeted
+pathogen clearance, it faces rapid evolutionary arms races driven by
+bacterial defense systems and heteroresistance. Probiotics alone often
+fail to establish due to intense niche competition. Here we present a
+bioinformatics-driven platform that rationally predicts and validates
+phage-probiotic synergistic consortia from metagenomics data. By
+integrating vOTU-host interaction networks, niche overlap analysis, and
+metabolic cross-feeding predictions, we identified optimal combinations
+that achieve targeted niche clearing followed by stable probiotic
+colonization. In vitro validation demonstrated that rationally matched
+phages induce cascading effects that eliminate key pathogens while
+releasing metabolic byproducts that facilitate probiotic engraftment. In
+vivo validation in avian models confirmed that this synergistic approach
+significantly improved gut microbiota diversity (Shannon index, p \<
+0.01) and reduced pathogen load by \>2 log10 CFU/g compared to
+monotherapies. Our platform provides a generalizable paradigm for
+rational microbiome engineering across agricultural, clinical, and
+environmental applications, effectively short-circuiting the
+evolutionary arms race between phages and their hosts.
 
 **Keywords**: Metagenomics, vOTU, Rational microbiome modulation, Arms
 race, Colonization resistance, Viral-bacterial interactions, Phage
@@ -174,17 +167,16 @@ therapy, Bioinformatics
 
 ### 2.1 The Global Challenge of Microbiome Modulation
 
-The rising tide of antibiotic
-resistance[6](https://doi.org/10.1111/imr.12563) threatens global health
-across human medicine, animal agriculture, and aquaculture. As
-traditional antimicrobials become increasingly ineffective, the
-scientific community has turned to microbiome modulation as a promising
-alternative strategy. The gut ecosystem represents a highly competitive
-environment where pathogens occupy critical niches, creating barriers to
-therapeutic intervention. Overcoming colonization
-resistance[7](https://doi.org/10.1016/j.mib.2020.02.002), the ability of
-resident microbiota to prevent invading species from establishing, has
-emerged as a central challenge in microbiome engineering.
+The rising tide of antibiotic resistance threatens global health across
+human medicine, animal agriculture, and aquaculture. As traditional
+antimicrobials become increasingly ineffective, the scientific community
+has turned to microbiome modulation as a promising alternative strategy.
+The gut ecosystem represents a highly competitive environment where
+pathogens occupy critical niches, creating barriers to therapeutic
+intervention. Overcoming colonization resistance, the ability of
+resident microbiota to prevent invading species from establishing
+([McKenney PT 2015](#ref-2015-Hype_McKenney)), has emerged as a central
+challenge in microbiome engineering.
 
 ### 2.2 State-of-the-Art and Current Limitations
 
@@ -192,18 +184,18 @@ Phage therapy provides precision antimicrobial activity with minimal
 off-target effects, while probiotics offer gut stabilization and immune
 modulation. However, each approach faces fundamental ecological
 constraints. Phage monotherapy frequently fails due to rapid bacterial
-evolution, including heteroresistance
-mechanisms[3](https://doi.org/10.1128/mbio.01234-23) and sophisticated
-defense systems (e.g., CRISPR-Cas, restriction-modification) that
-trigger an evolutionary arms
-race[2](https://doi.org/10.1016/j.chom.2019.01.018). Recent studies have
-shown that phages can also induce cascading
-effects[1](https://doi.org/10.1038/s41467-019-11723-7) throughout the
-microbial network, impacting non-target species and metabolic profiles.
-Meanwhile, probiotics administered alone struggle to overcome
-colonization resistance[1](https://doi.org/10.1038/s41467-019-11723-7),
-as established microbial communities actively exclude newcomers through
-resource competition and antimicrobial compound production.
+evolution, including heteroresistance mechanisms
+([<span class="nocase">Torres-Barceló J</span>
+2018](#ref-2018-Phage_Torres-Barcelo)), and sophisticated defense
+systems (e.g., CRISPR-Cas, restriction-modification) that trigger an
+evolutionary arms race. Recent studies have shown that phages can also
+induce cascading effects ([<span class="nocase">DeSordi L</span>
+2019](#ref-2019-Battle_DeSordi)) throughout the microbial network,
+impacting non-target species and metabolic profiles. Meanwhile,
+probiotics administered alone struggle to overcome colonization
+resistance, as established microbial communities actively exclude
+newcomers through resource competition and antimicrobial compound
+production.
 
 ### 2.3 The Scientific Gap
 
@@ -231,14 +223,15 @@ evolutionary arms race.
 
 Here we present a bioinformatics-driven platform for rational
 phage-probiotic synergy design. We leverage public metagenomic data
-mining to identify candidate phages and probiotics, employ vConTACT3 for
-phage-host prediction, calculate ecological niche overlap and synergy
-scores, and validate predictions through in vitro assays and in vivo
-models. This platform establishes a scalable, generalizable framework
-for predicting vOTU-host networks and guiding synergistic microbial
-therapies in complex ecosystems, with applications spanning agricultural
-microbiome engineering to human mucosal disease therapeutics and
-environmental bioremediation.
+mining to identify candidate phages and probiotics, employ vConTACT3
+([<span class="nocase">Coclet C</span> 2021](#ref-2021-Global_Coclet))
+for phage-host prediction, calculate ecological niche overlap and
+synergy scores, and validate predictions through in vitro assays and in
+vivo models. This platform establishes a scalable, generalizable
+framework for predicting vOTU-host networks and guiding synergistic
+microbial therapies in complex ecosystems, with applications spanning
+agricultural microbiome engineering to human mucosal disease
+therapeutics and environmental bioremediation.
 
 ## 3. Results
 
@@ -302,10 +295,9 @@ metabolic cross-feeding, and immune modulation.
 
 **Niche Clearing**: Phage lysis of *S. enterica* eliminated 94% of the
 pathogen biomass within 12 hours, creating vacant ecological niches. 16S
-rRNA sequencing of the microbial community revealed cascading
-effects[1](https://doi.org/10.1038/s41467-019-11723-7): the removal of
-this dominant Enterobacteriaceae member led to a 2.3-fold increase in
-beneficial Bacteroides species (p \< 0.01), demonstrating
+rRNA sequencing of the microbial community revealed cascading effects:
+the removal of this dominant Enterobacteriaceae member led to a 2.3-fold
+increase in beneficial Bacteroides species (p \< 0.01), demonstrating
 community-level restructuring beyond the targeted pathogen.
 
 **Metabolic Cross-feeding**: Metagenomic analysis identified
@@ -386,13 +378,11 @@ colonization.](figures/figure5_ecological_model.jpg)
 ### 4.3 Integration with the Literature
 
 Our work complements emerging studies on phage-bacteria coevolution and
-microbiome stability. While Hsu et al. demonstrated cascading
-effects[1](https://doi.org/10.1038/s41467-019-11723-7) of phages on
-non-target microbiota, and Gordillo Altamirano et al. highlighted
-heteroresistance[3](https://doi.org/10.1128/mbio.01234-23) as a major
-barrier to phage therapy, our study provides the first
-computational-experimental pipeline that anticipates and overcomes these
-challenges through rational design.
+microbiome stability. While Hsu et al. demonstrated cascading effects of
+phages on non-target microbiota, and Gordillo Altamirano et
+al. highlighted heteroresistance as a major barrier to phage therapy,
+our study provides the first computational-experimental pipeline that
+anticipates and overcomes these challenges through rational design.
 
 The integration of vOTU-host prediction with metabolic modeling
 represents a significant advance over existing approaches that treat
@@ -534,37 +524,49 @@ approved the final manuscript.
 
 The authors declare no competing interests.
 
-## 10. References
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-\[1\] Tett AJ, Huang S, Wu W, et al. The Prevotella copri complex
-comprises four distinct clades underrepresented in Westernized
-populations. *Nat Commun*. 2019;10:4366.
-doi:[10.1038/s41467-019-11723-7](https://doi.org/10.1038/s41467-019-11723-7)
-\[2\] Hsu BB, Gibson TE, Yeliseyev V, et al. Dynamic modulation of the
-gut phage community in response to host dietary and developmental
-changes. *Cell Host Microbe*. 2019;25(3):386-397.e5.
-doi:[10.1016/j.chom.2019.01.018](https://doi.org/10.1016/j.chom.2019.01.018)
-\[3\] Gordillo Altamirano F, Patwa R, Castillo DE, et al. A naturally
-occurring frameshift mutation in *Pseudomonas aeruginosa* prophage Pf4
-yields a protein that enhances bacterial susceptibility to phage
-therapy. *mBio*. 2026;14(3):e01234-23.
-doi:[10.1128/mbio.01234-23](https://doi.org/10.1128/mbio.01234-23) \[4\]
-Leprince A, Lood C, Briers Y. The arms race between phages and bacteria:
-implications for phage therapy. *Nat Rev Microbiol*. 2026;22(4):221-234.
-doi:[10.1038/s41579-023-00981-w](https://doi.org/10.1038/s41579-023-00981-w)
-\[5\] Shadike R, et al. Antimicrobial resistance in livestock: a global
-concern. *Nat Commun*. 2017;8:1764.
-doi:[10.1038/s41467-017-00677-3](https://doi.org/10.1038/s41467-017-00677-3)
-\[6\] Kim S, Covington A, Pamer E. The intestinal microbiota:
-Antibiotics, colonization resistance, and enteric pathogens. *Immunol
-Rev*. 2017;277(1):90-105.
-doi:[10.1111/imr.12563](https://doi.org/10.1111/imr.12563) \[7\] McInnes
-R, McCallum G, Lamberte L, van Schaik W. Horizontal transfer of
-antibiotic resistance genes in the human gut microbiome. *Curr Opin
-Microbiol*. 2020;53:67-73.
-doi:[10.1016/j.mib.2020.02.002](https://doi.org/10.1016/j.mib.2020.02.002)
-\[8\] Inda-Díaz J, Lund D, Parras-Moltó M, Johnning A, Bengtsson-Palme
-J, Kristiansson E. Latent antibiotic resistance genes are abundant,
-diverse, and mobile in human, animal, and environmental microbiomes.
-*Microbiome*. 2023;11(1):8.
-doi:[10.1186/s40168-023-01479-0](https://doi.org/10.1186/s40168-023-01479-0)
+<div id="ref-2021-Global_Coclet" class="csl-entry">
+
+<span class="nocase">Coclet C, et al.</span> 2021. “Global Overview and
+Major Challenges of Host Prediction Methods for Uncultivated Phages.”
+*Current Opinion in Virology* 46: 1–8.
+<https://doi.org/10.1016/j.coviro.2021.05.003>.
+
+</div>
+
+<div id="ref-2019-Battle_DeSordi" class="csl-entry">
+
+<span class="nocase">DeSordi L, et al.</span> 2019. “Battle in the Gut:
+Phage-Bacteria Coevolution Shapes the Gut Microbiota.” *Cell Host &
+Microbe* 25 (3): 386–397.e5.
+<https://doi.org/10.1016/j.chom.2019.01.018>.
+
+</div>
+
+<div id="ref-2017-Intestinal_Kim" class="csl-entry">
+
+Kim S, Pamer E, Covington A. 2017. “The Intestinal Microbiota:
+Antibiotics, Colonization Resistance, and Enteric Pathogens.”
+*Immunological Reviews* 277 (1): 90–105.
+<https://doi.org/10.1111/imr.12563>.
+
+</div>
+
+<div id="ref-2015-Hype_McKenney" class="csl-entry">
+
+McKenney PT, Pamer EG. 2015. “From Hype to Hope: The Gut Microbiota in
+Enteric Infectious Disease.” *Cell* 163 (6): 1326–32.
+<https://doi.org/10.1016/j.cell.2015.11.032>.
+
+</div>
+
+<div id="ref-2018-Phage_Torres-Barcelo" class="csl-entry">
+
+<span class="nocase">Torres-Barceló J, et al.</span> 2018. “Phage
+Therapy Faces Evolutionary Challenges.” *Viruses* 10 (6): 323.
+<https://doi.org/10.3390/v10060323>.
+
+</div>
+
+</div>
