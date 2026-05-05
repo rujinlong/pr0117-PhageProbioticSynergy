@@ -78,9 +78,212 @@
     78|# knitr::kable(head(adhesion_genes, 10), caption = "Adhesion-Related Genes in Probiotics")
     79|```
     80|
-    81|## 3. Niche Competition Modeling
-    82|
-    83|### 3.1 Ecological Niche Overlap
+## 3. Probiotic Fitness Knowledge Graph (Strategy 3 Enhancement)
+
+### 3.1 Knowledge Graph Construction
+
+Build a knowledge graph integrating multiple databases for objective probiotic scoring.
+
+```{python knowledge-graph}
+#| eval: false
+
+# Knowledge graph using NetworkX (Python)
+import networkx as nx
+import pandas as pd
+import json
+
+# Initialize knowledge graph
+G = nx.DiGraph()
+
+# === Node types ===
+# 1. Probiotic strains (from ProbiMed/BacMap)
+probiotics = pd.DataFrame({
+    'strain': ['Lactobacillus_acidophilus_NCFM', 'Bifidobacterium_lactis_BB12', 
+               'Bacillus_subtilis_NRRL_B-30809', 'Enterococcus_faecium_NCIMB_10415'],
+    'genome_size': [1.9, 2.2, 4.2, 2.8],  # Mbp
+    'GC_content': [35.2, 58.1, 43.5, 37.8],
+    'origin': ['human', 'animal', 'soil', 'animal']
+})
+
+# Add probiotic nodes
+for _, row in probiotics.iterrows():
+    G.add_node(row['strain'], type='probiotic', **row.to_dict())
+
+# 2. Functional modules (from KEGG/BacMap)
+functional_modules = [
+    ('bacteriocin_synthesis', 'pathway', {'category': 'antimicrobial'}),
+    ('adhesion_proteins', 'pathway', {'category': 'colonization'}),
+    ('bile_salt_hydrolase', 'pathway', {'category': 'survival'}),
+    ('short_chain_fatty_acid', 'pathway', {'category': 'metabolism'}),
+    ('CRISPR_Cas', 'pathway', {'category': 'defense'})
+]
+
+G.add_nodes_from([(m[0], m[2]) for m in functional_modules])
+
+# 3.Edgetypes: has_pathway, inhibits, enhances_synergy
+# Example edges (would be populated from real DB queries)
+edges = [
+    ('Lactobacillus_acidophilus_NCFM', 'adhesion_proteins', {'weight': 0.9}),
+    ('Lactobacillus_acidophilus_NCFM', 'bacteriocin_synthesis', {'weight': 0.8}),
+    ('bacteriocin_synthesis', 'pathogen_suppression', {'weight': 0.85}),
+    ('adhesion_proteins', 'gut_colonization', {'weight': 0.9})
+]
+
+G.add_edges_from(edges)
+
+print(f"Knowledge graph created: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+```
+
+### 3.2 Feature Engineering for ML Scoring
+
+Extract quantifiable features from genomes and knowledge graph.
+
+```{python feature-engineering}
+#| eval: false
+
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+
+# Feature matrix (example - would be computed from real data)
+features = pd.DataFrame({
+    'strain': probiotics['strain'],
+    'genome_size_mbp': probiotics['genome_size'],
+    'gc_content': probiotics['GC_content'],
+    'bacteriocin_genes': [5, 3, 8, 6],  # Count from genome annotation
+    'adhesion_genes': [12, 8, 4, 10],
+    'bile_tolerance_score': [0.9, 0.85, 0.6, 0.8],  # From experiments
+    'gut_colonization_score': [0.85, 0.8, 0.5, 0.75],  # From animal trials
+    'cr CRISPR_spacers': [15, 22, 8, 18],  # From CRISPR array analysis
+    'niche_overlap_pathogen': [0.7, 0.6, 0.4, 0.65]  # Computed from niche modeling
+})
+
+# Target variable: synergy score (to be predicted/validated)
+# This would come from literature + experimental validation
+features['synergy_score'] = [0.82, 0.78, 0.55, 0.75]  # Placeholder
+
+print("Feature matrix shape:", features.shape)
+print(features.head())
+```
+
+### 3.3 XGBoost Model for Probiotic Ranking
+
+Train ML model to predict probiotic synergy potential with hyperparameter tuning.
+
+```{python xgboost-model}
+#| eval: false
+
+import xgboost as xgb
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+import pandas as pd
+import numpy as np
+
+# Prepare data
+X = features.drop(['strain', 'synergy_score'], axis=1)
+y = features['synergy_score']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# === Base model ===
+model = xgb.XGBRegressor(
+    n_estimators=100,
+    max_depth=3,
+    learning_rate=0.1,
+    random_state=42
+)
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+
+print(f"Base Model Performance:")
+print(f"  MSE: {mse:.4f}")
+print(f"  R² Score: {r2:.4f}")
+print(f"  MAE: {mae:.4f}")
+
+# === Cross-validation ===
+print(f"\n=== Cross-Validation (5-fold) ===")
+cv_scores = cross_val_score(model, X, y, cv=5, scoring='r2')
+print(f"  R² scores: {cv_scores}")
+print(f"  Mean R²: {cv_scores.mean():.4f} (+/- {cv_scores.std():.4f})")
+
+# === Hyperparameter Tuning ===
+print(f"\n=== Hyperparameter Tuning (GridSearch) ===")
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [3, 5, 7],
+    'learning_rate': [0.01, 0.1, 0.3],
+    'subsample': [0.8, 1.0],
+    'colsample_bytree': [0.8, 1.0]
+}
+
+grid_search = GridSearchCV(
+    xgb.XGBRegressor(random_state=42),
+    param_grid,
+    cv=5,
+    scoring='r2',
+    n_jobs=-1,
+    verbose=1
+)
+grid_search.fit(X_train, y_train)
+
+print(f"\nBest parameters: {grid_search.best_params_}")
+print(f"Best cross-validation R²: {grid_search.best_score_:.4f}")
+
+# Use best model
+best_model = grid_search.best_estimator_
+y_pred_best = best_model.predict(X_test)
+r2_best = r2_score(y_test, y_pred_best)
+print(f"Test R² with tuned model: {r2_best:.4f}")
+
+# === Feature Importance (from best model) ===
+importance = pd.DataFrame({
+    'feature': X.columns,
+    'importance': best_model.feature_importances_
+}).sort_values('importance', ascending=False)
+
+print(f"\nFeature Importance (Tuned Model):")
+print(importance)
+
+# === Save model ===
+import joblib
+joblib.dump(best_model, 'probiotic_synergy_model.pkl')
+print(f"\n✓ Model saved to probiotic_synergy_model.pkl")
+```
+
+### 3.4 Visualization with Cytoscape
+
+Visualize knowledge graph and feature importance.
+
+```{r cytoscape-viz}
+#| eval: false
+
+# R interface to Cytoscape (if available)
+if (requireNamespace("RCy3", quietly = TRUE)) {
+  library(RCy3)
+  
+  # Create Cytoscape network from Python-computed graph
+  # (Integration would require exporting G to CSV/JSON)
+  
+  # Example: Bar plot of feature importance
+  library(ggplot2)
+  
+  ggplot(importance, aes(x = reorder(feature, importance), y = importance)) +
+    geom_bar(stat = "identity", fill = "steelblue") +
+    coord_flip() +
+    theme_minimal() +
+    labs(title = "Feature Importance for Probiotic Synergy Prediction",
+         x = "Feature", y = "Importance (XGBoost)")
+}
+```
+
+## 4. Niche Competition Modeling
+
+### 4.1 Ecological Niche Overlap
     84|
     85|Model the competitive relationship between pathogens and probiotics.
     86|
