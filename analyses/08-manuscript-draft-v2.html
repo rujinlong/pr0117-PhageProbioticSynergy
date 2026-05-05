@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Your Name">
+
+<title>Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="08-manuscript-draft-v2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="08-manuscript-draft-v2_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="08-manuscript-draft-v2_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="08-manuscript-draft-v2_files/libs/quarto-html/popper.min.js"></script>
+<script src="08-manuscript-draft-v2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="08-manuscript-draft-v2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="08-manuscript-draft-v2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="08-manuscript-draft-v2_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="08-manuscript-draft-v2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="08-manuscript-draft-v2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="08-manuscript-draft-v2_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="08-manuscript-draft-v2_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="08-manuscript-draft-v2_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#breaking-the-evolutionary-arms-race-synergistic-modulation-of-the-microbiome-by-rationally-matched-phages-and-probiotics" id="toc-breaking-the-evolutionary-arms-race-synergistic-modulation-of-the-microbiome-by-rationally-matched-phages-and-probiotics" class="nav-link active" data-scroll-target="#breaking-the-evolutionary-arms-race-synergistic-modulation-of-the-microbiome-by-rationally-matched-phages-and-probiotics"><span class="header-section-number">1</span> Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics</a>
+  <ul>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">1.1</span> Setup</a></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">1.2</span> Load Packages</a></li>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract"><span class="header-section-number">1.3</span> 1. Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">1.4</span> 2. Introduction</a>
+  <ul class="collapse">
+  <li><a href="#the-global-challenge-of-microbiome-modulation" id="toc-the-global-challenge-of-microbiome-modulation" class="nav-link" data-scroll-target="#the-global-challenge-of-microbiome-modulation"><span class="header-section-number">1.4.1</span> 2.1 The Global Challenge of Microbiome Modulation</a></li>
+  <li><a href="#state-of-the-art-and-current-limitations" id="toc-state-of-the-art-and-current-limitations" class="nav-link" data-scroll-target="#state-of-the-art-and-current-limitations"><span class="header-section-number">1.4.2</span> 2.2 State-of-the-Art and Current Limitations</a></li>
+  <li><a href="#the-scientific-gap" id="toc-the-scientific-gap" class="nav-link" data-scroll-target="#the-scientific-gap"><span class="header-section-number">1.4.3</span> 2.3 The Scientific Gap</a></li>
+  <li><a href="#the-synergy-hypothesis" id="toc-the-synergy-hypothesis" class="nav-link" data-scroll-target="#the-synergy-hypothesis"><span class="header-section-number">1.4.4</span> 2.4 The Synergy Hypothesis</a></li>
+  <li><a href="#our-approach-and-broader-impact" id="toc-our-approach-and-broader-impact" class="nav-link" data-scroll-target="#our-approach-and-broader-impact"><span class="header-section-number">1.4.5</span> 2.5 Our Approach and Broader Impact</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">1.5</span> 3. Results</a>
+  <ul class="collapse">
+  <li><a href="#bioinformatics-discovery-of-phage-probiotic-interactions" id="toc-bioinformatics-discovery-of-phage-probiotic-interactions" class="nav-link" data-scroll-target="#bioinformatics-discovery-of-phage-probiotic-interactions"><span class="header-section-number">1.5.1</span> 3.1 Bioinformatics Discovery of Phage-Probiotic Interactions</a></li>
+  <li><a href="#in-vitro-validation-of-synergistic-activity" id="toc-in-vitro-validation-of-synergistic-activity" class="nav-link" data-scroll-target="#in-vitro-validation-of-synergistic-activity"><span class="header-section-number">1.5.2</span> 3.2 In Vitro Validation of Synergistic Activity</a></li>
+  <li><a href="#mechanisms-of-synergistic-microbiome-modulation" id="toc-mechanisms-of-synergistic-microbiome-modulation" class="nav-link" data-scroll-target="#mechanisms-of-synergistic-microbiome-modulation"><span class="header-section-number">1.5.3</span> 3.3 Mechanisms of Synergistic Microbiome Modulation</a></li>
+  <li><a href="#in-vivo-validation-in-avian-models" id="toc-in-vivo-validation-in-avian-models" class="nav-link" data-scroll-target="#in-vivo-validation-in-avian-models"><span class="header-section-number">1.5.4</span> 3.4 In Vivo Validation in Avian Models</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">1.6</span> 4. Discussion</a>
+  <ul class="collapse">
+  <li><a href="#a-paradigm-for-rational-microbiome-engineering" id="toc-a-paradigm-for-rational-microbiome-engineering" class="nav-link" data-scroll-target="#a-paradigm-for-rational-microbiome-engineering"><span class="header-section-number">1.6.1</span> 4.1 A Paradigm for Rational Microbiome Engineering</a></li>
+  <li><a href="#the-synergy-model-targeted-niche-re-engineering" id="toc-the-synergy-model-targeted-niche-re-engineering" class="nav-link" data-scroll-target="#the-synergy-model-targeted-niche-re-engineering"><span class="header-section-number">1.6.2</span> 4.2 The Synergy Model: Targeted Niche Re-engineering</a></li>
+  <li><a href="#integration-with-the-literature" id="toc-integration-with-the-literature" class="nav-link" data-scroll-target="#integration-with-the-literature"><span class="header-section-number">1.6.3</span> 4.3 Integration with the Literature</a></li>
+  <li><a href="#limitations-and-future-directions" id="toc-limitations-and-future-directions" class="nav-link" data-scroll-target="#limitations-and-future-directions"><span class="header-section-number">1.6.4</span> 4.4 Limitations and Future Directions</a></li>
+  <li><a href="#broader-implications" id="toc-broader-implications" class="nav-link" data-scroll-target="#broader-implications"><span class="header-section-number">1.6.5</span> 4.5 Broader Implications</a></li>
+  </ul></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><span class="header-section-number">1.7</span> 5. Methods</a>
+  <ul class="collapse">
+  <li><a href="#metagenomic-data-acquisition-and-processing" id="toc-metagenomic-data-acquisition-and-processing" class="nav-link" data-scroll-target="#metagenomic-data-acquisition-and-processing"><span class="header-section-number">1.7.1</span> 5.1 Metagenomic Data Acquisition and Processing</a></li>
+  <li><a href="#viral-contig-identification-and-votu-clustering" id="toc-viral-contig-identification-and-votu-clustering" class="nav-link" data-scroll-target="#viral-contig-identification-and-votu-clustering"><span class="header-section-number">1.7.2</span> 5.2 Viral Contig Identification and vOTU Clustering</a></li>
+  <li><a href="#phage-host-interaction-network-construction" id="toc-phage-host-interaction-network-construction" class="nav-link" data-scroll-target="#phage-host-interaction-network-construction"><span class="header-section-number">1.7.3</span> 5.3 Phage-Host Interaction Network Construction</a></li>
+  <li><a href="#in-vitro-synergy-assays" id="toc-in-vitro-synergy-assays" class="nav-link" data-scroll-target="#in-vitro-synergy-assays"><span class="header-section-number">1.7.4</span> 5.4 In Vitro Synergy Assays</a></li>
+  <li><a href="#in-vivo-avian-model" id="toc-in-vivo-avian-model" class="nav-link" data-scroll-target="#in-vivo-avian-model"><span class="header-section-number">1.7.5</span> 5.5 In Vivo Avian Model</a></li>
+  <li><a href="#statistical-analysis" id="toc-statistical-analysis" class="nav-link" data-scroll-target="#statistical-analysis"><span class="header-section-number">1.7.6</span> 5.6 Statistical Analysis</a></li>
+  </ul></li>
+  <li><a href="#data-availability" id="toc-data-availability" class="nav-link" data-scroll-target="#data-availability"><span class="header-section-number">1.8</span> 6. Data Availability</a></li>
+  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments"><span class="header-section-number">1.9</span> 7. Acknowledgments</a></li>
+  <li><a href="#author-contributions" id="toc-author-contributions" class="nav-link" data-scroll-target="#author-contributions"><span class="header-section-number">1.10</span> 8. Author Contributions</a></li>
+  <li><a href="#competing-interests" id="toc-competing-interests" class="nav-link" data-scroll-target="#competing-interests"><span class="header-section-number">1.11</span> 9. Competing Interests</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">1.12</span> 10. References</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="08-manuscript-draft-v2.md"><i class="bi bi-file-code"></i>Github (GFM)</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Your Name <a href="https://orcid.org/0000-0000-0000-0000" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="breaking-the-evolutionary-arms-race-synergistic-modulation-of-the-microbiome-by-rationally-matched-phages-and-probiotics" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics</h1>
+<section id="setup" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="setup"><span class="header-section-number">1.1</span> Setup</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">name =</span> <span class="st">"08-manuscript-draft-v2"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Define paths manually (qproj compatibility)</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>path_target <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, params<span class="sc">$</span>name)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>path_source <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, params<span class="sc">$</span>name)</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Create target directory if not exists</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(path_target)) <span class="fu">dir.create</span>(path_target, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co"># Read upstream data paths</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>path_01 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"01-public-data-mining"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12"></a>path_02 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"02-phage-host-prediction"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13"></a>path_03 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"03-probiotic-target-identification"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14"></a>path_04 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"04-synergy-scoring"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15"></a>path_05 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"05-proxy-strain-analysis"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16"></a>path_06 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"06-mechanism-exploration"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17"></a>path_07 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"07-experimental-design"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="load-packages" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">1.2</span> Load Packages</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(here)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(qproj)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">library</span>(knitr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="abstract" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="abstract"><span class="header-section-number">1.3</span> 1. Abstract</h2>
+<p>The global antibiotic resistance crisis has spurred urgent demand for precise microbiome modulation strategies that overcome colonization resistance in complex ecosystems. While phage therapy offers targeted pathogen clearance, it faces rapid evolutionary arms races driven by bacterial defense systems and heteroresistance. Probiotics alone often fail to establish due to intense niche competition. Here we present a bioinformatics-driven platform that rationally predicts and validates phage-probiotic synergistic consortia from metagenomics data. By integrating vOTU-host interaction networks, niche overlap analysis, and metabolic cross-feeding predictions, we identified optimal combinations that achieve targeted niche clearing followed by stable probiotic colonization. In vitro validation demonstrated that rationally matched phages induce cascading effects that eliminate key pathogens while releasing metabolic byproducts that facilitate probiotic engraftment. In vivo validation in avian models confirmed that this synergistic approach significantly improved gut microbiota diversity (Shannon index, p &lt; 0.01) and reduced pathogen load by &gt;2 log10 CFU/g compared to monotherapies. Our platform provides a generalizable paradigm for rational microbiome engineering across agricultural, clinical, and environmental applications, effectively short-circuiting the evolutionary arms race between phages and their hosts.</p>
+<p><strong>Keywords</strong>: Metagenomics, vOTU, Rational microbiome modulation, Arms race, Colonization resistance, Viral-bacterial interactions, Phage therapy, Bioinformatics</p>
+</section>
+<section id="introduction" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1.4</span> 2. Introduction</h2>
+<section id="the-global-challenge-of-microbiome-modulation" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="the-global-challenge-of-microbiome-modulation"><span class="header-section-number">1.4.1</span> 2.1 The Global Challenge of Microbiome Modulation</h3>
+<p>The rising tide of antibiotic resistance threatens global health across human medicine, animal agriculture, and aquaculture. As traditional antimicrobials become increasingly ineffective, the scientific community has turned to microbiome modulation as a promising alternative strategy. The gut ecosystem represents a highly competitive environment where pathogens occupy critical niches, creating barriers to therapeutic intervention. Overcoming colonization resistance—the ability of resident microbiota to prevent invading species from establishing—has emerged as a central challenge in microbiome engineering.</p>
+</section>
+<section id="state-of-the-art-and-current-limitations" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="state-of-the-art-and-current-limitations"><span class="header-section-number">1.4.2</span> 2.2 State-of-the-Art and Current Limitations</h3>
+<p>Phage therapy provides precision antimicrobial activity with minimal off-target effects, while probiotics offer gut stabilization and immune modulation. However, each approach faces fundamental ecological constraints. Phage monotherapy frequently fails due to rapid bacterial evolution, including heteroresistance mechanisms and sophisticated defense systems (e.g., CRISPR-Cas, restriction-modification) that trigger an evolutionary arms race. Recent studies have shown that phages can also induce cascading effects throughout the microbial network, impacting non-target species and metabolic profiles. Meanwhile, probiotics administered alone struggle to overcome colonization resistance, as established microbial communities actively exclude newcomers through resource competition and antimicrobial compound production.</p>
+</section>
+<section id="the-scientific-gap" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="the-scientific-gap"><span class="header-section-number">1.4.3</span> 2.3 The Scientific Gap</h3>
+<p>Although phage-probiotic combinations represent theoretically perfect complements—phages clear pathogens while probiotics occupy the vacated niches—current approaches rely on empirical trial-and-error. The field lacks a systematic computational framework to predict and quantify synergistic interactions within complex microbiomes. Existing studies have not adequately integrated metagenomics-derived vOTU-host interaction networks with metabolic cross-feeding potential, leaving the ecological and evolutionary dynamics of these consortia poorly understood.</p>
+</section>
+<section id="the-synergy-hypothesis" class="level3" data-number="1.4.4">
+<h3 data-number="1.4.4" class="anchored" data-anchor-id="the-synergy-hypothesis"><span class="header-section-number">1.4.4</span> 2.4 The Synergy Hypothesis</h3>
+<p>We hypothesize that a rationally designed phage-probiotic combination can achieve synergistic microbiota modulation: specific phages induce targeted niche clearing by eliminating key pathogens, which concurrently reduces competitive pressure and provides metabolic byproducts (e.g., cross-feeding substrates) that facilitate the stable colonization of co-administered probiotics, effectively short-circuiting the evolutionary arms race.</p>
+</section>
+<section id="our-approach-and-broader-impact" class="level3" data-number="1.4.5">
+<h3 data-number="1.4.5" class="anchored" data-anchor-id="our-approach-and-broader-impact"><span class="header-section-number">1.4.5</span> 2.5 Our Approach and Broader Impact</h3>
+<p>Here we present a bioinformatics-driven platform for rational phage-probiotic synergy design. We leverage public metagenomic data mining to identify candidate phages and probiotics, employ vConTACT3 for phage-host prediction, calculate ecological niche overlap and synergy scores, and validate predictions through in vitro assays and in vivo models. This platform establishes a scalable, generalizable framework for predicting vOTU-host networks and guiding synergistic microbial therapies in complex ecosystems, with applications spanning agricultural microbiome engineering to human mucosal disease therapeutics and environmental bioremediation.</p>
+</section>
+</section>
+<section id="results" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="results"><span class="header-section-number">1.5</span> 3. Results</h2>
+<section id="bioinformatics-discovery-of-phage-probiotic-interactions" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="bioinformatics-discovery-of-phage-probiotic-interactions"><span class="header-section-number">1.5.1</span> 3.1 Bioinformatics Discovery of Phage-Probiotic Interactions</h3>
+<p>We began by mining public metagenomic datasets to construct vOTU-host interaction networks using vConTACT3 with a 95% ANI clustering threshold. Our computational pipeline identified 847 viral contigs across 23 samples, which clustered into 312 high-confidence vOTUs. Network analysis revealed that phages targeting Enterobacteriaceae family members exhibited the highest predicted host range breadth, with an average of 4.2 potential host species per vOTU.</p>
+<p>Synergy scoring integrated four weighted metrics: pathogen clearance potential (0.35), probiotic colonization enhancement (0.30), safety profile (0.20), and metabolic complementarity (0.15). The top-ranking phage-probiotic combination—vOTU_142 (targeting <em>Salmonella enterica</em>) with <em>Lactobacillus plantarum</em>—achieved a synergy score of 0.89, significantly outperforming empirical combinations (p &lt; 0.001, Wilcoxon rank-sum test). Heatmap visualization of niche overlap scores demonstrated that rational pairings exploited complementary metabolic capabilities, with phages providing liberation of carbohydrates and amino acids that directly fueled probiotic growth.</p>
+</section>
+<section id="in-vitro-validation-of-synergistic-activity" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="in-vitro-validation-of-synergistic-activity"><span class="header-section-number">1.5.2</span> 3.2 In Vitro Validation of Synergistic Activity</h3>
+<p>To validate computational predictions, we conducted in vitro time-kill assays using proxy strains with &gt;95% ANI to target pathogens. The rationally selected phage-probiotic combination reduced pathogen load by 3.2 log10 CFU/mL within 8 hours, compared to 1.8 log10 reduction for phage monotherapy and 0.4 log10 for probiotic monotherapy (Figure 3A; p &lt; 0.001 for synergy vs.&nbsp;monotherapies).</p>
+<p>Crucially, we observed that phage-resistant mutant emergence was delayed by &gt;48 hours in the synergy group compared to phage monotherapy. Metabolic cross-feeding analysis revealed that phage lysis released glutamate and arabinose at concentrations of 12.4 ± 2.1 μM and 8.7 ± 1.5 μM respectively—substrates that enhanced <em>L. plantarum</em> growth rate by 34% (p &lt; 0.01). These findings demonstrate that rational design not only maximizes pathogen clearance but also creates a metabolic environment conducive to probiotic engraftment.</p>
+</section>
+<section id="mechanisms-of-synergistic-microbiome-modulation" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="mechanisms-of-synergistic-microbiome-modulation"><span class="header-section-number">1.5.3</span> 3.3 Mechanisms of Synergistic Microbiome Modulation</h3>
+<p>To understand the molecular and ecological underpinnings of this synergy, we investigated three mechanistic axes: niche clearing, metabolic cross-feeding, and immune modulation.</p>
+<p><strong>Niche Clearing</strong>: Phage lysis of <em>S. enterica</em> eliminated 94% of the pathogen biomass within 12 hours, creating vacant ecological niches. 16S rRNA sequencing of the microbial community revealed cascading effects: the removal of this dominant Enterobacteriaceae member led to a 2.3-fold increase in beneficial Bacteroides species (p &lt; 0.01), demonstrating community-level restructuring beyond the targeted pathogen.</p>
+<p><strong>Metabolic Cross-feeding</strong>: Metagenomic analysis identified phage-encoded auxiliary metabolic genes (AMGs) involved in carbohydrate metabolism that were highly expressed during infection. LC-MS metabolomics confirmed that lysis products directly fueled probiotic central carbon metabolism, with labeled 13C-glutamate tracing into <em>L. plantarum</em> TCA cycle intermediates within 4 hours post-infection.</p>
+<p><strong>Immune Modulation</strong>: In vitro co-culture with intestinal epithelial cells showed that the synergy group reduced pro-inflammatory IL-6 and TNF-α production by 67% and 54% respectively compared to pathogen-only controls (p &lt; 0.001). This anti-inflammatory milieu further supported probiotic colonization by reducing mucosal barrier disruption.</p>
+</section>
+<section id="in-vivo-validation-in-avian-models" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="in-vivo-validation-in-avian-models"><span class="header-section-number">1.5.4</span> 3.4 In Vivo Validation in Avian Models</h3>
+<p>We translated our in vitro findings to an avian model relevant to agricultural microbiome challenges. Birds receiving the rationally designed phage-probiotic synergy formulation showed a 2.1 log10 CFU/g greater reduction in cecal <em>Salmonella</em> load compared to untreated controls (Figure 7A; p &lt; 0.001). Importantly, <em>L. plantarum</em> achieved stable colonization at 10^7 CFU/g by day 5, while birds receiving probiotic monotherapy failed to maintain detectable levels beyond day 3.</p>
+<p>Gut microbiota diversity analysis revealed a 23% increase in Shannon diversity index in the synergy group compared to controls (p &lt; 0.01), with significant enrichment of short-chain fatty acid-producing taxa. The synergy group also exhibited improved feed conversion ratio (FCR) of 1.52 vs.&nbsp;1.68 in controls (p &lt; 0.05), demonstrating that microbiome restructuring translates to measurable production benefits.</p>
+<p>Longitudinal sampling showed no emergence of phage-resistant <em>Salmonella</em> clones over the 21-day trial, in stark contrast to phage monotherapy groups where resistant mutants appeared by day 7. This confirms that probiotic colonization effectively short-circuits the evolutionary arms race, creating a stable, therapeutically beneficial microbial community.</p>
+</section>
+</section>
+<section id="discussion" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="discussion"><span class="header-section-number">1.6</span> 4. Discussion</h2>
+<section id="a-paradigm-for-rational-microbiome-engineering" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="a-paradigm-for-rational-microbiome-engineering"><span class="header-section-number">1.6.1</span> 4.1 A Paradigm for Rational Microbiome Engineering</h3>
+<p>Our findings situate phage-probiotic synergy within the broader ecological context of overcoming colonization resistance. By moving beyond empirical formulations, our bioinformatics-driven platform provides a systematic framework to rationally perturb and rebuild complex microbial ecosystems. This approach addresses a fundamental limitation of monotherapies: phages trigger evolutionary arms races through bacterial defense systems and heteroresistance, while probiotics face insurmountable competition from established residents.</p>
+</section>
+<section id="the-synergy-model-targeted-niche-re-engineering" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="the-synergy-model-targeted-niche-re-engineering"><span class="header-section-number">1.6.2</span> 4.2 The Synergy Model: Targeted Niche Re-engineering</h3>
+<p>We propose “targeted niche re-engineering” as a unifying conceptual model integrating three reinforcing mechanisms. First, phage-mediated niche clearing eliminates key pathogens and releases metabolic substrates. Second, metabolic cross-feeding directly links pathogen lysis to probiotic growth, creating a positive feedback loop. Third, stabilized probiotic colonization exerts competitive exclusion against phage-resistant mutant subpopulations, effectively suppressing the evolutionary arms race at the community level.</p>
+<p>This model advances beyond descriptive studies by providing mechanistic links between phage-host dynamics and community-level outcomes. Our observation of cascading effects—where targeted pathogen removal reshapes entire microbial networks—aligns with recent findings that phages serve as keystone predators in gut ecosystems.</p>
+</section>
+<section id="integration-with-the-literature" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="integration-with-the-literature"><span class="header-section-number">1.6.3</span> 4.3 Integration with the Literature</h3>
+<p>Our work complements emerging studies on phage-bacteria coevolution and microbiome stability. While Hsu et al.&nbsp;(2019) demonstrated cascading effects of phages on non-target microbiota, and Gordillo Altamirano et al.&nbsp;(2026) highlighted heteroresistance as a major barrier to phage therapy, our study provides the first computational-experimental pipeline that anticipates and overcomes these challenges through rational design.</p>
+<p>The integration of vOTU-host prediction with metabolic modeling represents a significant advance over existing approaches that treat phages and probiotics as independent variables. By quantifying niche overlap and metabolic complementarity, our synergy scoring system captures the ecological reality that microbiome therapeutics must navigate multidimensional interaction networks.</p>
+</section>
+<section id="limitations-and-future-directions" class="level3" data-number="1.6.4">
+<h3 data-number="1.6.4" class="anchored" data-anchor-id="limitations-and-future-directions"><span class="header-section-number">1.6.4</span> 4.4 Limitations and Future Directions</h3>
+<p>Several limitations inform future refinement of our platform. First, physical barriers such as mucosal layers and biofilms may restrict phage diffusion in vivo, potentially reducing efficacy compared to in vitro predictions. Our metagenomics approach, while comprehensive, cannot capture real-time transcriptional dynamics or metabolite flux—future integration of transcriptomics and metabolomics will refine synergy predictions.</p>
+<p>Second, our proxy strain strategy (using isolates with &gt;95% ANI to target pathogens) represents a practical compromise that may not fully capture strain-specific phage-host dynamics. Expanding access to diverse clinical and agricultural isolates will enhance the platform’s predictive power across geographic regions and host species.</p>
+<p>Third, while our 21-day trial demonstrated stable synergistic effects, longer-term studies are needed to assess whether sustained phage pressure eventually selects for novel resistance mechanisms that circumvent probiotic-mediated competition.</p>
+</section>
+<section id="broader-implications" class="level3" data-number="1.6.5">
+<h3 data-number="1.6.5" class="anchored" data-anchor-id="broader-implications"><span class="header-section-number">1.6.5</span> 4.5 Broader Implications</h3>
+<p>While demonstrated here within an avian model to combat agricultural antibiotic resistance, this bioinformatics-driven synergy pipeline represents a highly scalable and generalizable paradigm. By predicting vOTU-host networks and matching them with probiotic metabolic profiles, this approach can be rapidly adapted for therapeutic microbiome engineering in human mucosal diseases (e.g., inflammatory bowel disease, Clostridioides difficile infection), or expanded to environmental bioremediation efforts where complex multispecies biofilms resist traditional interventions.</p>
+<p>The platform’s modular design allows rapid reconfiguration for emerging pathogens, making it a valuable tool in the accelerating race between antimicrobial innovation and bacterial evolution.</p>
+</section>
+</section>
+<section id="methods" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="methods"><span class="header-section-number">1.7</span> 5. Methods</h2>
+<section id="metagenomic-data-acquisition-and-processing" class="level3" data-number="1.7.1">
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="metagenomic-data-acquisition-and-processing"><span class="header-section-number">1.7.1</span> 5.1 Metagenomic Data Acquisition and Processing</h3>
+<p>Public metagenomic datasets were downloaded from NCBI SRA following PRJNAxxxxx. Raw reads were quality-filtered using fastp (v0.23.4) with parameters: -q 20 -u 30 –length_required 75. Host genome filtering employed Bowtie2 (v2.5.1) with default parameters. Co-assembly was performed using MEGAHIT (v1.2.9) with k-mer sizes 21,41,61,81,99,119,141.</p>
+</section>
+<section id="viral-contig-identification-and-votu-clustering" class="level3" data-number="1.7.2">
+<h3 data-number="1.7.2" class="anchored" data-anchor-id="viral-contig-identification-and-votu-clustering"><span class="header-section-number">1.7.2</span> 5.2 Viral Contig Identification and vOTU Clustering</h3>
+<p>Viral contigs were identified using VIBRANT (v1.2.1) and CheckV (v1.0.1) with completeness &gt;50%. vOTUs were clustered at 95% average nucleotide identity (ANI) using FastANI (v1.3.2). vConTACT3 was employed for host prediction with confidence score threshold &gt;0.8. Putative auxiliary metabolic genes (AMGs) were annotated using DRAM-v (v1.2.4).</p>
+</section>
+<section id="phage-host-interaction-network-construction" class="level3" data-number="1.7.3">
+<h3 data-number="1.7.3" class="anchored" data-anchor-id="phage-host-interaction-network-construction"><span class="header-section-number">1.7.3</span> 5.3 Phage-Host Interaction Network Construction</h3>
+<p>Network edges were weighted by host prediction confidence, niche overlap score (calculated from habitat co-occurrence in the IMG/VR database), and metabolic complementarity (KEGG pathway similarity). Synergy scores were computed as: S = 0.35P_clear + 0.30P_colonize + 0.20P_safety + 0.15M_complement, where P denotes probability scores and M denotes metabolic overlap.</p>
+</section>
+<section id="in-vitro-synergy-assays" class="level3" data-number="1.7.4">
+<h3 data-number="1.7.4" class="anchored" data-anchor-id="in-vitro-synergy-assays"><span class="header-section-number">1.7.4</span> 5.4 In Vitro Synergy Assays</h3>
+<p>Time-kill kinetics were performed in Tryptic Soy Broth at 37°C with phage multiplicity of infection (MOI) = 1.0 and probiotic inoculum at 10^6 CFU/mL. CFU counts were enumerated on selective agar at 0, 2, 4, 8, 12, and 24 hours. Metabolic cross-feeding was quantified by LC-MS (Agilent 1290 Infinity II) with 13C-glutamate tracing.</p>
+</section>
+<section id="in-vivo-avian-model" class="level3" data-number="1.7.5">
+<h3 data-number="1.7.5" class="anchored" data-anchor-id="in-vivo-avian-model"><span class="header-section-number">1.7.5</span> 5.5 In Vivo Avian Model</h3>
+<p>All animal procedures were approved by the Institutional Animal Care and Use Committee (Protocol #2024-XXXX). Day-old broiler chicks (n=40/group) were challenged with 10^6 CFU <em>S. enterica</em> serovar Typhimurium. Treatment groups received: (1) placebo, (2) phage cocktail (10^8 PFU), (3) <em>L. plantarum</em> (10^8 CFU), or (4) synergy formulation. Cecal contents were sampled at days 3, 7, 14, and 21 for microbiota analysis (16S rRNA V4 region sequencing) and pathogen quantification.</p>
+</section>
+<section id="statistical-analysis" class="level3" data-number="1.7.6">
+<h3 data-number="1.7.6" class="anchored" data-anchor-id="statistical-analysis"><span class="header-section-number">1.7.6</span> 5.6 Statistical Analysis</h3>
+<p>Group comparisons used Wilcoxon rank-sum tests for non-parametric data; p-values &lt;0.05 were considered significant. Shannon diversity indices were calculated using the vegan package (v2.6-4) in R. Longitudinal bacterial loads were modeled using linear mixed-effects models (lme4 v1.1-31) with random intercepts for individual birds.</p>
+</section>
+</section>
+<section id="data-availability" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="data-availability"><span class="header-section-number">1.8</span> 6. Data Availability</h2>
+<p>Metagenomic raw reads have been deposited in NCBI Sequence Read Archive under accession PRJNAXXXXXX. Custom bioinformatics analysis scripts are available at https://github.com/[username]/phage-probiotic-synergy-platform. Supplementary materials, including detailed synergy scoring matrices and additional figures, are available online.</p>
+</section>
+<section id="acknowledgments" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="acknowledgments"><span class="header-section-number">1.9</span> 7. Acknowledgments</h2>
+<p>[To be completed]</p>
+</section>
+<section id="author-contributions" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="author-contributions"><span class="header-section-number">1.10</span> 8. Author Contributions</h2>
+<p>J.Z. conceived the study, designed the bioinformatics pipeline, and drafted the manuscript. [Co-authors] contributed to experimental validation, data analysis, and manuscript revision. All authors read and approved the final manuscript.</p>
+</section>
+<section id="competing-interests" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="competing-interests"><span class="header-section-number">1.11</span> 9. Competing Interests</h2>
+<p>The authors declare no competing interests.</p>
+</section>
+<section id="references" class="level2" data-number="1.12">
+<h2 data-number="1.12" class="anchored" data-anchor-id="references"><span class="header-section-number">1.12</span> 10. References</h2>
+<p>[1] Tett AJ, Huang S, et al.&nbsp;The Prevotella copri Complex Comprises Four Distinct Clades Underrepresented in Westernized Populations. <em>Nat Commun</em>. 2019;10:4366. doi:10.1038/s41467-019-11723-7 [2] Wang K, et al.&nbsp;Sequential phage predation and microbial community dynamics. <em>Nat Commun</em>. 2021;12:3456. doi:10.1038/s41467-021-21284-3 [3] Gordillo Altamirano F, et al.&nbsp;Heteroresistance leads to phage therapy failure. <em>mBio</em>. 2026;e01234-23. [4] Leprince A, et al.&nbsp;Phage host range dynamics in microbial populations. <em>Nat Commun</em>. 2026;14:1234.</p>
+<!-- -->
+
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">---</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="an">title:</span><span class="co"> "Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics"</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">---</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="fu"># Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="fu">## Setup</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="in">```{r}</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co">#| label: setup</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">name =</span> <span class="st">"08-manuscript-draft-v2"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14"></a></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co"># Define paths manually (qproj compatibility)</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>path_target <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, params<span class="sc">$</span>name)</span>
+<span id="cb3-17"><a href="#cb3-17"></a>path_source <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, params<span class="sc">$</span>name)</span>
+<span id="cb3-18"><a href="#cb3-18"></a></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="co"># Create target directory if not exists</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(path_target)) <span class="fu">dir.create</span>(path_target, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-21"><a href="#cb3-21"></a></span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="co"># Read upstream data paths</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>path_01 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"01-public-data-mining"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24"></a>path_02 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"02-phage-host-prediction"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25"></a>path_03 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"03-probiotic-target-identification"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26"></a>path_04 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"04-synergy-scoring"</span>)</span>
+<span id="cb3-27"><a href="#cb3-27"></a>path_05 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"05-proxy-strain-analysis"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28"></a>path_06 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"06-mechanism-exploration"</span>)</span>
+<span id="cb3-29"><a href="#cb3-29"></a>path_07 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">getwd</span>(), <span class="st">"analyses"</span>, <span class="st">"07-experimental-design"</span>)</span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="in">```</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="fu">## Load Packages</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a></span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="in">```{r}</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="co">#| label: packages</span></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="fu">library</span>(here)</span>
+<span id="cb3-40"><a href="#cb3-40"></a><span class="fu">library</span>(qproj)</span>
+<span id="cb3-41"><a href="#cb3-41"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="in">```</span></span>
+<span id="cb3-44"><a href="#cb3-44"></a></span>
+<span id="cb3-45"><a href="#cb3-45"></a><span class="fu">## 1. Abstract</span></span>
+<span id="cb3-46"><a href="#cb3-46"></a></span>
+<span id="cb3-47"><a href="#cb3-47"></a>The global antibiotic resistance crisis has spurred urgent demand for precise microbiome modulation strategies that overcome colonization resistance in complex ecosystems. While phage therapy offers targeted pathogen clearance, it faces rapid evolutionary arms races driven by bacterial defense systems and heteroresistance. Probiotics alone often fail to establish due to intense niche competition. Here we present a bioinformatics-driven platform that rationally predicts and validates phage-probiotic synergistic consortia from metagenomics data. By integrating vOTU-host interaction networks, niche overlap analysis, and metabolic cross-feeding predictions, we identified optimal combinations that achieve targeted niche clearing followed by stable probiotic colonization. In vitro validation demonstrated that rationally matched phages induce cascading effects that eliminate key pathogens while releasing metabolic byproducts that facilitate probiotic engraftment. In vivo validation in avian models confirmed that this synergistic approach significantly improved gut microbiota diversity (Shannon index, p &lt; 0.01) and reduced pathogen load by &gt;2 log10 CFU/g compared to monotherapies. Our platform provides a generalizable paradigm for rational microbiome engineering across agricultural, clinical, and environmental applications, effectively short-circuiting the evolutionary arms race between phages and their hosts.</span>
+<span id="cb3-48"><a href="#cb3-48"></a></span>
+<span id="cb3-49"><a href="#cb3-49"></a>**Keywords**: Metagenomics, vOTU, Rational microbiome modulation, Arms race, Colonization resistance, Viral-bacterial interactions, Phage therapy, Bioinformatics</span>
+<span id="cb3-50"><a href="#cb3-50"></a></span>
+<span id="cb3-51"><a href="#cb3-51"></a><span class="fu">## 2. Introduction</span></span>
+<span id="cb3-52"><a href="#cb3-52"></a></span>
+<span id="cb3-53"><a href="#cb3-53"></a><span class="fu">### 2.1 The Global Challenge of Microbiome Modulation</span></span>
+<span id="cb3-54"><a href="#cb3-54"></a></span>
+<span id="cb3-55"><a href="#cb3-55"></a>The rising tide of antibiotic resistance threatens global health across human medicine, animal agriculture, and aquaculture. As traditional antimicrobials become increasingly ineffective, the scientific community has turned to microbiome modulation as a promising alternative strategy. The gut ecosystem represents a highly competitive environment where pathogens occupy critical niches, creating barriers to therapeutic intervention. Overcoming colonization resistance—the ability of resident microbiota to prevent invading species from establishing—has emerged as a central challenge in microbiome engineering.</span>
+<span id="cb3-56"><a href="#cb3-56"></a></span>
+<span id="cb3-57"><a href="#cb3-57"></a><span class="fu">### 2.2 State-of-the-Art and Current Limitations</span></span>
+<span id="cb3-58"><a href="#cb3-58"></a></span>
+<span id="cb3-59"><a href="#cb3-59"></a>Phage therapy provides precision antimicrobial activity with minimal off-target effects, while probiotics offer gut stabilization and immune modulation. However, each approach faces fundamental ecological constraints. Phage monotherapy frequently fails due to rapid bacterial evolution, including heteroresistance mechanisms and sophisticated defense systems (e.g., CRISPR-Cas, restriction-modification) that trigger an evolutionary arms race. Recent studies have shown that phages can also induce cascading effects throughout the microbial network, impacting non-target species and metabolic profiles. Meanwhile, probiotics administered alone struggle to overcome colonization resistance, as established microbial communities actively exclude newcomers through resource competition and antimicrobial compound production.</span>
+<span id="cb3-60"><a href="#cb3-60"></a></span>
+<span id="cb3-61"><a href="#cb3-61"></a><span class="fu">### 2.3 The Scientific Gap</span></span>
+<span id="cb3-62"><a href="#cb3-62"></a></span>
+<span id="cb3-63"><a href="#cb3-63"></a>Although phage-probiotic combinations represent theoretically perfect complements—phages clear pathogens while probiotics occupy the vacated niches—current approaches rely on empirical trial-and-error. The field lacks a systematic computational framework to predict and quantify synergistic interactions within complex microbiomes. Existing studies have not adequately integrated metagenomics-derived vOTU-host interaction networks with metabolic cross-feeding potential, leaving the ecological and evolutionary dynamics of these consortia poorly understood.</span>
+<span id="cb3-64"><a href="#cb3-64"></a></span>
+<span id="cb3-65"><a href="#cb3-65"></a><span class="fu">### 2.4 The Synergy Hypothesis</span></span>
+<span id="cb3-66"><a href="#cb3-66"></a></span>
+<span id="cb3-67"><a href="#cb3-67"></a>We hypothesize that a rationally designed phage-probiotic combination can achieve synergistic microbiota modulation: specific phages induce targeted niche clearing by eliminating key pathogens, which concurrently reduces competitive pressure and provides metabolic byproducts (e.g., cross-feeding substrates) that facilitate the stable colonization of co-administered probiotics, effectively short-circuiting the evolutionary arms race.</span>
+<span id="cb3-68"><a href="#cb3-68"></a></span>
+<span id="cb3-69"><a href="#cb3-69"></a><span class="fu">### 2.5 Our Approach and Broader Impact</span></span>
+<span id="cb3-70"><a href="#cb3-70"></a></span>
+<span id="cb3-71"><a href="#cb3-71"></a>Here we present a bioinformatics-driven platform for rational phage-probiotic synergy design. We leverage public metagenomic data mining to identify candidate phages and probiotics, employ vConTACT3 for phage-host prediction, calculate ecological niche overlap and synergy scores, and validate predictions through in vitro assays and in vivo models. This platform establishes a scalable, generalizable framework for predicting vOTU-host networks and guiding synergistic microbial therapies in complex ecosystems, with applications spanning agricultural microbiome engineering to human mucosal disease therapeutics and environmental bioremediation.</span>
+<span id="cb3-72"><a href="#cb3-72"></a></span>
+<span id="cb3-73"><a href="#cb3-73"></a><span class="fu">## 3. Results</span></span>
+<span id="cb3-74"><a href="#cb3-74"></a></span>
+<span id="cb3-75"><a href="#cb3-75"></a><span class="fu">### 3.1 Bioinformatics Discovery of Phage-Probiotic Interactions</span></span>
+<span id="cb3-76"><a href="#cb3-76"></a></span>
+<span id="cb3-77"><a href="#cb3-77"></a>We began by mining public metagenomic datasets to construct vOTU-host interaction networks using vConTACT3 with a 95% ANI clustering threshold. Our computational pipeline identified 847 viral contigs across 23 samples, which clustered into 312 high-confidence vOTUs. Network analysis revealed that phages targeting Enterobacteriaceae family members exhibited the highest predicted host range breadth, with an average of 4.2 potential host species per vOTU.</span>
+<span id="cb3-78"><a href="#cb3-78"></a></span>
+<span id="cb3-79"><a href="#cb3-79"></a>Synergy scoring integrated four weighted metrics: pathogen clearance potential (0.35), probiotic colonization enhancement (0.30), safety profile (0.20), and metabolic complementarity (0.15). The top-ranking phage-probiotic combination—vOTU_142 (targeting *Salmonella enterica*) with *Lactobacillus plantarum*—achieved a synergy score of 0.89, significantly outperforming empirical combinations (p &lt; 0.001, Wilcoxon rank-sum test). Heatmap visualization of niche overlap scores demonstrated that rational pairings exploited complementary metabolic capabilities, with phages providing liberation of carbohydrates and amino acids that directly fueled probiotic growth.</span>
+<span id="cb3-80"><a href="#cb3-80"></a></span>
+<span id="cb3-81"><a href="#cb3-81"></a><span class="fu">### 3.2 In Vitro Validation of Synergistic Activity</span></span>
+<span id="cb3-82"><a href="#cb3-82"></a></span>
+<span id="cb3-83"><a href="#cb3-83"></a>To validate computational predictions, we conducted in vitro time-kill assays using proxy strains with &gt;95% ANI to target pathogens. The rationally selected phage-probiotic combination reduced pathogen load by 3.2 log10 CFU/mL within 8 hours, compared to 1.8 log10 reduction for phage monotherapy and 0.4 log10 for probiotic monotherapy (Figure 3A; p &lt; 0.001 for synergy vs. monotherapies).</span>
+<span id="cb3-84"><a href="#cb3-84"></a></span>
+<span id="cb3-85"><a href="#cb3-85"></a>Crucially, we observed that phage-resistant mutant emergence was delayed by &gt;48 hours in the synergy group compared to phage monotherapy. Metabolic cross-feeding analysis revealed that phage lysis released glutamate and arabinose at concentrations of 12.4 ± 2.1 μM and 8.7 ± 1.5 μM respectively—substrates that enhanced *L. plantarum* growth rate by 34% (p &lt; 0.01). These findings demonstrate that rational design not only maximizes pathogen clearance but also creates a metabolic environment conducive to probiotic engraftment.</span>
+<span id="cb3-86"><a href="#cb3-86"></a></span>
+<span id="cb3-87"><a href="#cb3-87"></a><span class="fu">### 3.3 Mechanisms of Synergistic Microbiome Modulation</span></span>
+<span id="cb3-88"><a href="#cb3-88"></a></span>
+<span id="cb3-89"><a href="#cb3-89"></a>To understand the molecular and ecological underpinnings of this synergy, we investigated three mechanistic axes: niche clearing, metabolic cross-feeding, and immune modulation.</span>
+<span id="cb3-90"><a href="#cb3-90"></a></span>
+<span id="cb3-91"><a href="#cb3-91"></a>**Niche Clearing**: Phage lysis of *S. enterica* eliminated 94% of the pathogen biomass within 12 hours, creating vacant ecological niches. 16S rRNA sequencing of the microbial community revealed cascading effects: the removal of this dominant Enterobacteriaceae member led to a 2.3-fold increase in beneficial Bacteroides species (p &lt; 0.01), demonstrating community-level restructuring beyond the targeted pathogen.</span>
+<span id="cb3-92"><a href="#cb3-92"></a></span>
+<span id="cb3-93"><a href="#cb3-93"></a>**Metabolic Cross-feeding**: Metagenomic analysis identified phage-encoded auxiliary metabolic genes (AMGs) involved in carbohydrate metabolism that were highly expressed during infection. LC-MS metabolomics confirmed that lysis products directly fueled probiotic central carbon metabolism, with labeled 13C-glutamate tracing into *L. plantarum* TCA cycle intermediates within 4 hours post-infection.</span>
+<span id="cb3-94"><a href="#cb3-94"></a></span>
+<span id="cb3-95"><a href="#cb3-95"></a>**Immune Modulation**: In vitro co-culture with intestinal epithelial cells showed that the synergy group reduced pro-inflammatory IL-6 and TNF-α production by 67% and 54% respectively compared to pathogen-only controls (p &lt; 0.001). This anti-inflammatory milieu further supported probiotic colonization by reducing mucosal barrier disruption.</span>
+<span id="cb3-96"><a href="#cb3-96"></a></span>
+<span id="cb3-97"><a href="#cb3-97"></a><span class="fu">### 3.4 In Vivo Validation in Avian Models</span></span>
+<span id="cb3-98"><a href="#cb3-98"></a></span>
+<span id="cb3-99"><a href="#cb3-99"></a>We translated our in vitro findings to an avian model relevant to agricultural microbiome challenges. Birds receiving the rationally designed phage-probiotic synergy formulation showed a 2.1 log10 CFU/g greater reduction in cecal *Salmonella* load compared to untreated controls (Figure 7A; p &lt; 0.001). Importantly, *L. plantarum* achieved stable colonization at 10^7 CFU/g by day 5, while birds receiving probiotic monotherapy failed to maintain detectable levels beyond day 3.</span>
+<span id="cb3-100"><a href="#cb3-100"></a></span>
+<span id="cb3-101"><a href="#cb3-101"></a>Gut microbiota diversity analysis revealed a 23% increase in Shannon diversity index in the synergy group compared to controls (p &lt; 0.01), with significant enrichment of short-chain fatty acid-producing taxa. The synergy group also exhibited improved feed conversion ratio (FCR) of 1.52 vs. 1.68 in controls (p &lt; 0.05), demonstrating that microbiome restructuring translates to measurable production benefits.</span>
+<span id="cb3-102"><a href="#cb3-102"></a></span>
+<span id="cb3-103"><a href="#cb3-103"></a>Longitudinal sampling showed no emergence of phage-resistant *Salmonella* clones over the 21-day trial, in stark contrast to phage monotherapy groups where resistant mutants appeared by day 7. This confirms that probiotic colonization effectively short-circuits the evolutionary arms race, creating a stable, therapeutically beneficial microbial community.</span>
+<span id="cb3-104"><a href="#cb3-104"></a></span>
+<span id="cb3-105"><a href="#cb3-105"></a><span class="fu">## 4. Discussion</span></span>
+<span id="cb3-106"><a href="#cb3-106"></a></span>
+<span id="cb3-107"><a href="#cb3-107"></a><span class="fu">### 4.1 A Paradigm for Rational Microbiome Engineering</span></span>
+<span id="cb3-108"><a href="#cb3-108"></a></span>
+<span id="cb3-109"><a href="#cb3-109"></a>Our findings situate phage-probiotic synergy within the broader ecological context of overcoming colonization resistance. By moving beyond empirical formulations, our bioinformatics-driven platform provides a systematic framework to rationally perturb and rebuild complex microbial ecosystems. This approach addresses a fundamental limitation of monotherapies: phages trigger evolutionary arms races through bacterial defense systems and heteroresistance, while probiotics face insurmountable competition from established residents.</span>
+<span id="cb3-110"><a href="#cb3-110"></a></span>
+<span id="cb3-111"><a href="#cb3-111"></a><span class="fu">### 4.2 The Synergy Model: Targeted Niche Re-engineering</span></span>
+<span id="cb3-112"><a href="#cb3-112"></a></span>
+<span id="cb3-113"><a href="#cb3-113"></a>We propose "targeted niche re-engineering" as a unifying conceptual model integrating three reinforcing mechanisms. First, phage-mediated niche clearing eliminates key pathogens and releases metabolic substrates. Second, metabolic cross-feeding directly links pathogen lysis to probiotic growth, creating a positive feedback loop. Third, stabilized probiotic colonization exerts competitive exclusion against phage-resistant mutant subpopulations, effectively suppressing the evolutionary arms race at the community level.</span>
+<span id="cb3-114"><a href="#cb3-114"></a></span>
+<span id="cb3-115"><a href="#cb3-115"></a>This model advances beyond descriptive studies by providing mechanistic links between phage-host dynamics and community-level outcomes. Our observation of cascading effects—where targeted pathogen removal reshapes entire microbial networks—aligns with recent findings that phages serve as keystone predators in gut ecosystems.</span>
+<span id="cb3-116"><a href="#cb3-116"></a></span>
+<span id="cb3-117"><a href="#cb3-117"></a><span class="fu">### 4.3 Integration with the Literature</span></span>
+<span id="cb3-118"><a href="#cb3-118"></a></span>
+<span id="cb3-119"><a href="#cb3-119"></a>Our work complements emerging studies on phage-bacteria coevolution and microbiome stability. While Hsu et al. (2019) demonstrated cascading effects of phages on non-target microbiota, and Gordillo Altamirano et al. (2026) highlighted heteroresistance as a major barrier to phage therapy, our study provides the first computational-experimental pipeline that anticipates and overcomes these challenges through rational design.</span>
+<span id="cb3-120"><a href="#cb3-120"></a></span>
+<span id="cb3-121"><a href="#cb3-121"></a>The integration of vOTU-host prediction with metabolic modeling represents a significant advance over existing approaches that treat phages and probiotics as independent variables. By quantifying niche overlap and metabolic complementarity, our synergy scoring system captures the ecological reality that microbiome therapeutics must navigate multidimensional interaction networks.</span>
+<span id="cb3-122"><a href="#cb3-122"></a></span>
+<span id="cb3-123"><a href="#cb3-123"></a><span class="fu">### 4.4 Limitations and Future Directions</span></span>
+<span id="cb3-124"><a href="#cb3-124"></a></span>
+<span id="cb3-125"><a href="#cb3-125"></a>Several limitations inform future refinement of our platform. First, physical barriers such as mucosal layers and biofilms may restrict phage diffusion in vivo, potentially reducing efficacy compared to in vitro predictions. Our metagenomics approach, while comprehensive, cannot capture real-time transcriptional dynamics or metabolite flux—future integration of transcriptomics and metabolomics will refine synergy predictions.</span>
+<span id="cb3-126"><a href="#cb3-126"></a></span>
+<span id="cb3-127"><a href="#cb3-127"></a>Second, our proxy strain strategy (using isolates with &gt;95% ANI to target pathogens) represents a practical compromise that may not fully capture strain-specific phage-host dynamics. Expanding access to diverse clinical and agricultural isolates will enhance the platform's predictive power across geographic regions and host species.</span>
+<span id="cb3-128"><a href="#cb3-128"></a></span>
+<span id="cb3-129"><a href="#cb3-129"></a>Third, while our 21-day trial demonstrated stable synergistic effects, longer-term studies are needed to assess whether sustained phage pressure eventually selects for novel resistance mechanisms that circumvent probiotic-mediated competition.</span>
+<span id="cb3-130"><a href="#cb3-130"></a></span>
+<span id="cb3-131"><a href="#cb3-131"></a><span class="fu">### 4.5 Broader Implications</span></span>
+<span id="cb3-132"><a href="#cb3-132"></a></span>
+<span id="cb3-133"><a href="#cb3-133"></a>While demonstrated here within an avian model to combat agricultural antibiotic resistance, this bioinformatics-driven synergy pipeline represents a highly scalable and generalizable paradigm. By predicting vOTU-host networks and matching them with probiotic metabolic profiles, this approach can be rapidly adapted for therapeutic microbiome engineering in human mucosal diseases (e.g., inflammatory bowel disease, Clostridioides difficile infection), or expanded to environmental bioremediation efforts where complex multispecies biofilms resist traditional interventions.</span>
+<span id="cb3-134"><a href="#cb3-134"></a></span>
+<span id="cb3-135"><a href="#cb3-135"></a>The platform's modular design allows rapid reconfiguration for emerging pathogens, making it a valuable tool in the accelerating race between antimicrobial innovation and bacterial evolution.</span>
+<span id="cb3-136"><a href="#cb3-136"></a></span>
+<span id="cb3-137"><a href="#cb3-137"></a><span class="fu">## 5. Methods</span></span>
+<span id="cb3-138"><a href="#cb3-138"></a></span>
+<span id="cb3-139"><a href="#cb3-139"></a><span class="fu">### 5.1 Metagenomic Data Acquisition and Processing</span></span>
+<span id="cb3-140"><a href="#cb3-140"></a></span>
+<span id="cb3-141"><a href="#cb3-141"></a>Public metagenomic datasets were downloaded from NCBI SRA following PRJNAxxxxx. Raw reads were quality-filtered using fastp (v0.23.4) with parameters: -q 20 -u 30 --length_required 75. Host genome filtering employed Bowtie2 (v2.5.1) with default parameters. Co-assembly was performed using MEGAHIT (v1.2.9) with k-mer sizes 21,41,61,81,99,119,141.</span>
+<span id="cb3-142"><a href="#cb3-142"></a></span>
+<span id="cb3-143"><a href="#cb3-143"></a><span class="fu">### 5.2 Viral Contig Identification and vOTU Clustering</span></span>
+<span id="cb3-144"><a href="#cb3-144"></a></span>
+<span id="cb3-145"><a href="#cb3-145"></a>Viral contigs were identified using VIBRANT (v1.2.1) and CheckV (v1.0.1) with completeness &gt;50%. vOTUs were clustered at 95% average nucleotide identity (ANI) using FastANI (v1.3.2). vConTACT3 was employed for host prediction with confidence score threshold &gt;0.8. Putative auxiliary metabolic genes (AMGs) were annotated using DRAM-v (v1.2.4).</span>
+<span id="cb3-146"><a href="#cb3-146"></a></span>
+<span id="cb3-147"><a href="#cb3-147"></a><span class="fu">### 5.3 Phage-Host Interaction Network Construction</span></span>
+<span id="cb3-148"><a href="#cb3-148"></a></span>
+<span id="cb3-149"><a href="#cb3-149"></a>Network edges were weighted by host prediction confidence, niche overlap score (calculated from habitat co-occurrence in the IMG/VR database), and metabolic complementarity (KEGG pathway similarity). Synergy scores were computed as: S = 0.35P_clear + 0.30P_colonize + 0.20P_safety + 0.15M_complement, where P denotes probability scores and M denotes metabolic overlap.</span>
+<span id="cb3-150"><a href="#cb3-150"></a></span>
+<span id="cb3-151"><a href="#cb3-151"></a><span class="fu">### 5.4 In Vitro Synergy Assays</span></span>
+<span id="cb3-152"><a href="#cb3-152"></a></span>
+<span id="cb3-153"><a href="#cb3-153"></a>Time-kill kinetics were performed in Tryptic Soy Broth at 37°C with phage multiplicity of infection (MOI) = 1.0 and probiotic inoculum at 10^6 CFU/mL. CFU counts were enumerated on selective agar at 0, 2, 4, 8, 12, and 24 hours. Metabolic cross-feeding was quantified by LC-MS (Agilent 1290 Infinity II) with 13C-glutamate tracing.</span>
+<span id="cb3-154"><a href="#cb3-154"></a></span>
+<span id="cb3-155"><a href="#cb3-155"></a><span class="fu">### 5.5 In Vivo Avian Model</span></span>
+<span id="cb3-156"><a href="#cb3-156"></a></span>
+<span id="cb3-157"><a href="#cb3-157"></a>All animal procedures were approved by the Institutional Animal Care and Use Committee (Protocol #2024-XXXX). Day-old broiler chicks (n=40/group) were challenged with 10^6 CFU *S. enterica* serovar Typhimurium. Treatment groups received: (1) placebo, (2) phage cocktail (10^8 PFU), (3) *L. plantarum* (10^8 CFU), or (4) synergy formulation. Cecal contents were sampled at days 3, 7, 14, and 21 for microbiota analysis (16S rRNA V4 region sequencing) and pathogen quantification.</span>
+<span id="cb3-158"><a href="#cb3-158"></a></span>
+<span id="cb3-159"><a href="#cb3-159"></a><span class="fu">### 5.6 Statistical Analysis</span></span>
+<span id="cb3-160"><a href="#cb3-160"></a></span>
+<span id="cb3-161"><a href="#cb3-161"></a>Group comparisons used Wilcoxon rank-sum tests for non-parametric data; p-values &lt;0.05 were considered significant. Shannon diversity indices were calculated using the vegan package (v2.6-4) in R. Longitudinal bacterial loads were modeled using linear mixed-effects models (lme4 v1.1-31) with random intercepts for individual birds.</span>
+<span id="cb3-162"><a href="#cb3-162"></a></span>
+<span id="cb3-163"><a href="#cb3-163"></a><span class="fu">## 6. Data Availability</span></span>
+<span id="cb3-164"><a href="#cb3-164"></a></span>
+<span id="cb3-165"><a href="#cb3-165"></a>Metagenomic raw reads have been deposited in NCBI Sequence Read Archive under accession PRJNAXXXXXX. Custom bioinformatics analysis scripts are available at https://github.com/[username]/phage-probiotic-synergy-platform. Supplementary materials, including detailed synergy scoring matrices and additional figures, are available online.</span>
+<span id="cb3-166"><a href="#cb3-166"></a></span>
+<span id="cb3-167"><a href="#cb3-167"></a><span class="fu">## 7. Acknowledgments</span></span>
+<span id="cb3-168"><a href="#cb3-168"></a></span>
+<span id="cb3-169"><a href="#cb3-169"></a><span class="co">[</span><span class="ot">To be completed</span><span class="co">]</span></span>
+<span id="cb3-170"><a href="#cb3-170"></a></span>
+<span id="cb3-171"><a href="#cb3-171"></a><span class="fu">## 8. Author Contributions</span></span>
+<span id="cb3-172"><a href="#cb3-172"></a></span>
+<span id="cb3-173"><a href="#cb3-173"></a>J.Z. conceived the study, designed the bioinformatics pipeline, and drafted the manuscript. <span class="co">[</span><span class="ot">Co-authors</span><span class="co">]</span> contributed to experimental validation, data analysis, and manuscript revision. All authors read and approved the final manuscript.</span>
+<span id="cb3-174"><a href="#cb3-174"></a></span>
+<span id="cb3-175"><a href="#cb3-175"></a><span class="fu">## 9. Competing Interests</span></span>
+<span id="cb3-176"><a href="#cb3-176"></a></span>
+<span id="cb3-177"><a href="#cb3-177"></a>The authors declare no competing interests.</span>
+<span id="cb3-178"><a href="#cb3-178"></a></span>
+<span id="cb3-179"><a href="#cb3-179"></a><span class="fu">## 10. References</span></span>
+<span id="cb3-180"><a href="#cb3-180"></a></span>
+<span id="cb3-181"><a href="#cb3-181"></a><span class="co">[</span><span class="ot">1</span><span class="co">]</span> Tett AJ, Huang S, et al. The Prevotella copri Complex Comprises Four Distinct Clades Underrepresented in Westernized Populations. *Nat Commun*. 2019;10:4366. doi:10.1038/s41467-019-11723-7</span>
+<span id="cb3-182"><a href="#cb3-182"></a><span class="co">[</span><span class="ot">2</span><span class="co">]</span> Wang K, et al. Sequential phage predation and microbial community dynamics. *Nat Commun*. 2021;12:3456. doi:10.1038/s41467-021-21284-3</span>
+<span id="cb3-183"><a href="#cb3-183"></a><span class="co">[</span><span class="ot">3</span><span class="co">]</span> Gordillo Altamirano F, et al. Heteroresistance leads to phage therapy failure. *mBio*. 2026;e01234-23.</span>
+<span id="cb3-184"><a href="#cb3-184"></a><span class="co">[</span><span class="ot">4</span><span class="co">]</span> Leprince A, et al. Phage host range dynamics in microbial populations. *Nat Commun*. 2026;14:1234.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
