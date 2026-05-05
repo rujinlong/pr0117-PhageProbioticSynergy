@@ -52,9 +52,9 @@ Your Name
 
 ## Setup
 
-\`\`\`{r} \#\| label: setup params \<- list(name =
-“07-experimental-design”) here::i_am(paste0(params\$name, “.qmd”), uuid
-= “g7h8i9j0-k1l2-3456-mnop-q1234567890”)
+\`\`\`{r} params \<- list(name = “07-experimental-design”)
+here::i_am(paste0(params\$name, “.qmd”), uuid =
+“g7h8i9j0-k1l2-3456-mnop-q1234567890”)
 
 qproj::proj_create_dir_target(params$name)
 path_target <- qproj::path_target(params$name) path_source \<-
@@ -72,7 +72,6 @@ qproj::path_source(“06-mechanism-exploration”)
     ## Load Packages
 
     ```\{r\}
-    #| label: packages
     library(tidyverse)
     library(here)
     library(qproj)
@@ -95,13 +94,13 @@ trials - Commercialization preparation
 
 ### 1.2 Design Principles
 
- Principle | Description |
-----|----|
- **Bioinformatics-First** | All decisions data-driven (Modules 01-04) |
- **Proxy Validation** | Validate on German strains, transfer to China |
- **Modular Design** | Each experiment builds on previous results |
- **Replication** | Biological triplicates, technical duplicates |
- **Controls** | Negative (PBS), Positive (antibiotics), Mono-therapies |
+| Principle | Description |
+|----|----|
+| **Bioinformatics-First** | All decisions data-driven (Modules 01-04) |
+| **Proxy Validation** | Validate on German strains, transfer to China |
+| **Modular Design** | Each experiment builds on previous results |
+| **Replication** | Biological triplicates, technical duplicates |
+| **Controls** | Negative (PBS), Positive (antibiotics), Mono-therapies |
 
 ## 2. In Vitro Experiments (Germany)
 
@@ -111,7 +110,7 @@ trials - Commercialization preparation
 
 **Protocol Template**:
 
-\`\`\`{r} \#\| label: phage-isolation-protocol \#\| eval: false
+\`\`\`{r} \#\| eval: false
 
 protocol \<- c( “\# Phage Isolation Protocol”, ““,”\## Sample
 Collection”, “- Source: Feces/gut content from healthy/sick animals”, “-
@@ -137,17 +136,16 @@ dir.create(file.path(path_target, “protocols”), showWarnings = FALSE)
 
     **Design**: 2×2 factorial (Phage ± Probiotic)
 
- Treatment | Phage | Probiotic | Expected Outcome |
------------|--------|------------|-------------------|
- Control | - | - | Baseline pathogen growth |
- Phage only | ✓ | - | Pathogen reduction |
- Probiotic only | - | ✓ | Moderate colonization |
- **Synergy** | ✓ | ✓ | **Max clearance + colonization** |
+    | Treatment | Phage | Probiotic | Expected Outcome |
+    |-----------|--------|------------|-------------------|
+    | Control | - | - | Baseline pathogen growth |
+    | Phage only | ✓ | - | Pathogen reduction |
+    | Probiotic only | - | ✓ | Moderate colonization |
+    | **Synergy** | ✓ | ✓ | **Max clearance + colonization** |
 
     **Measurement Metrics**:
 
     ```\{r\}
-    #| label: synergy-metrics
     #| eval: false
 
     metrics <- tibble(
@@ -172,7 +170,7 @@ position in incubator)
 
 **Response Variables**:
 
-\`\`\`{r} \#\| label: poultry-design \#\| eval: false
+\`\`\`{r} \#\| eval: false
 
 # Generate experimental design
 
@@ -199,7 +197,6 @@ knitr::kable(head(design, 10), caption = “Poultry Experiment Design
     **Power Analysis** (based on expected effect size):
 
     ```\{r\}
-    #| label: power-analysis
     #| eval: false
 
     # Template: Power analysis for ANOVA
@@ -236,17 +233,17 @@ From Notion Document Section 6.1 (Geographic & Regulatory Constraints):
 
 **Target**: Broiler chickens, commercial farm setting
 
- Parameter      | Specification                                 |
-----------------|-----------------------------------------------|
- **Animals**    | 1000 broilers, day-old                        |
- **Duration**   | 42 days (standard production cycle)           |
- **Treatments** | 4 groups × 250 birds                          |
- **Replicates** | 5 pens per treatment (50 birds/pen)           |
- **Metrics**    | FCR, mortality, lesion scores, gut microbiota |
+| Parameter      | Specification                                 |
+|----------------|-----------------------------------------------|
+| **Animals**    | 1000 broilers, day-old                        |
+| **Duration**   | 42 days (standard production cycle)           |
+| **Treatments** | 4 groups × 250 birds                          |
+| **Replicates** | 5 pens per treatment (50 birds/pen)           |
+| **Metrics**    | FCR, mortality, lesion scores, gut microbiota |
 
 **Economic Analysis**:
 
-\`\`\`{r} \#\| label: economic-model \#\| eval: false
+\`\`\`{r} \#\| eval: false
 
 economics \<- tibble( item = c(“Phage production (per dose)”, “Probiotic
 (per dose)”, “Administration”, “Labor”, “FCR improvement”, “Mortality
@@ -269,20 +266,19 @@ bird: \$”, total_savings) message(“ROI:”, round(ROI, 1), “%”)
 
     **Timeline for Germany Lab**:
 
- Week | Activity | Module Reference |
--------|-----------|------------------|
- 1-2 | Phage isolation from samples | - |
- 3-4 | Host range testing (proxy strains) | Module 05 |
- 5-6 | In vitro synergy tests | Module 04 |
- 7-8 | Mechanism validation (receptor, metabolic) | Module 06 |
- 9-10 | Prepare samples for China transfer | - |
+    | Week | Activity | Module Reference |
+    |-------|-----------|------------------|
+    | 1-2 | Phage isolation from samples | - |
+    | 3-4 | Host range testing (proxy strains) | Module 05 |
+    | 5-6 | In vitro synergy tests | Module 04 |
+    | 7-8 | Mechanism validation (receptor, metabolic) | Module 06 |
+    | 9-10 | Prepare samples for China transfer | - |
 
     ### 5.2 Data Management
 
     **Folder Structure**:
 
     ```\{r\}
-    #| label: data-management
     #| eval: false
 
     dirs <- c(
@@ -312,12 +308,12 @@ bird: \$”, total_savings) message(“ROI:”, round(ROI, 1), “%”)
 
 ### 6.1 Biosafety Considerations
 
- Risk                           | Mitigation                      |
---------------------------------|---------------------------------|
- **Phage resistance evolution** | Use phage cocktails (3+ phages) |
- **Horizontal gene transfer**   | Screen for AMR/virulence genes  |
- **Probiotic translocation**    | Use GRAS strains only           |
- **Allergic reactions**         | Monitor bird health daily       |
+| Risk                           | Mitigation                      |
+|--------------------------------|---------------------------------|
+| **Phage resistance evolution** | Use phage cocktails (3+ phages) |
+| **Horizontal gene transfer**   | Screen for AMR/virulence genes  |
+| **Probiotic translocation**    | Use GRAS strains only           |
+| **Allergic reactions**         | Monitor bird health daily       |
 
 ### 6.2 Ethical Approval
 
@@ -347,7 +343,7 @@ nlm source add phage-synergy --text "$(cat experimental_design_summary.txt)" \
 
 ## 8. Session Info
 
-`\{r\} #| label: session-info sessionInfo()`
+`\{r\} sessionInfo()`
 
 ## 9. Next Steps
 

@@ -9,7 +9,6 @@ params:
 ## Setup
 
 ```{r setup}
-#| label: setup
 params <- list(name = "06-mechanism-exploration")
 here::i_am(paste0(params$name, ".qmd"), uuid = "f6a7b8c9-d0e1-2345-ghij-k1234567890")
 
@@ -26,7 +25,6 @@ path_05 <- qproj::path_source("05-proxy-strain-analysis")
 ## Load Packages
 
 ```{r packages}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -76,7 +74,6 @@ Based on the 34 sources imported to NotebookLM:
 Compare receptor profiles before and after phage intervention.
 
 ```{r receptor-landscape}
-#| label: receptor-landscape
 #| eval: false
 
 # Template: Load genomic data for pathogens and probiotics
@@ -119,7 +116,6 @@ receptor_genes <- tibble(
 Explore how phage-mediated pathogen removal affects metabolic environment.
 
 ```{r metabolic-analysis}
-#| label: metabolic-analysis
 #| eval: false
 
 # Template: Load KEGG pathways / MetaCyc data
@@ -143,7 +139,6 @@ knitr::kable(metabolic_shifts, caption = "Expected Metabolic Shifts After Phage 
 Compare carbon source utilization profiles.
 
 ```{r carbon-utilization}
-#| label: carbon-utilization
 #| eval: false
 
 # Template: Using Biolog plate data or genomic prediction
@@ -170,7 +165,6 @@ Compare carbon source utilization profiles.
 Explore how the phage-probiotic combination modulates host immunity.
 
 ```{r immune-response}
-#| label: immune-response
 #| eval: false
 
 # Template: Cytokine profiling (from literature or experiments)
@@ -201,7 +195,6 @@ cytokine_long <- cytokines %>%
 Track potential gene transfer between phages, pathogens, and commensals.
 
 ```{r hgt-analysis}
-#| label: hgt-analysis
 #| eval: false
 
 # Template: Use PHASTER or similar tools to detect prophages
@@ -239,7 +232,6 @@ Create a systems-level model of phage-probiotic synergy.
 ### 7.2 Mathematical Model Template
 
 ```{r mathematical-model}
-#| label: mathematical-model
 #| eval: false
 
 # Template: Simple Lotka-Volterra competition model with phage predation
@@ -295,7 +287,6 @@ nlm source add phage-synergy --text "$(cat mechanism_summary.txt)" --title "Mech
 ## 9. Session Info
 
 ```{r session-info}
-#| label: session-info
 sessionInfo()
 ```
 

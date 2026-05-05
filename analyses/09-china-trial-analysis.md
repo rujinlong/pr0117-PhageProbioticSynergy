@@ -77,9 +77,9 @@ Your Name
 
 ## Setup
 
-\`\`\`{r} \#\| label: setup params \<- list(name =
-“09-china-trial-analysis”) here::i_am(paste0(params\$name, “.qmd”), uuid
-= “i9j0k1l2-m3n4-5678-opqr-s1234567890”)
+\`\`\`{r} params \<- list(name = “09-china-trial-analysis”)
+here::i_am(paste0(params\$name, “.qmd”), uuid =
+“i9j0k1l2-m3n4-5678-opqr-s1234567890”)
 
 qproj::proj_create_dir_target(params$name)
 path_target <- qproj::path_target(params$name) path_source \<-
@@ -94,7 +94,6 @@ qproj::path_source(“08-manuscript-draft”)
     ## Load Packages
 
     ```\{r\}
-    #| label: packages
     library(tidyverse)
     library(here)
     library(qproj)
@@ -115,12 +114,12 @@ market**: Chinese animal agriculture (家禽, 水产, 生猪) -
 
 ### 2.1 Regulatory Landscape
 
- Aspect                 | Germany       | China                        |
-------------------------|---------------|------------------------------|
- **Approval time**      | 2-3 months    | 6-12 months                  |
- **Cost per bird**      | €5-8          | ¥3-5 (€0.4-0.6)              |
- **Facility standards** | High (Tier-1) | Variable                     |
- **Sample size limits** | Moderate      | Large (1000+ birds feasible) |
+| Aspect                 | Germany       | China                        |
+|------------------------|---------------|------------------------------|
+| **Approval time**      | 2-3 months    | 6-12 months                  |
+| **Cost per bird**      | €5-8          | ¥3-5 (€0.4-0.6)              |
+| **Facility standards** | High (Tier-1) | Variable                     |
+| **Sample size limits** | Moderate      | Large (1000+ birds feasible) |
 
 ### 2.2 Trial Sites
 
@@ -136,7 +135,7 @@ Target: Fish/shrimp ponds - Scale: 10+ ponds (commercial scale)
 
 **Performance Metrics**:
 
-\`\`\`{r} \#\| label: performance-metrics \#\| eval: false
+\`\`\`{r} \#\| eval: false
 
 metrics \<- tibble( metric = c(“Feed Conversion Ratio (FCR)”, “Daily
 Weight Gain”, “Mortality (%)”, “Lesion Score (0-4)”, “Gut Morphology”,
@@ -150,7 +149,6 @@ knitr::kable(metrics, caption = “Performance Metrics for China Trials”)
     **Microbiome Sampling**:
 
     ```\{r\}
-    #| label: microbiome-sampling
     #| eval: false
 
     sampling_points <- tibble(
@@ -167,7 +165,7 @@ knitr::kable(metrics, caption = “Performance Metrics for China Trials”)
 
 Account for block (pen) and repeated measures (time).
 
-\`\`\`{r} \#\| label: mixed-model \#\| eval: false
+\`\`\`{r} \#\| eval: false
 
 # Template: Linear mixed model for FCR
 
@@ -199,7 +197,6 @@ Account for block (pen) and repeated measures (time).
     For non-normal data (mortality, lesion scores):
 
     ```\{r\}
-    #| label: nonparametric
     #| eval: false
 
     # Kruskal-Wallis for treatment effects
@@ -215,7 +212,7 @@ Account for block (pen) and repeated measures (time).
 
 ### 5.1 FCR Over Time
 
-\`\`\`{r} \#\| label: fcr-plot \#\| eval: false
+\`\`\`{r} \#\| eval: false
 
 # ggplot(trial_data, aes(x = day, y = FCR, color = treatment, group = pen)) +
 
@@ -233,7 +230,6 @@ Account for block (pen) and repeated measures (time).
     ### 5.2 Microbiome Shifts
 
     ```\{r\}
-    #| label: microbiome-plot
     #| eval: false
 
     # Template: Stacked bar plot of phage/viral abundance
@@ -250,7 +246,7 @@ Account for block (pen) and repeated measures (time).
 
 **Costs per 1000 birds** (¥):
 
-\`\`\`{r} \#\| label: cost-benefit
+\`\`\`{r}
 
 cost_benefit_cn \<- tibble( item = c(“Phage production (¥/dose)”,
 “Probiotic (¥/dose)”, “Administration”, “Labor”, “FCR improvement”,
@@ -272,12 +268,12 @@ per 1000 birds)”)
 
     ### 6.2 Market Comparison
 
- Product | Price per bird (¥) | Efficacy (FCR improvement) | Market Share |
----------|---------------------|----------------------------|--------------|
- **Our synergy** | 0.6 | 0.15 points | New entrant |
- 诺安百特 (phage only) | 0.8 | 0.10 points | Leading |
- CJ BIO (probiotic) | 0.5 | 0.08 points | Strong |
- Antibiotics (banned) | 0.3 | 0.20 points | Illegal |
+    | Product | Price per bird (¥) | Efficacy (FCR improvement) | Market Share |
+    |---------|---------------------|----------------------------|--------------|
+    | **Our synergy** | 0.6 | 0.15 points | New entrant |
+    | 诺安百特 (phage only) | 0.8 | 0.10 points | Leading |
+    | CJ BIO (probiotic) | 0.5 | 0.08 points | Strong |
+    | Antibiotics (banned) | 0.3 | 0.20 points | Illegal |
 
     ## 7. Regulatory Pathway (China)
 
@@ -285,13 +281,13 @@ per 1000 birds)”)
 
     **Timeline** (from Notion Section 13: Market & Commercial Context):
 
- Step | Agency | Duration | Status |
-------|--------|----------|--------|
- **Lab validation** | Internal | 3 months | ✅ Phase 2 |
- **Pilot trial** | Local FAIRS office | 3 months | 🔄 Phase 3 |
- **Full trial** | Ministry of Agriculture | 6 months | 🔄 Phase 4 |
- **Import license** | GACC (if Germany→China) | 3 months | Pending |
- **Production permit** | Local government | 3 months | Pending |
+    | Step | Agency | Duration | Status |
+    |------|--------|----------|--------|
+    | **Lab validation** | Internal | 3 months | ✅ Phase 2 |
+    | **Pilot trial** | Local FAIRS office | 3 months | 🔄 Phase 3 |
+    | **Full trial** | Ministry of Agriculture | 6 months | 🔄 Phase 4 |
+    | **Import license** | GACC (if Germany→China) | 3 months | Pending |
+    | **Production permit** | Local government | 3 months | Pending |
 
     ### 7.2 IP Strategy (Notion Section 14)
 
@@ -313,12 +309,12 @@ per 1000 birds)”)
 
     ### 8.2 Localization
 
- Aspect | Germany (R&D) | China (Production) |
---------|----------------|----------------------|
- **Phage production** | German lab | Transfer to China partner |
- **Probiotic production** | German strain | Local production |
- **Quality control** | German standard | Joint protocol |
- **Distribution** | N/A | Partner network |
+    | Aspect | Germany (R&D) | China (Production) |
+    |--------|----------------|----------------------|
+    | **Phage production** | German lab | Transfer to China partner |
+    | **Probiotic production** | German strain | Local production |
+    | **Quality control** | German standard | Joint protocol |
+    | **Distribution** | N/A | Partner network |
 
     ## 9. NotebookLM Validation
 
@@ -338,7 +334,7 @@ nlm source add phage-synergy --text "$(cat china_trial_results.txt)" \
 
 ## 10. Session Info
 
-`\{r\} #| label: session-info sessionInfo()`
+`\{r\} sessionInfo()`
 
 ## 11. Next Steps
 

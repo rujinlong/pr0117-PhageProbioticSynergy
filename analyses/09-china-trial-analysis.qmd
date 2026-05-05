@@ -7,7 +7,6 @@ title: "China Trial Analysis"
 ## Setup
 
 ```\{r\}
-#| label: setup
 params <- list(name = "09-china-trial-analysis")
 here::i_am(paste0(params$name, ".qmd"), uuid = "i9j0k1l2-m3n4-5678-opqr-s1234567890")
 
@@ -23,7 +22,6 @@ path_08 <- qproj::path_source("08-manuscript-draft")
 ## Load Packages
 
 ```\{r\}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -70,7 +68,6 @@ Analyze data from China animal trials and optimize formulations for Chinese mark
 **Performance Metrics**:
 
 ```\{r\}
-#| label: performance-metrics
 #| eval: false
 
 metrics <- tibble(
@@ -86,7 +83,6 @@ knitr::kable(metrics, caption = "Performance Metrics for China Trials")
 **Microbiome Sampling**:
 
 ```\{r\}
-#| label: microbiome-sampling
 #| eval: false
 
 sampling_points <- tibble(
@@ -105,7 +101,6 @@ knitr::kable(sampling_points, caption = "Microbiome Sampling Schedule")
 Account for block (pen) and repeated measures (time).
 
 ```\{r\}
-#| label: mixed-model
 #| eval: false
 
 # Template: Linear mixed model for FCR
@@ -127,7 +122,6 @@ Account for block (pen) and repeated measures (time).
 For non-normal data (mortality, lesion scores):
 
 ```\{r\}
-#| label: nonparametric
 #| eval: false
 
 # Kruskal-Wallis for treatment effects
@@ -145,7 +139,6 @@ For non-normal data (mortality, lesion scores):
 ### 5.1 FCR Over Time
 
 ```\{r\}
-#| label: fcr-plot
 #| eval: false
 
 # ggplot(trial_data, aes(x = day, y = FCR, color = treatment, group = pen)) +
@@ -159,7 +152,6 @@ For non-normal data (mortality, lesion scores):
 ### 5.2 Microbiome Shifts
 
 ```\{r\}
-#| label: microbiome-plot
 #| eval: false
 
 # Template: Stacked bar plot of phage/viral abundance
@@ -178,7 +170,6 @@ For non-normal data (mortality, lesion scores):
 **Costs per 1000 birds** (¥):
 
 ```\{r\}
-#| label: cost-benefit
 
 cost_benefit_cn <- tibble(
   item = c("Phage production (¥/dose)", "Probiotic (¥/dose)", 
@@ -267,7 +258,6 @@ nlm source add phage-synergy --text "$(cat china_trial_results.txt)" \
 ## 10. Session Info
 
 ```\{r\}
-#| label: session-info
 sessionInfo()
 ```
 

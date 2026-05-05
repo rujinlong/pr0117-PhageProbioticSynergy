@@ -9,7 +9,6 @@ params:
 ## Setup
 
 ```\{r\}
-#| label: setup
 params <- list(name = "07-experimental-design")
 here::i_am(paste0(params$name, ".qmd"), uuid = "g7h8i9j0-k1l2-3456-mnop-q1234567890")
 
@@ -28,7 +27,6 @@ path_06 <- qproj::path_source("06-mechanism-exploration")
 ## Load Packages
 
 ```\{r\}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -72,7 +70,6 @@ Based on Notion Research Master Plan Section 11 (Experimental Design Philosophy)
 **Protocol Template**:
 
 ```\{r\}
-#| label: phage-isolation-protocol
 #| eval: false
 
 protocol <- c(
@@ -125,7 +122,6 @@ dir.create(file.path(path_target, "protocols"), showWarnings = FALSE)
 **Measurement Metrics**:
 
 ```\{r\}
-#| label: synergy-metrics
 #| eval: false
 
 metrics <- tibble(
@@ -153,7 +149,6 @@ knitr::kable(metrics, caption = "In Vitro Synergy Metrics")
 **Response Variables**:
 
 ```\{r\}
-#| label: poultry-design
 #| eval: false
 
 # Generate experimental design
@@ -181,7 +176,6 @@ knitr::kable(head(design, 10), caption = "Poultry Experiment Design (RCBD)")
 **Power Analysis** (based on expected effect size):
 
 ```\{r\}
-#| label: power-analysis
 #| eval: false
 
 # Template: Power analysis for ANOVA
@@ -229,7 +223,6 @@ From Notion Document Section 6.1 (Geographic & Regulatory Constraints):
 **Economic Analysis**:
 
 ```\{r\}
-#| label: economic-model
 #| eval: false
 
 economics <- tibble(
@@ -268,7 +261,6 @@ message("ROI: ", round(ROI, 1), "%")
 **Folder Structure**:
 
 ```\{r\}
-#| label: data-management
 #| eval: false
 
 dirs <- c(
@@ -334,7 +326,6 @@ nlm source add phage-synergy --text "$(cat experimental_design_summary.txt)" \
 ## 8. Session Info
 
 ```\{r\}
-#| label: session-info
 sessionInfo()
 ```
 

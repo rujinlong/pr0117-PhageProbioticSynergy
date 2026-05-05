@@ -9,7 +9,6 @@ params:
 ## Setup
 
 ```{r setup}
-#| label: setup
 params <- list(name = "05-proxy-strain-analysis")
 here::i_am(paste0(params$name, ".qmd"), uuid = "e5f6a7b8-c9d0-1234-efgh-i1234567890")
 
@@ -26,7 +25,6 @@ path_04 <- qproj::path_source("04-synergy-scoring")
 ## Load Packages
 
 ```{r packages}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -70,7 +68,6 @@ Based on Notion Research Master Plan:
 ### 2.2 Data Sources for Strain Comparison
 
 ```{r data-sources}
-#| label: data-sources
 #| eval: false
 
 # Template: Search NCBI for available strains
@@ -99,7 +96,6 @@ if (FALSE) {
 ### 3.1 ANI Calculation Template
 
 ```{r ani-template}
-#| label: ani-template
 #| eval: false
 
 # Template for ANI calculation using pyani (Python) or fastANI
@@ -134,7 +130,6 @@ Sys.chmod(file.path(path_target, "scripts", "run_ani.sh"), "755")
 ### 3.2 Phage Receptor Profile Comparison
 
 ```{r receptor-comparison}
-#| label: receptor-comparison
 #| eval: false
 
 # Template: Compare phage receptor genes
@@ -213,7 +208,6 @@ Based on Notion document Section 7 (The Bioinformatics-First Strategy):
 ### 5.2 Validation Metrics
 
 ```{r validation-metrics}
-#| label: validation-metrics
 #| eval: false
 
 validation_criteria <- tibble(
@@ -261,7 +255,6 @@ nlm source add phage-synergy --text "$(cat proxy_strain_report.txt)" --title "Pr
 ## 8. Session Info
 
 ```{r session-info}
-#| label: session-info
 sessionInfo()
 ```
 

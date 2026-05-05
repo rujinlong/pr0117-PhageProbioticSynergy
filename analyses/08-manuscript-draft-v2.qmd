@@ -9,7 +9,6 @@ link-citations: true
 ## Setup
 
 ```{r}
-#| label: setup
 params <- list(name = "08-manuscript-draft-v2")
 
 # Define paths manually (qproj compatibility)
@@ -32,7 +31,6 @@ path_07 <- file.path(getwd(), "analyses", "07-experimental-design")
 ## Load Packages
 
 ```{r}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)

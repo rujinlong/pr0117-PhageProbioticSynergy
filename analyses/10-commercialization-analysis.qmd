@@ -7,7 +7,6 @@ title: "Commercialization Analysis"
 ## Setup
 
 ```\{r\}
-#| label: setup
 params <- list(name = "10-commercialization-analysis")
 here::i_am(paste0(params$name, ".qmd"), uuid = "j0k1l2m3-n4o5-6789-pqrs-t1234567890")
 
@@ -22,7 +21,6 @@ path_09 <- qproj::path_source("09-china-trial-analysis")
 ## Load Packages
 
 ```\{r\}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -69,7 +67,6 @@ From Notion Research Master Plan Section 13 (Market & Commercial Context):
 ### 2.2 Revenue Streams
 
 ```\{r\}
-#| label: revenue-model
 #| eval: false
 
 revenue <- tibble(
@@ -179,7 +176,6 @@ From Notion Section 14 (IP & Patent Strategy):
 ### 7.1 5-Year Revenue Projection
 
 ```\{r\}
-#| label: financial-projection
 #| eval: false
 
 years <- 1:5
@@ -255,7 +251,6 @@ nlm source add phage-synergy --text "$(cat commercial_analysis.txt)" \
 ## 10. Session Info
 
 ```\{r\}
-#| label: session-info
 sessionInfo()
 ```
 

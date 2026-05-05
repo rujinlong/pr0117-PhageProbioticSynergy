@@ -9,7 +9,6 @@ params:
 ## Setup
 
 ```{r setup}
-#| label: setup
 here::i_am(paste0(params$name, ".qmd"), uuid = "d4e5f6a7-b8c9-0123-defg-h1234567890")
 
 qproj::proj_create_dir_target(params$name)
@@ -25,7 +24,6 @@ path_03 <- qproj::path_source("03-probiotic-target-identification")
 ## Load Packages
 
 ```{r packages}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -66,7 +64,6 @@ Develop a scoring system to rank phage-probiotic combinations for animal health 
 ### 3.1 Load Upstream Results
 
 ```{r load-upstream}
-#| label: load-upstream
 #| eval: false
 
 # Load phage prediction results (from 02)
@@ -86,7 +83,6 @@ Develop a scoring system to rank phage-probiotic combinations for animal health 
 ### 3.2 Template Scoring Function
 
 ```{r scoring-function}
-#| label: scoring-function
 #| eval: false
 
 calculate_synergy_score <- function(phage_id, probiotic_id, phage_data, probiotic_data) {
@@ -138,7 +134,6 @@ calculate_synergy_score <- function(phage_id, probiotic_id, phage_data, probioti
 ### 4.2 Visualization
 
 ```{r visualize-rankings}
-#| label: visualize-rankings
 #| eval: false
 
 # Bar plot of top combinations
@@ -190,7 +185,6 @@ Based on NotebookLM literature (34 sources imported):
 ### 6.3 Economic Analysis Template
 
 ```{r economic-analysis}
-#| label: economic-analysis
 #| eval: false
 
 # Cost-benefit analysis template
@@ -233,7 +227,6 @@ ROI <- (total_benefit - total_cost) / total_cost * 100
 ## 8. Session Info
 
 ```{r session-info}
-#| label: session-info
 sessionInfo()
 ```
 

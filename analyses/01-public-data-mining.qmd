@@ -9,7 +9,6 @@ params:
 ## Setup
 
 ```{r setup}
-#| label: setup
 here::i_am(paste0(params$name, ".qmd"), uuid = "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
 
 # qproj setup
@@ -26,7 +25,6 @@ dir.create(file.path(path_target, "datasets"), showWarnings = FALSE)
 ## Load Packages
 
 ```{r packages}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -69,7 +67,6 @@ This module focuses on mining publicly available datasets relevant to phage-prob
 Search for metagenomic and metatranscriptomic datasets from animal gut samples.
 
 ```{r sra-search}
-#| label: sra-search
 #| eval: false
 
 # Search SRA for poultry gut metagenomes
@@ -97,7 +94,6 @@ if (FALSE) {  # Set to TRUE when ready to run
 Search for recent publications on phage-probiotic combinations.
 
 ```{r pubmed-search}
-#| label: pubmed-search
 #| eval: false
 
 # Search PubMed
@@ -133,7 +129,6 @@ if (FALSE) {
 Search for relevant BioProjects.
 
 ```{r bioproject-search}
-#| label: bioproject-search
 #| eval: false
 
 # Template for BioProject search
@@ -188,7 +183,6 @@ Based on the Notion Research Master Plan and preliminary research:
 ### 4.1 SRA Data Download (Template)
 
 ```{r sra-download-plan}
-#| label: sra-download-plan
 
 # Template for SRA download using sratoolkit
 sra_download_script <- c(
@@ -225,7 +219,6 @@ if (file.exists(file.path(path_target, "scripts", "download_sra.sh"))) {
 ### 4.2 Phage Genome Download
 
 ```{r phage-genome-download}
-#| label: phage-genome-download
 #| eval: false
 
 # Template: Download phage genomes from NCBI RefSeq
@@ -256,7 +249,6 @@ write_csv(
 Build an SQLite database to store all mined data.
 
 ```{r db-schema}
-#| label: db-schema
 #| eval: false
 
 library(DBI)
@@ -331,7 +323,6 @@ message("Database schema created at: ", db_path)
 ### 5.2 Populate Initial Data
 
 ```{r populate-initial}
-#| label: populate-initial
 #| eval: false
 
 con <- dbConnect(SQLite(), file.path(path_target, "datasets", "phage_probiotic_synergy.db"))
@@ -398,7 +389,6 @@ nlm source add phage-synergy --drive <FILE_ID> --type pdf
 ## 7. Session Info
 
 ```{r session-info}
-#| label: session-info
 sessionInfo()
 ```
 

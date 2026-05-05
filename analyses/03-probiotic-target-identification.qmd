@@ -9,7 +9,6 @@ params:
 ## Setup
 
 ```{r setup}
-#| label: setup
 here::i_am(paste0(params$name, ".qmd"), uuid = "c3d4e5f6-a7b8-9012-cdef-1234567890")
 
 qproj::proj_create_dir_target(params$name)
@@ -24,7 +23,6 @@ path_02 <- qproj::path_source("02-phage-host-prediction")
 ## Load Packages
 
 ```{r packages}
-#| label: packages
 library(tidyverse)
 library(here)
 library(qproj)
@@ -58,7 +56,6 @@ Based on NotebookLM literature review:
 Analyze what receptors/pathways probiotics use for colonization.
 
 ```{r receptor-analysis-template}
-#| label: receptor-analysis-template
 #| eval: false
 
 # Template: Analyze probiotic genome for adhesion factors
@@ -288,7 +285,6 @@ if (requireNamespace("RCy3", quietly = TRUE)) {
 Model the competitive relationship between pathogens and probiotics.
 
 ```{r niche-overlap-template}
-#| label: niche-overlap-template
 #| eval: false
 
 # Template: Calculate niche overlap index
@@ -317,7 +313,6 @@ niche_data <- tibble(
 Simulate how phage predation on pathogens opens niche space for probiotics.
 
 ```{r phage-impact-simulation}
-#| label: phage-impact-simulation
 #| eval: false
 
 # Template: Simple competition model
@@ -379,7 +374,6 @@ From the Research Master Plan:
 Analyze probiotic genomes for synergy-relevant features.
 
 ```{r genome-features-template}
-#| label: genome-features-template
 #| eval: false
 
 # Template: Analyze probiotic genomes
@@ -398,7 +392,6 @@ Analyze probiotic genomes for synergy-relevant features.
 Compare probiotic strains for optimal selection.
 
 ```{r comparative-genomics}
-#| label: comparative-genomics
 #| eval: false
 
 # Template: Compare multiple strains of same species
@@ -427,7 +420,6 @@ nlm source add phage-synergy --text "$(cat probiotic_ranking.txt)" --title "Prob
 ## 7. Session Info
 
 ```{r session-info}
-#| label: session-info
 sessionInfo()
 ```
 
