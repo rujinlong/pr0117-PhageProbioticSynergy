@@ -1,260 +1,260 @@
-     1|---
-     2|title: "Phage-Host Prediction Analysis"
-     3|params:
-     4|  name: "02-phage-host-prediction"
-     5|---
-     6|
-     7|# Phage-Host Prediction for Animal Pathogens
-     8|
-     9|## Setup
-    10|
-    11|```{r setup}
-    12|#| label: setup
-    13|here::i_am(paste0(params$name, ".qmd"), uuid = "b2c3d4e5-f6a7-8901-bcde-f1234567890")
-    14|
-    15|# qproj setup
-    16|qproj::proj_create_dir_target(params$name)
-    17|path_target <- qproj::path_target(params$name)
-    18|path_source <- qproj::path_source(params$name)
-    19|
-    20|# Read upstream data
-    21|path_upstream <- qproj::path_source("01-public-data-mining")
-    22|```
-    23|
-    24|## Load Packages
-    25|
-    26|```{r packages}
-    27|#| label: packages
-    28|library(tidyverse)
-    29|library(here)
-    30|library(qproj)
-    31|library(ape)
-    32|library(ggplot2)
-    33|# For phage-host prediction
-    34|# library(phageR)      # If available
-    35|# library(vConTACT2R)  # If available
-    36|```
-    37|
-    38|## 1. Objective
-    39|
-    40|Predict which phages can effectively target specific animal pathogens:
-    41|- **Target pathogens**: *Clostridium perfringens*, *Salmonella enterica*, *E. coli*, *Vibrio* spp.
-    42|- **Goal**: Identify lytic phages with broad host range or specific activity
-    43|- **Approach**: Use computational tools + existing databases (phagesDB, MVP, vConTACT3)
-    44|
-    45|## 2. Phage-Host Prediction Tools Review
-    46|
-    47|Based on NotebookLM research (34 sources imported), key tools include:
-    48|
-    49|### 2.1 Sequence-Based Methods
-    50|- **vConTACT3**: Viral protein cluster networks, genus-level prediction
-    51|- **PHIAF**: Phage-host interaction predictor using k-mer features
-    52|- **DeepHost**: Deep learning approach using genomic features
-    53|- **WIsH**: k-mer based method
-    54|
-    55|### 2.2 Structure-Based Methods
-    56|- **PHP**: Prokaryotic host prediction using structural features
-    57|- **VHQS**: Quality scoring for predicted interactions
-    58|
-    59|### 2.3 Integrated Pipelines
-    60|- **ViroProfiler** (our existing tool)
-    61|- **TPD** (Therapeutic Phage Discovery pipeline)
-    62|
-    63|## 3. Database Integration
-    64|
-    65|### 3.1 Download Phage Genomes from RefSeq
-    66|
-    67|Template for downloading phage genomes targeting our pathogens of interest.
-    68|
-    69|```{r download-phage-genomes}
-    70|#| label: download-phage-genomes
-    71|#| eval: false
-    72|
-    73|# Using entrez to download phage genomes
-    74|if (FALSE) {  # Set to TRUE when ready
-    75|  library(rentrez)
-    76|  
-    77|  # Search for phages targeting C. perfringens
-    78|  search_cperf <- rentrez::entrez_search(
-    79|    db = "nucleotide",
-    80|    term = "Clostridium perfringens phage[Organism] AND refseq[filter]",
-    81|    retmax = 100
-    82|  )
-    83|  
-    84|  # Download sequences
-    85|  phage_seqs <- rentrez::entrez_fetch(
-    86|    db = "nucleotide",
-    87|    id = search_cperf$ids,
-    88|    rettype = "fasta"
-    89|  )
-    90|  
-    91|  # Save
-    92|  writeLines(
-    93|    phage_seqs,
-    94|    file.path(path_target, "raw", "c_perfringens_phages.fasta")
-    95|  )
-    96|}
-    97|```
-    98|
-    99|### 3.2 Load Existing Database
-   100|
-   101|Load phage-host interaction data from integrated databases.
-   102|
-   103|```{r load-databases}
-   104|#| label: load-databases
-   105|#| eval: false
-   106|
-   107|# Template: Load phagesDB data
-   108|# Source: https://phagesdb.org/download/
-   109|phagesdb_url <- "https://phagesdb.org/media/ExportDatasets/"
-   110|
-   111|# Template: Load vConTACT3 results if available
-   112|# vcontact_results <- read_tsv(file.path(path_upstream, "processed", "vcontact_results.tsv"))
-   113|
-   114|message("Database loading templates ready")
-   115|```
-   116|
-   117|## 4. Host Prediction Analysis
-   118|
-   119|### 4.1 Using ViroProfiler Pipeline
-   120|
-   121|Our existing ViroProfiler pipeline can be used for phage-host prediction.
-   122|
-   123|```{r viroprofiler-template}
-   124|#| label: viroprofiler-template
-   125|#| eval: false
-   126|
-   127|# Template for running ViroProfiler
-   128|# ViroProfiler path (update as needed)
-   129|viroprofiler_path <- "~/tools/ViroProfiler"
-   130|
-   131|# Command template
-   132|viroprofiler_cmd <- sprintf(
-   133|  "cd %s && bash run_viroprofiler.sh -i %s -o %s -t phage_host",
-   134|  viroprofiler_path,
-   135|  file.path(path_upstream, "raw", "phage_contigs.fasta"),
-   136|  file.path(path_target, "processed", "viroprofiler_output")
-   137|)
-   138|
-   139|# Execute (when ready)
-   140|# system(viroprofiler_cmd)
-   141|```
-   142|
-   143|### 4.2 Using vConTACT3
-   144|
-   145|vConTACT3 for viral cluster-based host prediction.
-   146|
-   147|```{r vcontact-template}
-   148|#| label: vcontact-template
-   149|#| eval: false
-   150|
-   151|# Template for vConTACT3 analysis
-   152|# Input: viral protein files
-   153|# Output: cluster network with host predictions
-   154|
-   155|vcontact_cmd <- sprintf(
-   156|  "vcontact3 --input-file %s --output-dir %s --threads 8",
-   157|  file.path(path_upstream, "processed", "viral_proteins.faa"),
-   158|  file.path(path_target, "processed", "vcontact3_output")
-   159|)
-   160|
-   161|# Execute (when ready)
-   162|# system(vcontact_cmd)
-   163|```
-   164|
-   165|## 5. Results Integration
-   166|
-   167|### 5.1 Parse Prediction Results
-   168|
-   169|```{r parse-results}
-   170|#| label: parse-results
-   171|#| eval: false
-   172|
-   173|# Template: Parse ViroProfiler/vConTACT3 results
-   174|# results_df <- read_tsv(file.path(path_target, "processed", "predictions.tsv"))
-   175|
-   176|# Summary table template
-   177|# summary_table <- results_df %>%
-   178|#   group_by(target_pathogen, phage_id) %>%
-   179|#   summarise(
-   180|#     prediction_score = mean(score),
-   181|#     n_tools = n_distinct(tool),
-   182|#     .groups = "drop"
-   183|#   ) %>%
-   184|#   arrange(desc(prediction_score))
-   185|
-   186|# knitr::kable(summary_table, caption = "Phage-Host Prediction Results")
-   187|```
-   188|
-   189|### 5.2 Visualization
-   190|
-   191|```{r visualize-predictions}
-   192|#| label: visualize-predictions
-   193|#| eval: false
-   194|
-   195|# Template: Visualize prediction results
-   196|# ggplot(summary_table, aes(x = target_pathogen, y = prediction_score, fill = n_tools)) +
-   197|#   geom_boxplot() +
-   198|#   theme_minimal() +
-   199|#   labs(title = "Phage-Host Prediction Scores by Pathogen",
-   200|#        x = "Target Pathogen", y = "Prediction Score")
-   201|```
-   202|
-   203|## 6. Candidate Phage Selection
-   204|
-   205|### 6.1 Selection Criteria
-   206|
-   207|Based on the Research Master Plan:
-   208|1. **Lytic lifestyle** (not temperate)
-   209|2. **Broad host range** (target multiple strains)
-   210|3. **Genomic stability** (few lysogenic genes)
-   211|4. **Safety profile** (no toxin genes, no AMR genes)
-   212|
-   213|### 6.2 Top Candidates Table
-   214|
-   215|*To be populated after running predictions*
-   216|
-   217|| Phage ID | Target Pathogen | Prediction Score | Lifestyle | Host Range | Notes |
-   218||-----------|-----------------|------------------|------------|-------------|-------|
-   219|| TBD | C. perfringens | - | lytic | - | - |
-   220|| TBD | S. enterica | - | lytic | - | - |
-   221|| TBD | E. coli | - | lytic | - | - |
-   222|| TBD | Vibrio spp. | - | lytic | - | - |
-   223|
-   224|## 7. NotebookLM Integration
-   225|
-   226|### 7.1 Query NotebookLM for Validation
-   227|
-   228|Use NotebookLM to validate predictions against literature.
-   229|
-   230|```bash
-   231|nlm notebook query phage-synergy "What phages are effective against Clostridium perfringens in poultry?"
-   232|```
-   233|
-   234|### 7.2 Add Results to NotebookLM
-   235|
-   236|After generating prediction results, add them as a source to NotebookLM for cross-referencing with literature.
-   237|
-   238|```bash
-   239|# Convert results to text/PDF and add to NotebookLM
-   240|nlm source add phage-synergy --text "$(cat predictions_summary.txt)" --title "Phage-Host Predictions pr0117"
-   241|```
-   242|
-   243|## 8. Session Info
-   244|
-   245|```{r session-info}
-   246|#| label: session-info
-   247|sessionInfo()
-   248|```
-   249|
-   250|## 9. Next Steps
-   251|
-   252|1. **Run ViroProfiler** on target phage genomes
-   253|2. **Run vConTACT3** for cluster-based predictions
-   254|3. **Integrate results** from multiple tools
-   255|4. **Validate predictions** using NotebookLM literature
-   256|5. **Proceed to Module 03** (`03-probiotic-target-identification.qmd`)
-   257|
-   258|---
-   259|*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
-   260|
+---
+title: "Phage-Host Prediction Analysis"
+params:
+  name: "02-phage-host-prediction"
+---
+
+# Phage-Host Prediction for Animal Pathogens
+
+## Setup
+
+```{r setup}
+#| label: setup
+here::i_am(paste0(params$name, ".qmd"), uuid = "b2c3d4e5-f6a7-8901-bcde-f1234567890")
+
+# qproj setup
+qproj::proj_create_dir_target(params$name)
+path_target <- qproj::path_target(params$name)
+path_source <- qproj::path_source(params$name)
+
+# Read upstream data
+path_upstream <- qproj::path_source("01-public-data-mining")
+```
+
+## Load Packages
+
+```{r packages}
+#| label: packages
+library(tidyverse)
+library(here)
+library(qproj)
+library(ape)
+library(ggplot2)
+# For phage-host prediction
+# library(phageR)      # If available
+# library(vConTACT2R)  # If available
+```
+
+## 1. Objective
+
+Predict which phages can effectively target specific animal pathogens:
+- **Target pathogens**: *Clostridium perfringens*, *Salmonella enterica*, *E. coli*, *Vibrio* spp.
+- **Goal**: Identify lytic phages with broad host range or specific activity
+- **Approach**: Use computational tools + existing databases (phagesDB, MVP, vConTACT3)
+
+## 2. Phage-Host Prediction Tools Review
+
+Based on NotebookLM research (34 sources imported), key tools include:
+
+### 2.1 Sequence-Based Methods
+- **vConTACT3**: Viral protein cluster networks, genus-level prediction
+- **PHIAF**: Phage-host interaction predictor using k-mer features
+- **DeepHost**: Deep learning approach using genomic features
+- **WIsH**: k-mer based method
+
+### 2.2 Structure-Based Methods
+- **PHP**: Prokaryotic host prediction using structural features
+- **VHQS**: Quality scoring for predicted interactions
+
+### 2.3 Integrated Pipelines
+- **ViroProfiler** (our existing tool)
+- **TPD** (Therapeutic Phage Discovery pipeline)
+
+## 3. Database Integration
+
+### 3.1 Download Phage Genomes from RefSeq
+
+Template for downloading phage genomes targeting our pathogens of interest.
+
+```{r download-phage-genomes}
+#| label: download-phage-genomes
+#| eval: false
+
+# Using entrez to download phage genomes
+if (FALSE) {  # Set to TRUE when ready
+  library(rentrez)
+  
+  # Search for phages targeting C. perfringens
+  search_cperf <- rentrez::entrez_search(
+    db = "nucleotide",
+    term = "Clostridium perfringens phage[Organism] AND refseq[filter]",
+    retmax = 100
+  )
+  
+  # Download sequences
+  phage_seqs <- rentrez::entrez_fetch(
+    db = "nucleotide",
+    id = search_cperf$ids,
+    rettype = "fasta"
+  )
+  
+  # Save
+  writeLines(
+    phage_seqs,
+    file.path(path_target, "raw", "c_perfringens_phages.fasta")
+  )
+}
+```
+
+### 3.2 Load Existing Database
+
+Load phage-host interaction data from integrated databases.
+
+```{r load-databases}
+#| label: load-databases
+#| eval: false
+
+# Template: Load phagesDB data
+# Source: https://phagesdb.org/download/
+phagesdb_url <- "https://phagesdb.org/media/ExportDatasets/"
+
+# Template: Load vConTACT3 results if available
+# vcontact_results <- read_tsv(file.path(path_upstream, "processed", "vcontact_results.tsv"))
+
+message("Database loading templates ready")
+```
+
+## 4. Host Prediction Analysis
+
+### 4.1 Using ViroProfiler Pipeline
+
+Our existing ViroProfiler pipeline can be used for phage-host prediction.
+
+```{r viroprofiler-template}
+#| label: viroprofiler-template
+#| eval: false
+
+# Template for running ViroProfiler
+# ViroProfiler path (update as needed)
+viroprofiler_path <- "~/tools/ViroProfiler"
+
+# Command template
+viroprofiler_cmd <- sprintf(
+  "cd %s && bash run_viroprofiler.sh -i %s -o %s -t phage_host",
+  viroprofiler_path,
+  file.path(path_upstream, "raw", "phage_contigs.fasta"),
+  file.path(path_target, "processed", "viroprofiler_output")
+)
+
+# Execute (when ready)
+# system(viroprofiler_cmd)
+```
+
+### 4.2 Using vConTACT3
+
+vConTACT3 for viral cluster-based host prediction.
+
+```{r vcontact-template}
+#| label: vcontact-template
+#| eval: false
+
+# Template for vConTACT3 analysis
+# Input: viral protein files
+# Output: cluster network with host predictions
+
+vcontact_cmd <- sprintf(
+  "vcontact3 --input-file %s --output-dir %s --threads 8",
+  file.path(path_upstream, "processed", "viral_proteins.faa"),
+  file.path(path_target, "processed", "vcontact3_output")
+)
+
+# Execute (when ready)
+# system(vcontact_cmd)
+```
+
+## 5. Results Integration
+
+### 5.1 Parse Prediction Results
+
+```{r parse-results}
+#| label: parse-results
+#| eval: false
+
+# Template: Parse ViroProfiler/vConTACT3 results
+# results_df <- read_tsv(file.path(path_target, "processed", "predictions.tsv"))
+
+# Summary table template
+# summary_table <- results_df %>%
+#   group_by(target_pathogen, phage_id) %>%
+#   summarise(
+#     prediction_score = mean(score),
+#     n_tools = n_distinct(tool),
+#     .groups = "drop"
+#   ) %>%
+#   arrange(desc(prediction_score))
+
+# knitr::kable(summary_table, caption = "Phage-Host Prediction Results")
+```
+
+### 5.2 Visualization
+
+```{r visualize-predictions}
+#| label: visualize-predictions
+#| eval: false
+
+# Template: Visualize prediction results
+# ggplot(summary_table, aes(x = target_pathogen, y = prediction_score, fill = n_tools)) +
+#   geom_boxplot() +
+#   theme_minimal() +
+#   labs(title = "Phage-Host Prediction Scores by Pathogen",
+#        x = "Target Pathogen", y = "Prediction Score")
+```
+
+## 6. Candidate Phage Selection
+
+### 6.1 Selection Criteria
+
+Based on the Research Master Plan:
+1. **Lytic lifestyle** (not temperate)
+2. **Broad host range** (target multiple strains)
+3. **Genomic stability** (few lysogenic genes)
+4. **Safety profile** (no toxin genes, no AMR genes)
+
+### 6.2 Top Candidates Table
+
+*To be populated after running predictions*
+
+| Phage ID | Target Pathogen | Prediction Score | Lifestyle | Host Range | Notes |
+|-----------|-----------------|------------------|------------|-------------|-------|
+| TBD | C. perfringens | - | lytic | - | - |
+| TBD | S. enterica | - | lytic | - | - |
+| TBD | E. coli | - | lytic | - | - |
+| TBD | Vibrio spp. | - | lytic | - | - |
+
+## 7. NotebookLM Integration
+
+### 7.1 Query NotebookLM for Validation
+
+Use NotebookLM to validate predictions against literature.
+
+```bash
+nlm notebook query phage-synergy "What phages are effective against Clostridium perfringens in poultry?"
+```
+
+### 7.2 Add Results to NotebookLM
+
+After generating prediction results, add them as a source to NotebookLM for cross-referencing with literature.
+
+```bash
+# Convert results to text/PDF and add to NotebookLM
+nlm source add phage-synergy --text "$(cat predictions_summary.txt)" --title "Phage-Host Predictions pr0117"
+```
+
+## 8. Session Info
+
+```{r session-info}
+#| label: session-info
+sessionInfo()
+```
+
+## 9. Next Steps
+
+1. **Run ViroProfiler** on target phage genomes
+2. **Run vConTACT3** for cluster-based predictions
+3. **Integrate results** from multiple tools
+4. **Validate predictions** using NotebookLM literature
+5. **Proceed to Module 03** (`03-probiotic-target-identification.qmd`)
+
+---
+*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
+
