@@ -193,19 +193,11 @@ J.Z. conceived the study, designed the bioinformatics pipeline, and drafted the 
 The authors declare no competing interests.
 
 ## 10. References
-
-[1](https://doi.org/10.1038/s41467-019-11723-7) Tett AJ, Huang S, Wu W, et al. The Prevotella copri complex comprises four distinct clades underrepresented in Westernized populations. *Nat Commun*. 2019;10:4366. doi:10.1038/s41467-019-11723-7
-
-[2](https://doi.org/10.1016/j.chom.2019.01.018) Hsu BB, Gibson TE, Yeliseyev V, et al. Dynamic modulation of the gut phage community in response to host dietary and developmental changes. *Cell Host Microbe*. 2019;25(3):386-397.e5. doi:10.1016/j.chom.2019.01.018
-
-[3](https://doi.org/10.1128/mbio.01234-23) Gordillo Altamirano F, Patwa R, Castillo DE, et al. A naturally occurring frameshift mutation in *Pseudomonas aeruginosa* prophage Pf4 yields a protein that enhances bacterial susceptibility to phage therapy. *mBio*. 2026;14(3):e01234-23. doi:10.1128/mbio.01234-23
-
-[4](https://doi.org/10.1038/s41579-023-00981-w) Leprince A, Lood C, Briers Y. The arms race between phages and bacteria: implications for phage therapy. *Nat Rev Microbiol*. 2026;22(4):221-234. doi:10.1038/s41579-023-00981-w
-
-[5](https://doi.org/10.1038/s41467-017-00677-3) Shadike R, et al. Antimicrobial resistance in livestock: a global concern. *Nat Commun*. 2017;8:1764. doi:[10.1038/s41467-017-00677-3](https://doi.org/10.1038/s41467-017-00677-3)
-
-[6](https://doi.org/10.1111/imr.12563) Kim S, Covington A, Pamer E. The intestinal microbiota: Antibiotics, colonization resistance, and enteric pathogens. *Immunol Rev*. 2017;277(1):90-105. doi:[10.1111/imr.12563](https://doi.org/10.1111/imr.12563)
-
-[7](https://doi.org/10.1016/j.mib.2020.02.002) McInnes R, McCallum G, Lamberte L, van Schaik W. Horizontal transfer of antibiotic resistance genes in the human gut microbiome. *Curr Opin Microbiol*. 2020;53:67-73. doi:[10.1016/j.mib.2020.02.002](https://doi.org/10.1016/j.mib.2020.02.002)
-
-[8](https://doi.org/10.1186/s40168-023-01479-0) Inda-Díaz J, Lund D, Parras-Moltó M, Johnning A, Bengtsson-Palme J, Kristiansson E. Latent antibiotic resistance genes are abundant, diverse, and mobile in human, animal, and environmental microbiomes. *Microbiome*. 2023;11(1):8. doi:[10.1186/s40168-023-01479-0](https://doi.org/10.1186/s40168-023-01479-0)
+[1] Tett AJ, Huang S, Wu W, et al. The Prevotella copri complex comprises four distinct clades underrepresented in Westernized populations. *Nat Commun*. 2019;10:4366. doi:[10.1038/s41467-019-11723-7](https://doi.org/10.1038/s41467-019-11723-7)
+[2] Hsu BB, Gibson TE, Yeliseyev V, et al. Dynamic modulation of the gut phage community in response to host dietary and developmental changes. *Cell Host Microbe*. 2019;25(3):386-397.e5. doi:[10.1016/j.chom.2019.01.018](https://doi.org/10.1016/j.chom.2019.01.018)
+[3] Gordillo Altamirano F, Patwa R, Castillo DE, et al. A naturally occurring frameshift mutation in *Pseudomonas aeruginosa* prophage Pf4 yields a protein that enhances bacterial susceptibility to phage therapy. *mBio*. 2026;14(3):e01234-23. doi:[10.1128/mbio.01234-23](https://doi.org/10.1128/mbio.01234-23)
+[4] Leprince A, Lood C, Briers Y. The arms race between phages and bacteria: implications for phage therapy. *Nat Rev Microbiol*. 2026;22(4):221-234. doi:[10.1038/s41579-023-00981-w](https://doi.org/10.1038/s41579-023-00981-w)
+[5] Shadike R, et al. Antimicrobial resistance in livestock: a global concern. *Nat Commun*. 2017;8:1764. doi:[10.1038/s41467-017-00677-3](https://doi.org/10.1038/s41467-017-00677-3)
+[6] Kim S, Covington A, Pamer E. The intestinal microbiota: Antibiotics, colonization resistance, and enteric pathogens. *Immunol Rev*. 2017;277(1):90-105. doi:[10.1111/imr.12563](https://doi.org/10.1111/imr.12563)
+[7] McInnes R, McCallum G, Lamberte L, van Schaik W. Horizontal transfer of antibiotic resistance genes in the human gut microbiome. *Curr Opin Microbiol*. 2020;53:67-73. doi:[10.1016/j.mib.2020.02.002](https://doi.org/10.1016/j.mib.2020.02.002)
+[8] Inda-Díaz J, Lund D, Parras-Moltó M, Johnning A, Bengtsson-Palme J, Kristiansson E. Latent antibiotic resistance genes are abundant, diverse, and mobile in human, animal, and environmental microbiomes. *Microbiome*. 2023;11(1):8. doi:[10.1186/s40168-023-01479-0](https://doi.org/10.1186/s40168-023-01479-0)
