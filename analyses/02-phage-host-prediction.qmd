@@ -13,11 +13,11 @@ here::i_am(paste0(params$name, ".qmd"), uuid = "b2c3d4e5-f6a7-8901-bcde-f1234567
 
 # qproj setup
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
-path_upstream <- qproj::path_source("01-public-data-mining")
+path_upstream <- qproj::proj_path_source("01-public-data-mining")
 ```
 
 ## Load Packages

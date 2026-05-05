@@ -13,13 +13,14 @@ here::i_am(paste0(params$name, ".qmd"), uuid = "a1b2c3d4-e5f6-7890-abcd-ef123456
 
 # qproj setup
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Create subdirectories
 dir.create(file.path(path_target, "raw"), showWarnings = FALSE)
 dir.create(file.path(path_target, "processed"), showWarnings = FALSE)
 dir.create(file.path(path_target, "datasets"), showWarnings = FALSE)
+dir.create(file.path(path_target, "scripts"), showWarnings = FALSE)
 ```
 
 ## Load Packages

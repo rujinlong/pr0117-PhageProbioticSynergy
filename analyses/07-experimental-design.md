@@ -4,79 +4,94 @@ Your Name
 - [<span class="toc-section-number">1</span> Experimental
   Design](#experimental-design)
   - [<span class="toc-section-number">1.1</span> Setup](#setup)
-- [<span class="toc-section-number">2</span> Read upstream
-  data](#read-upstream-data)
-  - [<span class="toc-section-number">2.1</span> 1. Experimental
+  - [<span class="toc-section-number">1.2</span> Load
+    Packages](#load-packages)
+  - [<span class="toc-section-number">1.3</span> 1. Experimental
     Strategy](#1-experimental-strategy)
-    - [<span class="toc-section-number">2.1.1</span> 1.1 From
+    - [<span class="toc-section-number">1.3.1</span> 1.1 From
       Bioinformatics to Bench](#11-from-bioinformatics-to-bench)
-    - [<span class="toc-section-number">2.1.2</span> 1.2 Design
+    - [<span class="toc-section-number">1.3.2</span> 1.2 Design
       Principles](#12-design-principles)
-  - [<span class="toc-section-number">2.2</span> 2. In Vitro Experiments
+  - [<span class="toc-section-number">1.4</span> 2. In Vitro Experiments
     (Germany)](#2-in-vitro-experiments-germany)
-    - [<span class="toc-section-number">2.2.1</span> 2.1 Phage Isolation
+    - [<span class="toc-section-number">1.4.1</span> 2.1 Phage Isolation
       & Characterization](#21-phage-isolation--characterization)
-  - [<span class="toc-section-number">2.3</span> 3. Animal Experiments
+    - [<span class="toc-section-number">1.4.2</span> 2.2 Synergy Testing
+      (In Vitro)](#22-synergy-testing-in-vitro)
+  - [<span class="toc-section-number">1.5</span> 3. Animal Experiments
     (Germany → China
     Transfer)](#3-animal-experiments-germany--china-transfer)
-    - [<span class="toc-section-number">2.3.1</span> 3.1 Poultry Model
+    - [<span class="toc-section-number">1.5.1</span> 3.1 Poultry Model
       (Broiler Chickens)](#31-poultry-model-broiler-chickens)
-- [<span class="toc-section-number">3</span> Generate experimental
-  design](#generate-experimental-design)
-- [<span class="toc-section-number">4</span> Add
-  metadata](#add-metadata)
-  - [<span class="toc-section-number">4.1</span> 4. China Animal
+    - [<span class="toc-section-number">1.5.2</span> 3.2 Sample Size
+      Calculation](#32-sample-size-calculation)
+  - [<span class="toc-section-number">1.6</span> 4. China Animal
     Trials](#4-china-animal-trials)
-    - [<span class="toc-section-number">4.1.1</span> 4.1 Regulatory
+    - [<span class="toc-section-number">1.6.1</span> 4.1 Regulatory
       Compliance](#41-regulatory-compliance)
-    - [<span class="toc-section-number">4.1.2</span> 4.2 Trial Design
+    - [<span class="toc-section-number">1.6.2</span> 4.2 Trial Design
       (China)](#42-trial-design-china)
-  - [<span class="toc-section-number">4.2</span> 6. Safety &
+  - [<span class="toc-section-number">1.7</span> 5. Laboratory
+    Workflow](#5-laboratory-workflow)
+    - [<span class="toc-section-number">1.7.1</span> 5.1 Sample
+      Collection & Processing](#51-sample-collection--processing)
+    - [<span class="toc-section-number">1.7.2</span> 5.2 Data
+      Management](#52-data-management)
+  - [<span class="toc-section-number">1.8</span> 6. Safety &
     Ethics](#6-safety--ethics)
-    - [<span class="toc-section-number">4.2.1</span> 6.1 Biosafety
+    - [<span class="toc-section-number">1.8.1</span> 6.1 Biosafety
       Considerations](#61-biosafety-considerations)
-    - [<span class="toc-section-number">4.2.2</span> 6.2 Ethical
+    - [<span class="toc-section-number">1.8.2</span> 6.2 Ethical
       Approval](#62-ethical-approval)
-  - [<span class="toc-section-number">4.3</span> 7. NotebookLM
+  - [<span class="toc-section-number">1.9</span> 7. NotebookLM
     Integration](#7-notebooklm-integration)
-    - [<span class="toc-section-number">4.3.1</span> 7.1 Query for
+    - [<span class="toc-section-number">1.9.1</span> 7.1 Query for
       Experimental Validation](#71-query-for-experimental-validation)
-    - [<span class="toc-section-number">4.3.2</span> 7.2 Add Design to
+    - [<span class="toc-section-number">1.9.2</span> 7.2 Add Design to
       NotebookLM](#72-add-design-to-notebooklm)
-  - [<span class="toc-section-number">4.4</span> 8. Session
+  - [<span class="toc-section-number">1.10</span> 8. Session
     Info](#8-session-info)
-  - [<span class="toc-section-number">4.5</span> 9. Next
+  - [<span class="toc-section-number">1.11</span> 9. Next
     Steps](#9-next-steps)
 
 # Experimental Design
 
 ## Setup
 
-\`\`\`{r} params \<- list(name = “07-experimental-design”)
-here::i_am(paste0(params\$name, “.qmd”), uuid =
-“g7h8i9j0-k1l2-3456-mnop-q1234567890”)
+<details class="code-fold">
+<summary>Code</summary>
+
+``` r
+here::i_am(paste0(params$name, ".qmd"), uuid = "g7h8i9j0-k1l2-3456-mnop-q1234567890")
 
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name) path_source \<-
-qproj::path_source(params\$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
+path_02 <- qproj::proj_path_source("02-phage-host-prediction")
+path_03 <- qproj::proj_path_source("03-probiotic-target-identification")
+path_04 <- qproj::proj_path_source("04-synergy-scoring")
+path_05 <- qproj::proj_path_source("05-proxy-strain-analysis")
+path_06 <- qproj::proj_path_source("06-mechanism-exploration")
+```
 
-path_02 \<- qproj::path_source(“02-phage-host-prediction”) path_03 \<-
-qproj::path_source(“03-probiotic-target-identification”) path_04 \<-
-qproj::path_source(“04-synergy-scoring”) path_05 \<-
-qproj::path_source(“05-proxy-strain-analysis”) path_06 \<-
-qproj::path_source(“06-mechanism-exploration”)
+</details>
 
+## Load Packages
 
-    ## Load Packages
+<details class="code-fold">
+<summary>Code</summary>
 
-    ```\{r\}
-    library(tidyverse)
-    library(here)
-    library(qproj)
-    library(ggplot2)
-    library(agricolae)  # For experimental design
+``` r
+library(tidyverse)
+library(here)
+library(qproj)
+library(ggplot2)
+# library(agricolae)  # For experimental design
+```
+
+</details>
 
 ## 1. Experimental Strategy
 
@@ -110,53 +125,77 @@ trials - Commercialization preparation
 
 **Protocol Template**:
 
-\`\`\`{r} \#\| eval: false
+<details class="code-fold">
+<summary>Code</summary>
 
-protocol \<- c( “\# Phage Isolation Protocol”, ““,”\## Sample
-Collection”, “- Source: Feces/gut content from healthy/sick animals”, “-
-Transport: Anaerobic buffer, 4°C, \<2h”, “- Storage: -80°C with glycerol
-(for long-term)”, ““,”\## Enrichment”, “- Add sample to TSB (37°C,
-anaerobic, 24h)”, “- Add CaCl2 to 10mM (enhance phage adsorption)”, “-
-Centrifuge 5000g, 10min, 4°C”, “- Filter supernatant (0.22μm)”, ““,”\##
-Phage Assay (Double Agar Layer)“,”- Host: Overnight culture (OD600 =
-0.3)“,”- Mix: 100μL host + 5mL soft agar + 10-100μL sample”, “- Pour
-onto pre-warmed TSA plate”, “- Incubate 24-48h at 37°C”, “- Count
-plaques, calculate titer (PFU/mL)”, ““,”\## Characterization”, “- TEM:
-Negative staining, observe morphology”, “- Host range: Spot test on 10+
-strains”, “- Stability: pH 3-10, temperature 4-60°C”, “- One-step growth
-curve: Latent period, burst size” )
+``` r
+protocol <- c(
+  "# Phage Isolation Protocol",
+  "",
+  "## Sample Collection",
+  "- Source: Feces/gut content from healthy/sick animals",
+  "- Transport: Anaerobic buffer, 4°C, <2h",
+  "- Storage: -80°C with glycerol (for long-term)",
+  "",
+  "## Enrichment",
+  "- Add sample to TSB (37°C, anaerobic, 24h)",
+  "- Add CaCl2 to 10mM (enhance phage adsorption)",
+  "- Centrifuge 5000g, 10min, 4°C",
+  "- Filter supernatant (0.22μm)",
+  "",
+  "## Phage Assay (Double Agar Layer)",
+  "- Host: Overnight culture (OD600 = 0.3)",
+  "- Mix: 100μL host + 5mL soft agar + 10-100μL sample",
+  "- Pour onto pre-warmed TSA plate",
+  "- Incubate 24-48h at 37°C",
+  "- Count plaques, calculate titer (PFU/mL)",
+  "",
+  "## Characterization",
+  "- TEM: Negative staining, observe morphology",
+  "- Host range: Spot test on 10+ strains",
+  "- Stability: pH 3-10, temperature 4-60°C",
+  "- One-step growth curve: Latent period, burst size"
+)
 
-write_lines( protocol, file.path(path_target, “protocols”,
-“phage_isolation.txt”) )
+write_lines(
+  protocol,
+  file.path(path_target, "protocols", "phage_isolation.txt")
+)
 
-dir.create(file.path(path_target, “protocols”), showWarnings = FALSE)
+dir.create(file.path(path_target, "protocols"), showWarnings = FALSE)
+```
 
+</details>
 
-    ### 2.2 Synergy Testing (In Vitro)
+### 2.2 Synergy Testing (In Vitro)
 
-    **Design**: 2×2 factorial (Phage ± Probiotic)
+**Design**: 2×2 factorial (Phage ± Probiotic)
 
-    | Treatment | Phage | Probiotic | Expected Outcome |
-    |-----------|--------|------------|-------------------|
-    | Control | - | - | Baseline pathogen growth |
-    | Phage only | ✓ | - | Pathogen reduction |
-    | Probiotic only | - | ✓ | Moderate colonization |
-    | **Synergy** | ✓ | ✓ | **Max clearance + colonization** |
+| Treatment      | Phage | Probiotic | Expected Outcome                 |
+|----------------|-------|-----------|----------------------------------|
+| Control        | \-    | \-        | Baseline pathogen growth         |
+| Phage only     | ✓     | \-        | Pathogen reduction               |
+| Probiotic only | \-    | ✓         | Moderate colonization            |
+| **Synergy**    | ✓     | ✓         | **Max clearance + colonization** |
 
-    **Measurement Metrics**:
+**Measurement Metrics**:
 
-    ```\{r\}
-    #| eval: false
+<details class="code-fold">
+<summary>Code</summary>
 
-    metrics <- tibble(
-      metric = c("Pathogen CFU", "Probiotic CFU", "Short-chain fatty acids",
-                 "pH", "Bile acid profile", "Inflammatory markers"),
-      method = c("Plate count", "Plate count", "GC-MS",
-                  "pH meter", "LC-MS", "ELISA/qPCR"),
-      frequency = c("Daily", "Daily", "Endpoint", "Daily", "Endpoint", "Endpoint")
-    )
+``` r
+metrics <- tibble(
+  metric = c("Pathogen CFU", "Probiotic CFU", "Short-chain fatty acids",
+             "pH", "Bile acid profile", "Inflammatory markers"),
+  method = c("Plate count", "Plate count", "GC-MS",
+              "pH meter", "LC-MS", "ELISA/qPCR"),
+  frequency = c("Daily", "Daily", "Endpoint", "Daily", "Endpoint", "Endpoint")
+)
 
-    knitr::kable(metrics, caption = "In Vitro Synergy Metrics")
+knitr::kable(metrics, caption = "In Vitro Synergy Metrics")
+```
+
+</details>
 
 ## 3. Animal Experiments (Germany → China Transfer)
 
@@ -170,53 +209,61 @@ position in incubator)
 
 **Response Variables**:
 
-\`\`\`{r} \#\| eval: false
+<details class="code-fold">
+<summary>Code</summary>
 
+``` r
 # Generate experimental design
-
 library(agricolae)
 
-treatments \<- c(“Control”, “Phage”, “Probiotic”, “Synergy”) timepoints
-\<- c(0, 7, 14, 21, 35) blocks \<- 1:3
+treatments <- c("Control", "Phage", "Probiotic", "Synergy")
+timepoints <- c(0, 7, 14, 21, 35)
+blocks <- 1:3
 
-design \<- design.rcbd( treatments, r = length(blocks) \*
-length(timepoints), serie = 2 \# Randomize within blocks )
+design <- design.rcbd(
+  treatments,
+  r = length(blocks) * length(timepoints),
+  serie = 2  # Randomize within blocks
+)
 
 # Add metadata
-
 design$timepoint <- rep(timepoints, each = length(treatments) * length(blocks))
-design$block \<- rep(blocks, each = length(treatments), times =
-length(timepoints))
+design$block <- rep(blocks, each = length(treatments), times = length(timepoints))
 
-knitr::kable(head(design, 10), caption = “Poultry Experiment Design
-(RCBD)”)
+knitr::kable(head(design, 10), caption = "Poultry Experiment Design (RCBD)")
+```
 
+</details>
 
-    ### 3.2 Sample Size Calculation
+### 3.2 Sample Size Calculation
 
-    **Power Analysis** (based on expected effect size):
+**Power Analysis** (based on expected effect size):
 
-    ```\{r\}
-    #| eval: false
+<details class="code-fold">
+<summary>Code</summary>
 
-    # Template: Power analysis for ANOVA
-    # Expected effect size: d = 0.8 (large)
-    # Alpha = 0.05, Power = 0.80
+``` r
+# Template: Power analysis for ANOVA
+# Expected effect size: d = 0.8 (large)
+# Alpha = 0.05, Power = 0.80
 
-    # Using pwr package (if available)
-    if (requireNamespace("pwr", quietly = TRUE)) {
-      library(pwr)
-      power_result <- pwr.anova.test(
-        k = 4,        # 4 treatments
-        f = 0.4,      # Cohen's f (medium-large effect)
-        sig.level = 0.05,
-        power = 0.80
-      )
-      print(power_result)
-    }
+# Using pwr package (if available)
+if (requireNamespace("pwr", quietly = TRUE)) {
+  library(pwr)
+  power_result <- pwr.anova.test(
+    k = 4,        # 4 treatments
+    f = 0.4,      # Cohen's f (medium-large effect)
+    sig.level = 0.05,
+    power = 0.80
+  )
+  print(power_result)
+}
 
-    # Rule of thumb: 8-10 birds per treatment per timepoint
-    # Total: 4 treatments × 5 timepoints × 10 birds = 200 birds
+# Rule of thumb: 8-10 birds per treatment per timepoint
+# Total: 4 treatments × 5 timepoints × 10 birds = 200 birds
+```
+
+</details>
 
 ## 4. China Animal Trials
 
@@ -243,66 +290,76 @@ From Notion Document Section 6.1 (Geographic & Regulatory Constraints):
 
 **Economic Analysis**:
 
-\`\`\`{r} \#\| eval: false
+<details class="code-fold">
+<summary>Code</summary>
 
-economics \<- tibble( item = c(“Phage production (per dose)”, “Probiotic
-(per dose)”, “Administration”, “Labor”, “FCR improvement”, “Mortality
-reduction”), cost = c(0.05, 0.03, 0.01, 0.02, -0.10, -0.50), \# Negative
-= savings unit = c(“USD”, “USD”, “USD”, “USD”, “FCR points”, “%”) )
+``` r
+economics <- tibble(
+  item = c("Phage production (per dose)", "Probiotic (per dose)", 
+            "Administration", "Labor", "FCR improvement", "Mortality reduction"),
+  cost = c(0.05, 0.03, 0.01, 0.02, -0.10, -0.50),  # Negative = savings
+  unit = c("USD", "USD", "USD", "USD", "FCR points", "%")
+)
 
-total_cost_per_bird \<- sum(economics$cost[economics$cost \> 0\])
-total_savings \<- abs(sum(economics$cost[economics$cost \< 0\]))
+total_cost_per_bird <- sum(economics$cost[economics$cost > 0])
+total_savings <- abs(sum(economics$cost[economics$cost < 0]))
 
-ROI \<- (total_savings - total_cost_per_bird) / total_cost_per_bird \*
-100
+ROI <- (total_savings - total_cost_per_bird) / total_cost_per_bird * 100
 
-message(“Cost per bird: \$”, total_cost_per_bird) message(“Savings per
-bird: \$”, total_savings) message(“ROI:”, round(ROI, 1), “%”)
+message("Cost per bird: $", total_cost_per_bird)
+message("Savings per bird: $", total_savings)
+message("ROI: ", round(ROI, 1), "%")
+```
 
+</details>
 
-    ## 5. Laboratory Workflow
+## 5. Laboratory Workflow
 
-    ### 5.1 Sample Collection & Processing
+### 5.1 Sample Collection & Processing
 
-    **Timeline for Germany Lab**:
+**Timeline for Germany Lab**:
 
-    | Week | Activity | Module Reference |
-    |-------|-----------|------------------|
-    | 1-2 | Phage isolation from samples | - |
-    | 3-4 | Host range testing (proxy strains) | Module 05 |
-    | 5-6 | In vitro synergy tests | Module 04 |
-    | 7-8 | Mechanism validation (receptor, metabolic) | Module 06 |
-    | 9-10 | Prepare samples for China transfer | - |
+| Week | Activity                                   | Module Reference |
+|------|--------------------------------------------|------------------|
+| 1-2  | Phage isolation from samples               | \-               |
+| 3-4  | Host range testing (proxy strains)         | Module 05        |
+| 5-6  | In vitro synergy tests                     | Module 04        |
+| 7-8  | Mechanism validation (receptor, metabolic) | Module 06        |
+| 9-10 | Prepare samples for China transfer         | \-               |
 
-    ### 5.2 Data Management
+### 5.2 Data Management
 
-    **Folder Structure**:
+**Folder Structure**:
 
-    ```\{r\}
-    #| eval: false
+<details class="code-fold">
+<summary>Code</summary>
 
-    dirs <- c(
-      "raw/phage_isolation",
-      "raw/synergy_assays",
-      "raw/metagenomics",
-      "processed/phage_characterization",
-      "processed/synergy_results",
-      "processed/microbiome_analysis",
-      "metadata/animal_records",
-      "metadata/sample_tracking",
-      "figures/virology",
-      "figures/microbiome",
-      "figures/economics"
-    )
+``` r
+dirs <- c(
+  "raw/phage_isolation",
+  "raw/synergy_assays",
+  "raw/metagenomics",
+  "processed/phage_characterization",
+  "processed/synergy_results",
+  "processed/microbiome_analysis",
+  "metadata/animal_records",
+  "metadata/sample_tracking",
+  "figures/virology",
+  "figures/microbiome",
+  "figures/economics"
+)
 
-    for (d in dirs) {
-      dir.create(file.path(path_target, d), recursive = TRUE, showWarnings = FALSE)
-    }
+for (d in dirs) {
+  dir.create(file.path(path_target, d), recursive = TRUE, showWarnings = FALSE)
+}
 
-    write_lines(
-      c("Data Management Plan", "==================", "", paste("Created:", dirs)),
-      file.path(path_target, "README_data_management.txt")
-    )
+write_lines(
+  c("Data Management Plan", "==================", "", paste("Created:", dirs)),
+  file.path(path_target, "README_data_management.txt")
+)
+```
+
+</details>
 
 ## 6. Safety & Ethics
 
@@ -343,7 +400,47 @@ nlm source add phage-synergy --text "$(cat experimental_design_summary.txt)" \
 
 ## 8. Session Info
 
-`\{r\} sessionInfo()`
+<details class="code-fold">
+<summary>Code</summary>
+
+``` r
+sessionInfo()
+```
+
+</details>
+
+    R version 4.5.3 (2026-03-11)
+    Platform: aarch64-apple-darwin20
+    Running under: macOS Tahoe 26.3.1
+
+    Matrix products: default
+    BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+    LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+    locale:
+    [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+    time zone: Europe/Berlin
+    tzcode source: internal
+
+    attached base packages:
+    [1] stats     graphics  grDevices utils     datasets  methods   base     
+
+    other attached packages:
+     [1] qproj_0.1.5     here_1.0.2      lubridate_1.9.5 forcats_1.0.1  
+     [5] stringr_1.6.0   dplyr_1.2.1     purrr_1.2.1     readr_2.2.0    
+     [9] tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.2   tidyverse_2.0.0
+
+    loaded via a namespace (and not attached):
+     [1] gtable_0.3.6       jsonlite_2.0.0     compiler_4.5.3     tidyselect_1.2.1  
+     [5] scales_1.4.0       yaml_2.3.12        fastmap_1.2.0      R6_2.6.1          
+     [9] generics_0.1.4     knitr_1.51         rprojroot_2.1.1    pillar_1.11.1     
+    [13] RColorBrewer_1.1-3 tzdb_0.5.0         rlang_1.2.0        stringi_1.8.7     
+    [17] xfun_0.57          S7_0.2.1           otel_0.2.0         timechange_0.4.0  
+    [21] cli_3.6.5          withr_3.0.2        magrittr_2.0.5     digest_0.6.39     
+    [25] grid_4.5.3         hms_1.1.4          lifecycle_1.0.5    vctrs_0.7.2       
+    [29] evaluate_1.0.5     glue_1.8.0         farver_2.1.2       codetools_0.2-20  
+    [33] rmarkdown_2.31     tools_4.5.3        pkgconfig_2.0.3    htmltools_0.5.9   
 
 ## 9. Next Steps
 

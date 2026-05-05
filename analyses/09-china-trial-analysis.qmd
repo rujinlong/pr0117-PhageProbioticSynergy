@@ -1,22 +1,23 @@
 ---
 title: "China Trial Analysis"
+params:
+  name: "09-china-trial-analysis"
 ---
 
 # China Trial Analysis
 
 ## Setup
 
-```{r}
-params <- list(name = "09-china-trial-analysis")
+```{r setup}
 here::i_am(paste0(params$name, ".qmd"), uuid = "i9j0k1l2-m3n4-5678-opqr-s1234567890")
 
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
-path_07 <- qproj::path_source("07-experimental-design")
-path_08 <- qproj::path_source("08-manuscript-draft")
+path_07 <- qproj::proj_path_source("07-experimental-design")
+path_08 <- qproj::proj_path_source("08-manuscript-draft")
 ```
 
 ## Load Packages

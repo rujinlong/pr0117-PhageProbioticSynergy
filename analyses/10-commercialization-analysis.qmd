@@ -1,21 +1,22 @@
 ---
 title: "Commercialization Analysis"
+params:
+  name: "10-commercialization-analysis"
 ---
 
 # Commercialization Analysis
 
 ## Setup
 
-```{r}
-params <- list(name = "10-commercialization-analysis")
+```{r setup}
 here::i_am(paste0(params$name, ".qmd"), uuid = "j0k1l2m3-n4o5-6789-pqrs-t1234567890")
 
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
-path_09 <- qproj::path_source("09-china-trial-analysis")
+path_09 <- qproj::proj_path_source("09-china-trial-analysis")
 ```
 
 ## Load Packages
@@ -67,7 +68,7 @@ From Notion Research Master Plan Section 13 (Market & Commercial Context):
 ### 2.2 Revenue Streams
 
 ```{r}
-#| eval: false
+#| label: revenue-streams
 
 revenue <- tibble(
   stream = c("Direct sales (phage)", "Direct sales (probiotic)", 
@@ -176,7 +177,7 @@ From Notion Section 14 (IP & Patent Strategy):
 ### 7.1 5-Year Revenue Projection
 
 ```{r}
-#| eval: false
+#| label: projections
 
 years <- 1:5
 revenue_m <- c(0.5, 5, 20, 50, 100)  # Million ¥
@@ -193,13 +194,14 @@ projections <- tibble(
 
 knitr::kable(projections, caption = "5-Year Financial Projection (Million ¥)")
 
-# ggplot(projections, aes(x = Year)) +
-#   geom_line(aes(y = Revenue_M, color = "Revenue")) +
-#   geom_line(aes(y = Cost_M, color = "Cost")) +
-#   geom_line(aes(y = Cumulative_Profit, color = "Cumulative Profit")) +
-#   theme_minimal() +
-#   labs(title = "Financial Projection (Million ¥)",
-#        y = "Million ¥")
+ggplot(projections, aes(x = Year)) +
+  geom_line(aes(y = Revenue_M, color = "Revenue")) +
+  geom_line(aes(y = Cost_M, color = "Cost")) +
+  geom_line(aes(y = Cumulative_Profit, color = "Cumulative Profit")) +
+  theme_minimal() +
+  labs(title = "Financial Projection (Million ¥)",
+       y = "Million ¥",
+       color = "Legend")
 ```
 
 **Break-even**: Month 30 (2.5 years)

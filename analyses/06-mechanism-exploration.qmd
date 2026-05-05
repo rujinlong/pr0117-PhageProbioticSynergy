@@ -9,17 +9,16 @@ params:
 ## Setup
 
 ```{r setup}
-params <- list(name = "06-mechanism-exploration")
 here::i_am(paste0(params$name, ".qmd"), uuid = "f6a7b8c9-d0e1-2345-ghij-k1234567890")
 
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
-path_02 <- qproj::path_source("02-phage-host-prediction")
-path_03 <- qproj::path_source("03-probiotic-target-identification")
-path_05 <- qproj::path_source("05-proxy-strain-analysis")
+path_02 <- qproj::proj_path_source("02-phage-host-prediction")
+path_03 <- qproj::proj_path_source("03-probiotic-target-identification")
+path_05 <- qproj::proj_path_source("05-proxy-strain-analysis")
 ```
 
 ## Load Packages
@@ -30,7 +29,7 @@ library(here)
 library(qproj)
 library(ggplot2)
 library(ape)
-library(phyloseq)  # For microbiome analysis
+# library(phyloseq)  # For microbiome analysis
 # library(DESeq2)   # For differential abundance
 # library(vegan)     # For ordination
 ```

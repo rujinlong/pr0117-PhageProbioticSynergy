@@ -1,5 +1,7 @@
 ---
 title: "Breaking the evolutionary arms race: Synergistic modulation of the microbiome by rationally matched phages and probiotics"
+params:
+  name: "08-manuscript-draft-v2"
 bibliography: references.bib
 link-citations: true
 ---
@@ -8,24 +10,21 @@ link-citations: true
 
 ## Setup
 
-```{r}
-params <- list(name = "08-manuscript-draft-v2")
+```{r setup}
+here::i_am(paste0(params$name, ".qmd"), uuid = "h8i9j0k1-l2m3-4567-nopq-r1234567890")
 
-# Define paths manually (qproj compatibility)
-path_target <- file.path(getwd(), "analyses", params$name)
-path_source <- file.path(getwd(), "analyses", params$name)
-
-# Create target directory if not exists
-if (!dir.exists(path_target)) dir.create(path_target, recursive = TRUE)
+qproj::proj_create_dir_target(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data paths
-path_01 <- file.path(getwd(), "analyses", "01-public-data-mining")
-path_02 <- file.path(getwd(), "analyses", "02-phage-host-prediction")
-path_03 <- file.path(getwd(), "analyses", "03-probiotic-target-identification")
-path_04 <- file.path(getwd(), "analyses", "04-synergy-scoring")
-path_05 <- file.path(getwd(), "analyses", "05-proxy-strain-analysis")
-path_06 <- file.path(getwd(), "analyses", "06-mechanism-exploration")
-path_07 <- file.path(getwd(), "analyses", "07-experimental-design")
+path_01 <- qproj::proj_path_source("01-public-data-mining")
+path_02 <- qproj::proj_path_source("02-phage-host-prediction")
+path_03 <- qproj::proj_path_source("03-probiotic-target-identification")
+path_04 <- qproj::proj_path_source("04-synergy-scoring")
+path_05 <- qproj::proj_path_source("05-proxy-strain-analysis")
+path_06 <- qproj::proj_path_source("06-mechanism-exploration")
+path_07 <- qproj::proj_path_source("07-experimental-design")
 ```
 
 ## Load Packages

@@ -9,17 +9,16 @@ params:
 ## Setup
 
 ```{r setup}
-params <- list(name = "05-proxy-strain-analysis")
 here::i_am(paste0(params$name, ".qmd"), uuid = "e5f6a7b8-c9d0-1234-efgh-i1234567890")
 
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
-path_01 <- qproj::path_source("01-public-data-mining")
-path_02 <- qproj::path_source("02-phage-host-prediction")
-path_04 <- qproj::path_source("04-synergy-scoring")
+path_01 <- qproj::proj_path_source("01-public-data-mining")
+path_02 <- qproj::proj_path_source("02-phage-host-prediction")
+path_04 <- qproj::proj_path_source("04-synergy-scoring")
 ```
 
 ## Load Packages

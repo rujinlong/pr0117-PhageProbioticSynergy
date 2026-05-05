@@ -9,19 +9,18 @@ params:
 ## Setup
 
 ```{r}
-params <- list(name = "07-experimental-design")
 here::i_am(paste0(params$name, ".qmd"), uuid = "g7h8i9j0-k1l2-3456-mnop-q1234567890")
 
 qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
+path_target <- qproj::proj_path_target(params$name)()
+path_source <- qproj::proj_path_source(params$name)
 
 # Read upstream data
-path_02 <- qproj::path_source("02-phage-host-prediction")
-path_03 <- qproj::path_source("03-probiotic-target-identification")
-path_04 <- qproj::path_source("04-synergy-scoring")
-path_05 <- qproj::path_source("05-proxy-strain-analysis")
-path_06 <- qproj::path_source("06-mechanism-exploration")
+path_02 <- qproj::proj_path_source("02-phage-host-prediction")
+path_03 <- qproj::proj_path_source("03-probiotic-target-identification")
+path_04 <- qproj::proj_path_source("04-synergy-scoring")
+path_05 <- qproj::proj_path_source("05-proxy-strain-analysis")
+path_06 <- qproj::proj_path_source("06-mechanism-exploration")
 ```
 
 ## Load Packages
@@ -31,7 +30,7 @@ library(tidyverse)
 library(here)
 library(qproj)
 library(ggplot2)
-library(agricolae)  # For experimental design
+# library(agricolae)  # For experimental design
 ```
 
 ## 1. Experimental Strategy
