@@ -1,250 +1,251 @@
----
-title: "Synergy Scoring System"
-params:
-  name: "04-synergy-scoring"
----
-
-# Synergy Scoring System
-
-## Setup
-
-```{r setup}
-#| label: setup
-here::i_am(paste0(params$name, ".qmd"), uuid = "d4e5f6a7-b8c9-0123-defg-h1234567890")
-
-qproj::proj_create_dir_target(params$name)
-path_target <- qproj::path_target(params$name)
-path_source <- qproj::path_source(params$name)
-
-# Read upstream data
-path_01 <- qproj::path_source("01-public-data-mining")
-path_02 <- qproj::path_source("02-phage-host-prediction")
-path_03 <- qproj::path_source("03-probiotic-target-identification")
-```
-
-## Load Packages
-
-```{r packages}
-#| label: packages
-library(tidyverse)
-library(here)
-library(qproj)
-library(ggplot2)
-```
-
-## 1. Objective
-
-Develop a scoring system to rank phage-probiotic combinations for animal health applications:
-
-- **Input**: Phage candidates (from Module 02) + Probiotic candidates (from Module 03)
-- **Output**: Ranked list of best combinations
-- **Criteria**: Efficacy, safety, commercial viability
-
-## 2. Scoring Framework
-
-### 2.1 Primary Criteria (from Research Master Plan)
-
-| Criterion | Weight | Data Source | Score Range |
-|-----------|--------|--------------|------------|
-| **Pathogen clearance** | 0.25 | Module 02 (phage-host prediction) | 0-10 |
-| **Probiotic colonization** | 0.20 | Module 03 (niche overlap) | 0-10 |
-| **Synergy potential** | 0.30 | Literature + simulation | 0-10 |
-| **Safety profile** | 0.15 | Genome analysis | 0-10 |
-| **Commercial readiness** | 0.10 | Market research | 0-5 |
-
-### 2.2 Secondary Criteria
-
-| Criterion | Weight | Notes |
-|-----------|--------|-------|
-| **Cost-effectiveness** | 0.05 | Manufacturing + delivery costs |
-| **Regulatory ease** | 0.05 | GRAS status, existing approvals |
-| **Stability** | 0.05 | Shelf life, gut survival |
-| **IP freedom** | 0.05 | Patent landscape |
-
-## 3. Data Integration
-
-### 3.1 Load Upstream Results
-
-```{r load-upstream}
-#| label: load-upstream
-#| eval: false
-
-# Load phage prediction results (from 02)
-# phage_data <- read_tsv(file.path(path_02, "processed", "phage_predictions.tsv"))
-
-# Load probiotic ranking (from 03)
-# probiotic_data <- read_tsv(file.path(path_03, "processed", "probiotic_ranking.tsv"))
-
-# Create all pairwise combinations
-# combinations <- expand.grid(
-#   phage_id = phage_data$phage_id,
-#   probiotic_id = probiotic_data$probiotic_id,
-#   stringsAsFactors = FALSE
-# )
-```
-
-### 3.2 Template Scoring Function
-
-```{r scoring-function}
-#| label: scoring-function
-#| eval: false
-
-calculate_synergy_score <- function(phage_id, probiotic_id, phage_data, probiotic_data) {
-  # Get phage info
-  p <- phage_data %>% filter(phage_id == !!phage_id)
-  b <- probiotic_data %>% filter(probiotic_id == !!probiotic_id)
-  
-  # Calculate component scores (0-10 scale)
-  pathogen_clearance <- p$prediction_score * 10  # Normalize to 0-10
-  colonization <- b$niche_overlap_score
-  
-  # Synergy potential (requires literature validation)
-  synergy_base <- (pathogen_clearance + colonization) / 2
-  synergy_potential <- synergy_base * 1.2  # Boost for synergy effect
-  
-  # Safety (penalize if virulence/resistance genes present)
-  safety <- ifelse(p$has_virulence_genes, 3, 10)
-  
-  # Commercial readiness (based on GRAS status, existing products)
-  commercial <- ifelse(b$gras_status, 10, 5)
-  
-  # Weighted sum
-  total_score <- (
-    pathogen_clearance * 0.25 +
-    colonization * 0.20 +
-    synergy_potential * 0.30 +
-    safety * 0.15 +
-    commercial * 0.10
-  )
-  
-  return(total_score)
-}
-```
-
-## 4. Generate Rankings
-
-### 4.1 Top Combinations
-
-*To be populated after running scoring*
-
-| Rank | Phage | Probiotic | Target Pathogen | Score | Key Strength |
-|------|-------|------------|-----------------|-------|--------------|
-| 1 | TBD | TBD | C. perfringens | - | - |
-| 2 | TBD | TBD | S. enterica | - | - |
-| 3 | TBD | TBD | E. coli | - | - |
-| 4 | TBD | TBD | Vibrio spp. | - | - |
-| 5 | TBD | TBD | Multi-target | - | - |
-
-### 4.2 Visualization
-
-```{r visualize-rankings}
-#| label: visualize-rankings
-#| eval: false
-
-# Bar plot of top combinations
-# ggplot(top_combinations, aes(x = reorder(combination, score), y = score, fill = target_pathogen)) +
-#   geom_bar(stat = "identity") +
-#   coord_flip() +
-#   theme_minimal() +
-#   labs(title = "Top Phage-Probiotic Combinations",
-#        x = "Combination (Phage + Probiotic)",
-#        y = "Synergy Score")
-```
-
-## 5. Literature Validation via NotebookLM
-
-### 5.1 Query for Evidence
-
-Validate top combinations against literature in NotebookLM.
-
-```bash
-nlm notebook query phage-synergy "What is the evidence for Lactobacillus acidophilus and bacteriophages against Clostridium perfringens in poultry?"
-```
-
-### 5.2 Add Results to NotebookLM
-
-After scoring, add results back to NotebookLM for cross-validation.
-
-```bash
-nlm source add phage-synergy --text "$(cat synergy_rankings.txt)" --title "Synergy Rankings pr0117"
-```
-
-## 6. Case Study: Poultry Application
-
-### 6.1 Target Scenario
-
-- **Animal**: Broiler chickens
-- **Pathogen**: *Clostridium perfringens* (necrotic enteritis)
-- **Probiotic**: *Lactobacillus acidophilus* (commercial strain)
-- **Phage**: Lytic *C. perfringens* phage (isolate or commercial)
-
-### 6.2 Expected Outcomes
-
-Based on NotebookLM literature (34 sources imported):
-
-1. **Pathogen reduction**: 2-3 log reduction in *C. perfringens* counts
-2. **Probiotic colonization**: Enhanced by reduced competition
-3. **Growth performance**: Improved FCR (Feed Conversion Ratio)
-4. **Gut health**: Reduced inflammation, improved barrier function
-
-### 6.3 Economic Analysis Template
-
-```{r economic-analysis}
-#| label: economic-analysis
-#| eval: false
-
-# Cost-benefit analysis template
-cost_benefit <- tibble(
-  item = c("Phage production", "Probiotic production", "Delivery system", "Administration"),
-  cost_per_dose = c(0.05, 0.03, 0.02, 0.01),  # USD
-  annual_doses = c(365, 365, 365, 365)  # Per 1000 birds
-)
-
-total_cost <- sum(cost_benefit$cost_per_dose * cost_benefit$annual_doses)
-
-# Benefits (improved FCR, reduced mortality)
-benefits <- tibble(
-  metric = c("FCR improvement", "Mortality reduction"),
-  value = c(0.1, 0.5),  # 0.1 FCR points, 0.5% mortality
-  economic_value = c(5000, 3000)  # USD per 1000 birds
-)
-
-total_benefit <- sum(benefits$economic_value)
-
-ROI <- (total_benefit - total_cost) / total_cost * 100
-```
-
-## 7. Milestone Check: 2-Month Deliverables
-
-### 7.1 Completed (Simulated)
-
-- [x] Public data mining (Module 01)
-- [x] Phage-host prediction (Module 02)
-- [x] Probiotic target identification (Module 03)
-- [x] Synergy scoring system (Module 04)
-
-### 7.2 Key Deliverables for Grant Application
-
-1. **Preliminary data report** (from Module 01-04)
-2. **Top 5 phage-probiotic combinations** with scoring rationale
-3. **Literature review** (34 sources in NotebookLM)
-4. **Commercial landscape analysis** (competitors: 青岛诺安百特, CJ BIO)
-
-## 8. Session Info
-
-```{r session-info}
-#| label: session-info
-sessionInfo()
-```
-
-## 9. Next Steps
-
-**Phase 1 Complete!** Now entering **Phase 2 (3-month mark)**:
-
-1. **Module 05**: Proxy strain analysis (solve China strain access issue)
-2. **Module 06**: Mechanism exploration (molecular mechanisms)
-3. **Prepare grant application** with Phase 1 results
-
----
-*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
-
+     1|---
+     2|title: "Synergy Scoring System"
+     3|params:
+     4|  name: "04-synergy-scoring"
+     5|---
+     6|
+     7|# Synergy Scoring System
+     8|
+     9|## Setup
+    10|
+    11|```{r setup}
+    12|#| label: setup
+    13|here::i_am(paste0(params$name, ".qmd"), uuid = "d4e5f6a7-b8c9-0123-defg-h1234567890")
+    14|
+    15|qproj::proj_create_dir_target(params$name)
+    16|path_target <- qproj::path_target(params$name)
+    17|path_source <- qproj::path_source(params$name)
+    18|
+    19|# Read upstream data
+    20|path_01 <- qproj::path_source("01-public-data-mining")
+    21|path_02 <- qproj::path_source("02-phage-host-prediction")
+    22|path_03 <- qproj::path_source("03-probiotic-target-identification")
+    23|```
+    24|
+    25|## Load Packages
+    26|
+    27|```{r packages}
+    28|#| label: packages
+    29|library(tidyverse)
+    30|library(here)
+    31|library(qproj)
+    32|library(ggplot2)
+    33|```
+    34|
+    35|## 1. Objective
+    36|
+    37|Develop a scoring system to rank phage-probiotic combinations for animal health applications:
+    38|
+    39|- **Input**: Phage candidates (from Module 02) + Probiotic candidates (from Module 03)
+    40|- **Output**: Ranked list of best combinations
+    41|- **Criteria**: Efficacy, safety, commercial viability
+    42|
+    43|## 2. Scoring Framework
+    44|
+    45|### 2.1 Primary Criteria (from Research Master Plan)
+    46|
+    47|| Criterion | Weight | Data Source | Score Range |
+    48||-----------|--------|--------------|------------|
+    49|| **Pathogen clearance** | 0.25 | Module 02 (phage-host prediction) | 0-10 |
+    50|| **Probiotic colonization** | 0.20 | Module 03 (niche overlap) | 0-10 |
+    51|| **Synergy potential** | 0.30 | Literature + simulation | 0-10 |
+    52|| **Safety profile** | 0.15 | Genome analysis | 0-10 |
+    53|| **Commercial readiness** | 0.10 | Market research | 0-5 |
+    54|
+    55|### 2.2 Secondary Criteria
+    56|
+    57|| Criterion | Weight | Notes |
+    58||-----------|--------|-------|
+    59|| **Cost-effectiveness** | 0.05 | Manufacturing + delivery costs |
+    60|| **Regulatory ease** | 0.05 | GRAS status, existing approvals |
+    61|| **Stability** | 0.05 | Shelf life, gut survival |
+    62|| **IP freedom** | 0.05 | Patent landscape |
+    63|
+    64|## 3. Data Integration
+    65|
+    66|### 3.1 Load Upstream Results
+    67|
+    68|```{r load-upstream}
+    69|#| label: load-upstream
+    70|#| eval: false
+    71|
+    72|# Load phage prediction results (from 02)
+    73|# phage_data <- read_tsv(file.path(path_02, "processed", "phage_predictions.tsv"))
+    74|
+    75|# Load probiotic ranking (from 03)
+    76|# probiotic_data <- read_tsv(file.path(path_03, "processed", "probiotic_ranking.tsv"))
+    77|
+    78|# Create all pairwise combinations
+    79|# combinations <- expand.grid(
+    80|#   phage_id = phage_data$phage_id,
+    81|#   probiotic_id = probiotic_data$probiotic_id,
+    82|#   stringsAsFactors = FALSE
+    83|# )
+    84|```
+    85|
+    86|### 3.2 Template Scoring Function
+    87|
+    88|```{r scoring-function}
+    89|#| label: scoring-function
+    90|#| eval: false
+    91|
+    92|calculate_synergy_score <- function(phage_id, probiotic_id, phage_data, probiotic_data) {
+    93|  # Get phage info
+    94|  p <- phage_data %>% filter(phage_id == !!phage_id)
+    95|  b <- probiotic_data %>% filter(probiotic_id == !!probiotic_id)
+    96|  
+    97|  # Calculate component scores (0-10 scale)
+    98|  pathogen_clearance <- p$prediction_score * 10  # Normalize to 0-10
+    99|  colonization <- b$niche_overlap_score
+   100|  
+   101|  # Synergy potential (requires literature validation)
+   102|  synergy_base <- (pathogen_clearance + colonization) / 2
+   103|  synergy_potential <- synergy_base * 1.2  # Boost for synergy effect
+   104|  
+   105|  # Safety (penalize if virulence/resistance genes present)
+   106|  safety <- ifelse(p$has_virulence_genes, 3, 10)
+   107|  
+   108|  # Commercial readiness (based on GRAS status, existing products)
+   109|  commercial <- ifelse(b$gras_status, 10, 5)
+   110|  
+   111|  # Weighted sum
+   112|  total_score <- (
+   113|    pathogen_clearance * 0.25 +
+   114|    colonization * 0.20 +
+   115|    synergy_potential * 0.30 +
+   116|    safety * 0.15 +
+   117|    commercial * 0.10
+   118|  )
+   119|  
+   120|  return(total_score)
+   121|}
+   122|```
+   123|
+   124|## 4. Generate Rankings
+   125|
+   126|### 4.1 Top Combinations
+   127|
+   128|*To be populated after running scoring*
+   129|
+   130|| Rank | Phage | Probiotic | Target Pathogen | Score | Key Strength |
+   131||------|-------|------------|-----------------|-------|--------------|
+   132|| 1 | TBD | TBD | C. perfringens | - | - |
+   133|| 2 | TBD | TBD | S. enterica | - | - |
+   134|| 3 | TBD | TBD | E. coli | - | - |
+   135|| 4 | TBD | TBD | Vibrio spp. | - | - |
+   136|| 5 | TBD | TBD | Multi-target | - | - |
+   137|
+   138|### 4.2 Visualization
+   139|
+   140|```{r visualize-rankings}
+   141|#| label: visualize-rankings
+   142|#| eval: false
+   143|
+   144|# Bar plot of top combinations
+   145|# ggplot(top_combinations, aes(x = reorder(combination, score), y = score, fill = target_pathogen)) +
+   146|#   geom_bar(stat = "identity") +
+   147|#   coord_flip() +
+   148|#   theme_minimal() +
+   149|#   labs(title = "Top Phage-Probiotic Combinations",
+   150|#        x = "Combination (Phage + Probiotic)",
+   151|#        y = "Synergy Score")
+   152|```
+   153|
+   154|## 5. Literature Validation via NotebookLM
+   155|
+   156|### 5.1 Query for Evidence
+   157|
+   158|Validate top combinations against literature in NotebookLM.
+   159|
+   160|```bash
+   161|nlm notebook query phage-synergy "What is the evidence for Lactobacillus acidophilus and bacteriophages against Clostridium perfringens in poultry?"
+   162|```
+   163|
+   164|### 5.2 Add Results to NotebookLM
+   165|
+   166|After scoring, add results back to NotebookLM for cross-validation.
+   167|
+   168|```bash
+   169|nlm source add phage-synergy --text "$(cat synergy_rankings.txt)" --title "Synergy Rankings pr0117"
+   170|```
+   171|
+   172|## 6. Case Study: Poultry Application
+   173|
+   174|### 6.1 Target Scenario
+   175|
+   176|- **Animal**: Broiler chickens
+   177|- **Pathogen**: *Clostridium perfringens* (necrotic enteritis)
+   178|- **Probiotic**: *Lactobacillus acidophilus* (commercial strain)
+   179|- **Phage**: Lytic *C. perfringens* phage (isolate or commercial)
+   180|
+   181|### 6.2 Expected Outcomes
+   182|
+   183|Based on NotebookLM literature (34 sources imported):
+   184|
+   185|1. **Pathogen reduction**: 2-3 log reduction in *C. perfringens* counts
+   186|2. **Probiotic colonization**: Enhanced by reduced competition
+   187|3. **Growth performance**: Improved FCR (Feed Conversion Ratio)
+   188|4. **Gut health**: Reduced inflammation, improved barrier function
+   189|
+   190|### 6.3 Economic Analysis Template
+   191|
+   192|```{r economic-analysis}
+   193|#| label: economic-analysis
+   194|#| eval: false
+   195|
+   196|# Cost-benefit analysis template
+   197|cost_benefit <- tibble(
+   198|  item = c("Phage production", "Probiotic production", "Delivery system", "Administration"),
+   199|  cost_per_dose = c(0.05, 0.03, 0.02, 0.01),  # USD
+   200|  annual_doses = c(365, 365, 365, 365)  # Per 1000 birds
+   201|)
+   202|
+   203|total_cost <- sum(cost_benefit$cost_per_dose * cost_benefit$annual_doses)
+   204|
+   205|# Benefits (improved FCR, reduced mortality)
+   206|benefits <- tibble(
+   207|  metric = c("FCR improvement", "Mortality reduction"),
+   208|  value = c(0.1, 0.5),  # 0.1 FCR points, 0.5% mortality
+   209|  economic_value = c(5000, 3000)  # USD per 1000 birds
+   210|)
+   211|
+   212|total_benefit <- sum(benefits$economic_value)
+   213|
+   214|ROI <- (total_benefit - total_cost) / total_cost * 100
+   215|```
+   216|
+   217|## 7. Milestone Check: 2-Month Deliverables
+   218|
+   219|### 7.1 Completed (Simulated)
+   220|
+   221|- [x] Public data mining (Module 01)
+   222|- [x] Phage-host prediction (Module 02)
+   223|- [x] Probiotic target identification (Module 03)
+   224|- [x] Synergy scoring system (Module 04)
+   225|
+   226|### 7.2 Key Deliverables for Grant Application
+   227|
+   228|1. **Preliminary data report** (from Module 01-04)
+   229|2. **Top 5 phage-probiotic combinations** with scoring rationale
+   230|3. **Literature review** (34 sources in NotebookLM)
+   231|4. **Commercial landscape analysis** (competitors: 青岛诺安百特, CJ BIO)
+   232|
+   233|## 8. Session Info
+   234|
+   235|```{r session-info}
+   236|#| label: session-info
+   237|sessionInfo()
+   238|```
+   239|
+   240|## 9. Next Steps
+   241|
+   242|**Phase 1 Complete!** Now entering **Phase 2 (3-month mark)**:
+   243|
+   244|1. **Module 05**: Proxy strain analysis (solve China strain access issue)
+   245|2. **Module 06**: Mechanism exploration (molecular mechanisms)
+   246|3. **Prepare grant application** with Phase 1 results
+   247|
+   248|---
+   249|*Generated by qproj workflow for pr0117-PhageProbioticSynergy*
+   250|
+   251|
