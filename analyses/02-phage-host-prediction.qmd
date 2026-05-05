@@ -206,12 +206,12 @@ Based on the Research Master Plan:
 
 *To be populated after running predictions*
 
-| Phage ID | Target Pathogen | Prediction Score | Lifestyle | Host Range | Notes |
-|-----------|-----------------|------------------|------------|-------------|-------|
-| TBD | C. perfringens | - | lytic | - | - |
-| TBD | S. enterica | - | lytic | - | - |
-| TBD | E. coli | - | lytic | - | - |
-| TBD | Vibrio spp. | - | lytic | - | - |
+ Phage ID | Target Pathogen | Prediction Score | Lifestyle | Host Range | Notes |
+-----------|-----------------|------------------|------------|-------------|-------|
+ TBD | C. perfringens | - | lytic | - | - |
+ TBD | S. enterica | - | lytic | - | - |
+ TBD | E. coli | - | lytic | - | - |
+ TBD | Vibrio spp. | - | lytic | - | - |
 
 ## 7. NotebookLM Integration
 

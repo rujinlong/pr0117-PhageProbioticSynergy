@@ -6,7 +6,7 @@ title: "Commercialization Analysis"
 
 ## Setup
 
-```\{r\}
+```{r}
 params <- list(name = "10-commercialization-analysis")
 here::i_am(paste0(params$name, ".qmd"), uuid = "j0k1l2m3-n4o5-6789-pqrs-t1234567890")
 
@@ -20,7 +20,7 @@ path_09 <- qproj::path_source("09-china-trial-analysis")
 
 ## Load Packages
 
-```\{r\}
+```{r}
 library(tidyverse)
 library(here)
 library(qproj)
@@ -33,22 +33,22 @@ library(ggplot2)
 
 From Notion Research Master Plan Section 13 (Market & Commercial Context):
 
-| Sector | Farmgate Value (¥ billions) | Antibiotic BAN Impact | Our Opportunity |
-|--------|--------------------------|----------------------|-------------------|
-| **Poultry** | 1,200 | High (daily antibiotics banned) | Phage+Probiotic for broilers |
-| **Aquaculture** | 800 | Medium (shrimp/fish) | Vibrio control + gut health |
-| **Swine** | 1,500 | High (strict monitoring) | Salmonella control |
-| **Cattle** | 600 | Low (mainly beef) | Limited focus |
+ Sector | Farmgate Value (¥ billions) | Antibiotic BAN Impact | Our Opportunity |
+--------|--------------------------|----------------------|-------------------|
+ **Poultry** | 1,200 | High (daily antibiotics banned) | Phage+Probiotic for broilers |
+ **Aquaculture** | 800 | Medium (shrimp/fish) | Vibrio control + gut health |
+ **Swine** | 1,500 | High (strict monitoring) | Salmonella control |
+ **Cattle** | 600 | Low (mainly beef) | Limited focus |
 
 **Primary target**: Poultry (fastest ROI, 禁抗令 impact最高)
 
 ### 1.2 Competitive Landscape
 
-| Competitor | Product Type | Market Share | Strength | Weakness |
-|------------|---------------|--------------|----------|----------|
-| **青岛诺安百特** (Qingdao Nuo'anbai) | Phage (mono) | Leading | Established sales network | No synergy approach |
-| **CJ BIO** (Korea) | Probiotic (mono) | Strong | Large capacity | No phage integration |
-| **Our Product** | **Phage+Probiotic Synergy** | New entrant | Scientific basis, bioinformatics-driven | Needs market entry |
+ Competitor | Product Type | Market Share | Strength | Weakness |
+------------|---------------|--------------|----------|----------|
+ **青岛诺安百特** (Qingdao Nuo'anbai) | Phage (mono) | Leading | Established sales network | No synergy approach |
+ **CJ BIO** (Korea) | Probiotic (mono) | Strong | Large capacity | No phage integration |
+ **Our Product** | **Phage+Probiotic Synergy** | New entrant | Scientific basis, bioinformatics-driven | Needs market entry |
 
 ## 2. Business Model
 
@@ -66,7 +66,7 @@ From Notion Research Master Plan Section 13 (Market & Commercial Context):
 
 ### 2.2 Revenue Streams
 
-```\{r\}
+```{r}
 #| eval: false
 
 revenue <- tibble(
@@ -85,12 +85,12 @@ knitr::kable(revenue, caption = "Revenue Streams Analysis")
 
 From Notion Section 14 (IP & Patent Strategy):
 
-| Patent | Coverage | Status | Timeline |
-|--------|----------|--------|----------|
-| **Phage cocktail composition** | Germany + PCT | Filed (Phase 2) | 3-5 years protection |
-| **Synergy formulation** | China + PCT | Drafting | File Month 9 |
-| **Application method** | China specific | Drafting | File Month 10 |
-| **Probiotic strain selection** | Trade secret | Maintaining | Ongoing |
+ Patent | Coverage | Status | Timeline |
+--------|----------|--------|----------|
+ **Phage cocktail composition** | Germany + PCT | Filed (Phase 2) | 3-5 years protection |
+ **Synergy formulation** | China + PCT | Drafting | File Month 9 |
+ **Application method** | China specific | Drafting | File Month 10 |
+ **Probiotic strain selection** | Trade secret | Maintaining | Ongoing |
 
 ### 3.2 Freedom to Operate (FTO)
 
@@ -108,23 +108,23 @@ From Notion Section 14 (IP & Patent Strategy):
 
 ### 4.1 China Market Access
 
-| Step | Agency | Timeline | Cost (¥) |
-|------|--------|----------|----------|
-| **Lab validation** | Internal | Complete (Phase 2) | 50K |
-| **Pilot trial** | Local FAIRS | Month 7-9 | 200K |
-| **Full trial** | Ministry of Agriculture | Month 10-15 | 500K |
-| **Production permit** | Provincial gov | Month 16-18 | 100K |
-| **Sales license** | National | Month 19-20 | 50K |
+ Step | Agency | Timeline | Cost (¥) |
+------|--------|----------|----------|
+ **Lab validation** | Internal | Complete (Phase 2) | 50K |
+ **Pilot trial** | Local FAIRS | Month 7-9 | 200K |
+ **Full trial** | Ministry of Agriculture | Month 10-15 | 500K |
+ **Production permit** | Provincial gov | Month 16-18 | 100K |
+ **Sales license** | National | Month 19-20 | 50K |
 
 **Total timeline**: ~20 months from lab validation to market.
 
 ### 4.2 International Expansion (Post-China)
 
-| Market | Regulation | Timeline | Entry Strategy |
-|--------|-------------|----------|-----------------|
-| **EU** | EFSA | 24+ months | Partner with EU firm |
-| **USA** | FDA | 18+ months | CJ BIO partnership? |
-| **SEA** | Variable | 12 months | China model replication |
+ Market | Regulation | Timeline | Entry Strategy |
+--------|-------------|----------|-----------------|
+ **EU** | EFSA | 24+ months | Partner with EU firm |
+ **USA** | FDA | 18+ months | CJ BIO partnership? |
+ **SEA** | Variable | 12 months | China model replication |
 
 ## 5. Manufacturing & Supply Chain
 
@@ -142,23 +142,23 @@ From Notion Section 14 (IP & Patent Strategy):
 
 ### 5.2 Quality Control
 
-| Test | Frequency | Method | Standard |
-|------|-----------|--------|----------|
-| **Phage titer** | Every batch | Double agar layer | >10^9 PFU/mL |
-| **Probiotic viability** | Every batch | Plate count | >10^9 CFU/g |
-| **Sterility** | Every batch | Membrane filtration | No growth |
-| **Heavy metals** | Quarterly | ICP-MS | Meet feed standards |
+ Test | Frequency | Method | Standard |
+------|-----------|--------|----------|
+ **Phage titer** | Every batch | Double agar layer | >10^9 PFU/mL |
+ **Probiotic viability** | Every batch | Plate count | >10^9 CFU/g |
+ **Sterility** | Every batch | Membrane filtration | No growth |
+ **Heavy metals** | Quarterly | ICP-MS | Meet feed standards |
 
 ## 6. Go-to-Market Strategy
 
 ### 6.1 Customer Segments
 
-| Segment | Size | Priority | Approach |
-|---------|------|----------|----------|
-| **Large integrators** (Wens, New Hope) | 5-10 firms | P0 (Highest) | Direct sales team |
-| **Medium farms** (10K-100K birds) | 1,000+ | P1 | Distributor network |
-| **Feed mills** | 50+ | P2 | B2B ingredient sales |
-| **Aquaculture** | 200+ farms | P3 | Specialized channel |
+ Segment | Size | Priority | Approach |
+---------|------|----------|----------|
+ **Large integrators** (Wens, New Hope) | 5-10 firms | P0 (Highest) | Direct sales team |
+ **Medium farms** (10K-100K birds) | 1,000+ | P1 | Distributor network |
+ **Feed mills** | 50+ | P2 | B2B ingredient sales |
+ **Aquaculture** | 200+ farms | P3 | Specialized channel |
 
 ### 6.2 Pricing Strategy
 
@@ -175,7 +175,7 @@ From Notion Section 14 (IP & Patent Strategy):
 
 ### 7.1 5-Year Revenue Projection
 
-```\{r\}
+```{r}
 #| eval: false
 
 years <- 1:5
@@ -206,23 +206,23 @@ knitr::kable(projections, caption = "5-Year Financial Projection (Million ¥)")
 
 ### 7.2 Funding Requirements
 
-| Round | Amount (M¥) | Use | Source |
-|-------|---------------|-----|--------|
-| **Seed** (Month 0-6) | 2M | R&D, pilot trial | Government grant (DFG-equivalent), angel |
-| **Series A** (Month 12) | 10M | China trial, production setup | VC (agtech focus) |
-| **Series B** (Month 24) | 50M | Market expansion | VC, strategic investor |
+ Round | Amount (M¥) | Use | Source |
+-------|---------------|-----|--------|
+ **Seed** (Month 0-6) | 2M | R&D, pilot trial | Government grant (DFG-equivalent), angel |
+ **Series A** (Month 12) | 10M | China trial, production setup | VC (agtech focus) |
+ **Series B** (Month 24) | 50M | Market expansion | VC, strategic investor |
 
 ## 8. Risk Management
 
 ### 8.1 Risk Matrix
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| **Regulatory delay** | Medium | High | Start approvals early (Month 1) |
-| **Competitor blocking** | Low | High | Strong IP portfolio, design around |
-| **Phage resistance** | High | Medium | Use cocktails (3+ phages) |
-| **Market rejection** | Low | High | Pilot trials with key customers |
-| **Production failure** | Low | Medium | Partner with established facility |
+ Risk | Probability | Impact | Mitigation |
+------|-------------|--------|------------|
+ **Regulatory delay** | Medium | High | Start approvals early (Month 1) |
+ **Competitor blocking** | Low | High | Strong IP portfolio, design around |
+ **Phage resistance** | High | Medium | Use cocktails (3+ phages) |
+ **Market rejection** | Low | High | Pilot trials with key customers |
+ **Production failure** | Low | Medium | Partner with established facility |
 
 ### 8.2 Exit Strategy
 
@@ -250,7 +250,7 @@ nlm source add phage-synergy --text "$(cat commercial_analysis.txt)" \
 
 ## 10. Session Info
 
-```\{r\}
+```{r}
 sessionInfo()
 ```
 

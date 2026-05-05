@@ -42,22 +42,22 @@ Develop a scoring system to rank phage-probiotic combinations for animal health 
 
 ### 2.1 Primary Criteria (from Research Master Plan)
 
-| Criterion | Weight | Data Source | Score Range |
-|-----------|--------|--------------|------------|
-| **Pathogen clearance** | 0.25 | Module 02 (phage-host prediction) | 0-10 |
-| **Probiotic colonization** | 0.20 | Module 03 (niche overlap) | 0-10 |
-| **Synergy potential** | 0.30 | Literature + simulation | 0-10 |
-| **Safety profile** | 0.15 | Genome analysis | 0-10 |
-| **Commercial readiness** | 0.10 | Market research | 0-5 |
+ Criterion | Weight | Data Source | Score Range |
+-----------|--------|--------------|------------|
+ **Pathogen clearance** | 0.25 | Module 02 (phage-host prediction) | 0-10 |
+ **Probiotic colonization** | 0.20 | Module 03 (niche overlap) | 0-10 |
+ **Synergy potential** | 0.30 | Literature + simulation | 0-10 |
+ **Safety profile** | 0.15 | Genome analysis | 0-10 |
+ **Commercial readiness** | 0.10 | Market research | 0-5 |
 
 ### 2.2 Secondary Criteria
 
-| Criterion | Weight | Notes |
-|-----------|--------|-------|
-| **Cost-effectiveness** | 0.05 | Manufacturing + delivery costs |
-| **Regulatory ease** | 0.05 | GRAS status, existing approvals |
-| **Stability** | 0.05 | Shelf life, gut survival |
-| **IP freedom** | 0.05 | Patent landscape |
+ Criterion | Weight | Notes |
+-----------|--------|-------|
+ **Cost-effectiveness** | 0.05 | Manufacturing + delivery costs |
+ **Regulatory ease** | 0.05 | GRAS status, existing approvals |
+ **Stability** | 0.05 | Shelf life, gut survival |
+ **IP freedom** | 0.05 | Patent landscape |
 
 ## 3. Data Integration
 
@@ -123,13 +123,13 @@ calculate_synergy_score <- function(phage_id, probiotic_id, phage_data, probioti
 
 *To be populated after running scoring*
 
-| Rank | Phage | Probiotic | Target Pathogen | Score | Key Strength |
-|------|-------|------------|-----------------|-------|--------------|
-| 1 | TBD | TBD | C. perfringens | - | - |
-| 2 | TBD | TBD | S. enterica | - | - |
-| 3 | TBD | TBD | E. coli | - | - |
-| 4 | TBD | TBD | Vibrio spp. | - | - |
-| 5 | TBD | TBD | Multi-target | - | - |
+ Rank | Phage | Probiotic | Target Pathogen | Score | Key Strength |
+------|-------|------------|-----------------|-------|--------------|
+ 1 | TBD | TBD | C. perfringens | - | - |
+ 2 | TBD | TBD | S. enterica | - | - |
+ 3 | TBD | TBD | E. coli | - | - |
+ 4 | TBD | TBD | Vibrio spp. | - | - |
+ 5 | TBD | TBD | Multi-target | - | - |
 
 ### 4.2 Visualization
 

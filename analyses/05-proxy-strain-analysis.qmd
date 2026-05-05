@@ -45,13 +45,13 @@ library(ggtree)
 
 ### 1.2 Target Pathogens for China Market
 
-| Pathogen | Disease | Target Animal | China Market Priority |
-|----------|---------|---------------|----------------------|
-| *Clostridium perfringens* | 坏死性肠炎 | 家禽 (poultry) | ⭐⭐⭐⭐⭐ |
-| *Salmonella enterica* | 沙门氏菌病 | 家禽/牲畜 | ⭐⭐⭐⭐ |
-| *Escherichia coli* (pathogenic) | 大肠杆菌病 | 家禽/水产 | ⭐⭐⭐⭐ |
-| *Vibrio parahaemolyticus* | 急性肠胃炎 | 水产 (aquaculture) | ⭐⭐⭐ |
-| *Streptococcus suis* | 猪链球菌病 | 生猪 (pig) | ⭐⭐⭐ |
+ Pathogen | Disease | Target Animal | China Market Priority |
+----------|---------|---------------|----------------------|
+ *Clostridium perfringens* | 坏死性肠炎 | 家禽 (poultry) | ⭐⭐⭐⭐⭐ |
+ *Salmonella enterica* | 沙门氏菌病 | 家禽/牲畜 | ⭐⭐⭐⭐ |
+ *Escherichia coli* (pathogenic) | 大肠杆菌病 | 家禽/水产 | ⭐⭐⭐⭐ |
+ *Vibrio parahaemolyticus* | 急性肠胃炎 | 水产 (aquaculture) | ⭐⭐⭐ |
+ *Streptococcus suis* | 猪链球菌病 | 生猪 (pig) | ⭐⭐⭐ |
 
 ## 2. Proxy Strain Selection Strategy
 
@@ -164,25 +164,25 @@ Sys.chmod(file.path(path_target, "scripts", "run_ani.sh"), "755")
 
 *To be populated after analysis*
 
-| Strain | Origin | ANI to China Isolate | Phage Susceptibility | Availability | Score |
-|--------|--------|---------------------|----------------------|--------------|-------|
-| ATCC 13124 | USA | - | Known | ATCC/DSMZ | - |
-| DSM 756 | Germany | - | Moderate | DSMZ | - |
-| TYPE B STRAIN | - | - | - | - | - |
+ Strain | Origin | ANI to China Isolate | Phage Susceptibility | Availability | Score |
+--------|--------|---------------------|----------------------|--------------|-------|
+ ATCC 13124 | USA | - | Known | ATCC/DSMZ | - |
+ DSM 756 | Germany | - | Moderate | DSMZ | - |
+ TYPE B STRAIN | - | - | - | - | - |
 
 ### 4.2 *Salmonella enterica* Proxies
 
-| Strain | Serovar | ANI to China Isolate | Phage Susceptibility | Availability | Score |
-|--------|---------|---------------------|----------------------|--------------|-------|
-| ATCC 14028 | Typhimurium | - | High | ATCC | - |
-| DSM 554 | Enteritidis | - | Moderate | DSMZ | - |
+ Strain | Serovar | ANI to China Isolate | Phage Susceptibility | Availability | Score |
+--------|---------|---------------------|----------------------|--------------|-------|
+ ATCC 14028 | Typhimurium | - | High | ATCC | - |
+ DSM 554 | Enteritidis | - | Moderate | DSMZ | - |
 
 ### 4.3 *Vibrio* spp. Proxies (Aquaculture)
 
-| Strain | Species | Origin | ANI | Host Range | Score |
-|--------|---------|--------|-----|------------|-------|
-| ATCC 17802 | V. parahaemolyticus | USA | - | Known | - |
-| DSM 10027 | V. cholerae | Germany | - | Moderate | - |
+ Strain | Species | Origin | ANI | Host Range | Score |
+--------|---------|--------|-----|------------|-------|
+ ATCC 17802 | V. parahaemolyticus | USA | - | Known | - |
+ DSM 10027 | V. cholerae | Germany | - | Moderate | - |
 
 ## 5. Experimental Validation Plan
 

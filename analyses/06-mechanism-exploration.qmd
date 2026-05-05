@@ -52,13 +52,13 @@ Explore the molecular mechanisms by which phages enhance probiotic colonization:
 
 Based on the 34 sources imported to NotebookLM:
 
-| Mechanism | Evidence Strength | Key Papers |
-|-----------|-------------------|-------------|
-| **Direct niche clearing** | Strong (15+ papers) | Effects of Phage Cocktail... (Broiler Chickens) |
-| **Metabolic cross-feeding** | Moderate (8 papers) | Probiophage: Novel Candidate... |
-| **Immune modulation** | Emerging (5 papers) | Engineered probiotics for IBD... |
-| **Receptor remodeling** | Theoretical (3 papers) | Global research trends in bacteriophage... |
-| **Biofilm disruption** | Moderate (6 papers) | Phage-Antibiotic Synergy Review... |
+ Mechanism | Evidence Strength | Key Papers |
+-----------|-------------------|-------------|
+ **Direct niche clearing** | Strong (15+ papers) | Effects of Phage Cocktail... (Broiler Chickens) |
+ **Metabolic cross-feeding** | Moderate (8 papers) | Probiophage: Novel Candidate... |
+ **Immune modulation** | Emerging (5 papers) | Engineered probiotics for IBD... |
+ **Receptor remodeling** | Theoretical (3 papers) | Global research trends in bacteriophage... |
+ **Biofilm disruption** | Moderate (6 papers) | Phage-Antibiotic Synergy Review... |
 
 ### 2.2 Testable Predictions
 

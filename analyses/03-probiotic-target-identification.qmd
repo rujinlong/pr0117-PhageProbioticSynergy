@@ -43,13 +43,13 @@ Identify which probiotic bacteria benefit most from phage-mediated niche clearin
 
 Based on NotebookLM literature review:
 
-| Factor | Description | Relevance to Synergy |
-|--------|-------------|---------------------|
-| Adhesion molecules | Bind to gut epithelial cells | Phage clearing competitors → more adhesion sites |
-| Metabolic flexibility | Utilize diverse carbon sources | Survive after pathogen removal |
-| Bile tolerance | Survive gut environment | Essential for delivery |
-| Competitive exclusion | Outcompete pathogens | Enhanced by phage predation |
-| Immune modulation | Regulate host immune response | Complementary to phage action |
+ Factor | Description | Relevance to Synergy |
+--------|-------------|---------------------|
+ Adhesion molecules | Bind to gut epithelial cells | Phage clearing competitors → more adhesion sites |
+ Metabolic flexibility | Utilize diverse carbon sources | Survive after pathogen removal |
+ Bile tolerance | Survive gut environment | Essential for delivery |
+ Competitive exclusion | Outcompete pathogens | Enhanced by phage predation |
+ Immune modulation | Regulate host immune response | Complementary to phage action |
 
 ### 2.2 Receptor Landscape Analysis
 
@@ -349,23 +349,23 @@ post_phage <- initial_state %>%
 
 From the Research Master Plan:
 
-| Criterion | Weight | Description |
-|-----------|--------|-------------|
-| Niche overlap with pathogen | 0.3 | Higher overlap = more benefit from phage |
-| Lytic phage availability | 0.25 | Ensure effective phages exist |
-| Commercial availability | 0.2 | Ready for application |
-| Safety profile | 0.15 | GRAS status, no virulence |
-| Mechanism clarity | 0.1 | Understanding of synergy |
+ Criterion | Weight | Description |
+-----------|--------|-------------|
+ Niche overlap with pathogen | 0.3 | Higher overlap = more benefit from phage |
+ Lytic phage availability | 0.25 | Ensure effective phages exist |
+ Commercial availability | 0.2 | Ready for application |
+ Safety profile | 0.15 | GRAS status, no virulence |
+ Mechanism clarity | 0.1 | Understanding of synergy |
 
 ### 4.2 Preliminary Ranking
 
 *To be populated after analysis*
 
-| Rank | Probiotic | Target Pathogen | Niche Overlap | Phage Available | Score |
-|------|------------|-----------------|---------------|------------------|-------|
-| 1 | TBD | TBD | - | - | - |
-| 2 | TBD | TBD | - | - | - |
-| 3 | TBD | TBD | - | - | - |
+ Rank | Probiotic | Target Pathogen | Niche Overlap | Phage Available | Score |
+------|------------|-----------------|---------------|------------------|-------|
+ 1 | TBD | TBD | - | - | - |
+ 2 | TBD | TBD | - | - | - |
+ 3 | TBD | TBD | - | - | - |
 
 ## 5. Genomic Analysis
 

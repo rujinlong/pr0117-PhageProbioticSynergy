@@ -6,7 +6,7 @@ title: "China Trial Analysis"
 
 ## Setup
 
-```\{r\}
+```{r}
 params <- list(name = "09-china-trial-analysis")
 here::i_am(paste0(params$name, ".qmd"), uuid = "i9j0k1l2-m3n4-5678-opqr-s1234567890")
 
@@ -21,7 +21,7 @@ path_08 <- qproj::path_source("08-manuscript-draft")
 
 ## Load Packages
 
-```\{r\}
+```{r}
 library(tidyverse)
 library(here)
 library(qproj)
@@ -42,12 +42,12 @@ Analyze data from China animal trials and optimize formulations for Chinese mark
 
 ### 2.1 Regulatory Landscape
 
-| Aspect | Germany | China |
-|--------|---------|-------|
-| **Approval time** | 2-3 months | 6-12 months |
-| **Cost per bird** | €5-8 | ¥3-5 (€0.4-0.6) |
-| **Facility standards** | High (Tier-1) | Variable |
-| **Sample size limits** | Moderate | Large (1000+ birds feasible) |
+ Aspect | Germany | China |
+--------|---------|-------|
+ **Approval time** | 2-3 months | 6-12 months |
+ **Cost per bird** | €5-8 | ¥3-5 (€0.4-0.6) |
+ **Facility standards** | High (Tier-1) | Variable |
+ **Sample size limits** | Moderate | Large (1000+ birds feasible) |
 
 ### 2.2 Trial Sites
 
@@ -67,7 +67,7 @@ Analyze data from China animal trials and optimize formulations for Chinese mark
 
 **Performance Metrics**:
 
-```\{r\}
+```{r}
 #| eval: false
 
 metrics <- tibble(
@@ -82,7 +82,7 @@ knitr::kable(metrics, caption = "Performance Metrics for China Trials")
 
 **Microbiome Sampling**:
 
-```\{r\}
+```{r}
 #| eval: false
 
 sampling_points <- tibble(
@@ -100,7 +100,7 @@ knitr::kable(sampling_points, caption = "Microbiome Sampling Schedule")
 
 Account for block (pen) and repeated measures (time).
 
-```\{r\}
+```{r}
 #| eval: false
 
 # Template: Linear mixed model for FCR
@@ -121,7 +121,7 @@ Account for block (pen) and repeated measures (time).
 
 For non-normal data (mortality, lesion scores):
 
-```\{r\}
+```{r}
 #| eval: false
 
 # Kruskal-Wallis for treatment effects
@@ -138,7 +138,7 @@ For non-normal data (mortality, lesion scores):
 
 ### 5.1 FCR Over Time
 
-```\{r\}
+```{r}
 #| eval: false
 
 # ggplot(trial_data, aes(x = day, y = FCR, color = treatment, group = pen)) +
@@ -151,7 +151,7 @@ For non-normal data (mortality, lesion scores):
 
 ### 5.2 Microbiome Shifts
 
-```\{r\}
+```{r}
 #| eval: false
 
 # Template: Stacked bar plot of phage/viral abundance
@@ -169,7 +169,7 @@ For non-normal data (mortality, lesion scores):
 
 **Costs per 1000 birds** (¥):
 
-```\{r\}
+```{r}
 
 cost_benefit_cn <- tibble(
   item = c("Phage production (¥/dose)", "Probiotic (¥/dose)", 
@@ -190,12 +190,12 @@ knitr::kable(cost_benefit_cn, caption = "Cost-Benefit Analysis (China, per 1000 
 
 ### 6.2 Market Comparison
 
-| Product | Price per bird (¥) | Efficacy (FCR improvement) | Market Share |
-|---------|---------------------|----------------------------|--------------|
-| **Our synergy** | 0.6 | 0.15 points | New entrant |
-| 诺安百特 (phage only) | 0.8 | 0.10 points | Leading |
-| CJ BIO (probiotic) | 0.5 | 0.08 points | Strong |
-| Antibiotics (banned) | 0.3 | 0.20 points | Illegal |
+ Product | Price per bird (¥) | Efficacy (FCR improvement) | Market Share |
+---------|---------------------|----------------------------|--------------|
+ **Our synergy** | 0.6 | 0.15 points | New entrant |
+ 诺安百特 (phage only) | 0.8 | 0.10 points | Leading |
+ CJ BIO (probiotic) | 0.5 | 0.08 points | Strong |
+ Antibiotics (banned) | 0.3 | 0.20 points | Illegal |
 
 ## 7. Regulatory Pathway (China)
 
@@ -203,13 +203,13 @@ knitr::kable(cost_benefit_cn, caption = "Cost-Benefit Analysis (China, per 1000 
 
 **Timeline** (from Notion Section 13: Market & Commercial Context):
 
-| Step | Agency | Duration | Status |
-|------|--------|----------|--------|
-| **Lab validation** | Internal | 3 months | ✅ Phase 2 |
-| **Pilot trial** | Local FAIRS office | 3 months | 🔄 Phase 3 |
-| **Full trial** | Ministry of Agriculture | 6 months | 🔄 Phase 4 |
-| **Import license** | GACC (if Germany→China) | 3 months | Pending |
-| **Production permit** | Local government | 3 months | Pending |
+ Step | Agency | Duration | Status |
+------|--------|----------|--------|
+ **Lab validation** | Internal | 3 months | ✅ Phase 2 |
+ **Pilot trial** | Local FAIRS office | 3 months | 🔄 Phase 3 |
+ **Full trial** | Ministry of Agriculture | 6 months | 🔄 Phase 4 |
+ **Import license** | GACC (if Germany→China) | 3 months | Pending |
+ **Production permit** | Local government | 3 months | Pending |
 
 ### 7.2 IP Strategy (Notion Section 14)
 
@@ -231,12 +231,12 @@ Based on trial results:
 
 ### 8.2 Localization
 
-| Aspect | Germany (R&D) | China (Production) |
-|--------|----------------|----------------------|
-| **Phage production** | German lab | Transfer to China partner |
-| **Probiotic production** | German strain | Local production |
-| **Quality control** | German standard | Joint protocol |
-| **Distribution** | N/A | Partner network |
+ Aspect | Germany (R&D) | China (Production) |
+--------|----------------|----------------------|
+ **Phage production** | German lab | Transfer to China partner |
+ **Probiotic production** | German strain | Local production |
+ **Quality control** | German standard | Joint protocol |
+ **Distribution** | N/A | Partner network |
 
 ## 9. NotebookLM Validation
 
@@ -257,7 +257,7 @@ nlm source add phage-synergy --text "$(cat china_trial_results.txt)" \
 
 ## 10. Session Info
 
-```\{r\}
+```{r}
 sessionInfo()
 ```
 

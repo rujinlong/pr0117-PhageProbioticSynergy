@@ -170,13 +170,13 @@ Based on the Notion Research Master Plan and preliminary research:
 
 ### 3.2 Public Datasets to Mine
 
-| Dataset Type | Source | Target | Status |
-|-------------|--------|--------|--------|
-| Poultry gut metagenomes | SRA | Chicken gut microbiome | To search |
-| Duck gut virome | SRA/BioProject | Duck FVT reference | To search |
-| Aquaculture microbiome | SRA/ENA | Fish/shrimp gut | To search |
-| Phage-host databases | phagesDB, MVP | Phage collections | To integrate |
-| Probiotic genomes | NCBI RefSeq | Lactobacillus, Bifidobacterium | To download |
+ Dataset Type | Source | Target | Status |
+-------------|--------|--------|--------|
+ Poultry gut metagenomes | SRA | Chicken gut microbiome | To search |
+ Duck gut virome | SRA/BioProject | Duck FVT reference | To search |
+ Aquaculture microbiome | SRA/ENA | Fish/shrimp gut | To search |
+ Phage-host databases | phagesDB, MVP | Phage collections | To integrate |
+ Probiotic genomes | NCBI RefSeq | Lactobacillus, Bifidobacterium | To download |
 
 ## 4. Data Download Plan
 
